@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>AsyncX | Repositório de Máquinas</title>
+<style>
+    body { background: #050505; color: white; font-family: 'Inter', sans-serif; margin: 0; }
+    .header { background: #0f0f0f; padding: 20px; display: flex; justify-content: space-between; border-bottom: 1px solid #1f1f1f; }
+    
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 30px;
+        padding: 40px;
+        max-width: 1100px;
+        margin: auto;
+    }
+
+    .maquina-card {
+        background: #0f0f0f;
+        border-radius: 18px; 
+        overflow: hidden;
+        border: 1px solid #1f1f1f;
+        text-align: center;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .maquina-card:hover { 
+        border-color: #00f2ff; 
+        transform: translateY(-8px);
+        box-shadow: 0 10px 20px rgba(0, 242, 255, 0.1);
+    }
+
+    .capa-container {
+        width: 100%;
+        aspect-ratio: 1 / 1; 
+        overflow: hidden;
+        background: #151515;
+    }
+
+    .capa { 
+        width: 100%; 
+        height: 100%; 
+        object-fit: cover; 
+        transition: transform 0.5s ease;
+    }
+
+    .maquina-card:hover .capa {
+        transform: scale(1.1);
+    }
+
+    .info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    
+    .maquina-nome { 
+        font-weight: 600; 
+        font-size: 1rem; 
+        margin-bottom: 15px; 
+        color: #e0e0e0;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-download {
+        display: block;
+        background: transparent;
+        color: #00f2ff;
+        border: 1px solid #00f2ff;
+        padding: 10px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 0.8rem;
+        transition: 0.3s;
+    }
+
+    .btn-download:hover {
+        background: #00f2ff;
+        color: black;
+    }
+</style>
+</head>
+<body>
+    <div class="header">
+        <a href="/dashboard" style="color: #00f2ff; text-decoration: none;"> < Voltar</a>
+        <div style="font-weight: bold;">ASYNCX - machines </div>
+    </div>
+
+<div class="grid-container">
+    {% for m in maquinas %}
+    <div class="maquina-card">
+        <div class="capa-container">
+            <img src="/static/img/{{ m.img }}" class="capa" alt="{{ m.nome }}">
+        </div>
+        <div class="info">
+            <div class="maquina-nome">{{ m.nome }}</div>
+            <a href="{{ m.link }}" class="btn-download" target="_blank">Download .OVA</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</body>
+</html>

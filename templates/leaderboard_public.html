@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>LIVE RANKING | ASYNCX HCB</title>
+    <style>
+        :root {
+            --bg: #000000;
+            --accent: #00f2ff;
+            --gold: #ffd700;
+            --card: #0a0a0a;
+        }
+
+        body { 
+            background: var(--bg); 
+            color: white; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            padding: 40px;
+            overflow: hidden; /* Mantém tudo fixo no telão */
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+            border-bottom: 2px solid #111;
+            padding-bottom: 20px;
+        }
+
+        .timer-box { text-align: right; }
+        #countdown { 
+            font-size: 5rem; 
+            font-weight: 900; 
+            color: var(--accent); 
+            text-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+        }
+
+        /* Destaque do 1º Lugar */
+        .champion-card {
+            background: linear-gradient(145deg, #111, #000);
+            border: 2px solid var(--gold);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.15);
+        }
+
+        .champion-info h1 { font-size: 4rem; margin: 0; text-transform: uppercase; }
+        .champion-score { font-size: 5rem; font-weight: 900; color: var(--gold); }
+
+        /* Lista dos demais times */
+        .ranking-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Duas colunas para caber mais times sem scroll */
+            gap: 15px;
+        }
+
+        .rank-item {
+            background: var(--card);
+            border: 1px solid #1f1f1f;
+            padding: 15px 30px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.8rem;
+        }
+
+        .pos { color: #444; font-weight: bold; margin-right: 20px; }
+        .score-small { color: var(--accent); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>
+            <div style="font-size: 1.2rem; color: #555; letter-spacing: 5px;">ASYNCX DIGITAL SECURITY</div>
+            <div style="font-size: 3rem; font-weight: 900;">HACKATHON BOX</div>
+        </div>
+        <div class="timer-box">
+            <div class="timer-label" style="color: #444; font-weight: bold;">TEMPO RESTANTE</div>
+            <div id="countdown">00:00:00</div>
+        </div>
+
+    </div>
+
+    <div id="leaderboard-content">
+        {% if ranking %}
+        <div class="champion-card">
+            <div class="champion-info">
+                <div style="color: var(--gold); font-weight: bold; letter-spacing: 3px;">TOP 01 - LÍDER ATUAL</div>
+                <h1>{{ ranking[0].name }}</h1>
+            </div>
+            <div class="champion-score">{{ ranking[0].score }} <small style="font-size: 1.5rem;">PTS</small></div>
+        </div>
+
+        <div class="ranking-list">
+            {% for r in ranking[1:11] %} <div class="rank-item">
+                <div>
+                    <span class="pos">{{ loop.index + 1 }}º</span>
+                    <span>{{ r.name }}</span>
+                </div>
+                <div class="score-small">{{ r.score }} PTS</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+    const eventEndTime = new Date("{{ end_time }}").getTime();
+
+    const display = document.querySelector('#countdown');
+
+    function updateTimer() {
+        const now = new Date().getTime();
+        const distance = eventEndTime - now;
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        const h = hours < 10 ? "0" + hours : hours;
+        const m = minutes < 10 ? "0" + minutes : minutes;
+        const s = seconds < 10 ? "0" + seconds : seconds;
+
+        if (days > 0) {
+            display.textContent = days + "d " + h + ":" + m + ":" + s;
+        } else {
+            display.textContent = h + ":" + m + ":" + s;
+        }
+
+        if (distance < 0) {
+            clearInterval(timerInterval);
+            display.textContent = "00:00:00";
+            display.style.color = "#ff4d4d";
+            document.querySelector('.timer-label').textContent = "EVENTO ENCERRADO";
+        }
+    }
+
+    const timerInterval = setInterval(updateTimer, 1000);
+    updateTimer(); // Executa imediatamente para não ver o 00:00:00 inicial
+
+    setInterval(function() {
+        // Em vez de recarregar a página toda (location.reload), 
+        // o ideal no futuro é atualizar apenas a lista, mas por hora
+        // o reload garante que o 'end_time' e o ranking venham frescos do banco.
+        location.reload(); 
+    }, 30000);
+
+    </script>
+</body>
+</html>

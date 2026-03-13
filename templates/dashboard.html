@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>AsyncX - Hackathon Challenge Box</title>
+    <style>
+        /* Variáveis de Estilo Moderno */
+        :root {
+            --bg-body: #0d1117;
+            --bg-card: #161b22;
+            --border: #30363d;
+            --accent: #238636;
+            --cyan: #00f2ff;
+            --danger: #ff4d4d;
+            --text: #c9d1d9;
+        }
+
+        body { 
+            background: var(--bg-body); 
+            color: var(--text); 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; 
+        }
+
+        /* Cabeçalho Organizado */
+        .nav { 
+            background: var(--bg-card); 
+            padding: 12px 30px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 2px solid var(--accent); 
+        }
+
+        .nav-left { font-weight: bold; color: #8b949e; letter-spacing: 1px; }
+
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+
+        .team-info { font-size: 0.9rem; color: #fff; }
+
+        /* Botões do Cabeçalho */
+        .btn-nav {
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 8px;
+            transition: 0.3s ease;
+        }
+
+        .btn-download { color: var(--cyan); border: 1px solid var(--cyan); }
+        .btn-download:hover { background: rgba(0, 242, 255, 0.1); }
+
+        .btn-logout { color: var(--danger); border: 1px solid var(--danger); }
+        .btn-logout:hover { background: rgba(255, 77, 77, 0.1); }
+
+        /* Layout Principal */
+        .main { display: grid; grid-template-columns: 2.5fr 1fr; gap: 20px; padding: 20px; }
+
+        /* Linhas de Desafio Finas e Modernas */
+        .challenge-row {
+            background: var(--bg-card);
+            padding: 8px 18px;
+            margin-bottom: 6px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.2s;
+        }
+
+        .challenge-info { display: flex; align-items: center; gap: 15px; flex: 1; }
+        .challenge-title { font-weight: 500; font-size: 0.9rem; min-width: 180px; }
+        .challenge-points { color: var(--accent); font-size: 0.8rem; font-weight: bold; }
+
+        .challenge-form { display: flex; gap: 8px; align-items: center; }
+        
+        input.compact {
+            background: var(--bg-body);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 5px 10px;
+            color: white;
+            font-size: 0.8rem;
+            width: 150px;
+        }
+
+        .btn-submit { background: var(--accent); color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+
+        /* Estilo para Desafio Concluído */
+        .challenge-row.solved {
+            opacity: 0.3;
+            background: #090c10;
+            border-color: var(--accent);
+            pointer-events: none;
+            filter: grayscale(1);
+        }
+
+.hint-container {
+    margin: 10px 0 15px 30px; 
+}
+
+.hint-text {
+    color: #e3b341;
+    font-size: 0.8rem;
+    filter: blur(5px);
+    transition: filter 0.3s ease;
+    user-select: none;
+    cursor: pointer;
+    background: rgba(227, 179, 65, 0.05); /* Fundo mais sutil */
+    padding: 8px 15px;
+    border-radius: 6px;
+    border: 1px dashed rgba(227, 179, 65, 0.2); /* Borda para indicar área clicável */
+    display: inline-block; /* Faz a caixa se ajustar ao texto */
+}
+
+.hint-text.reveal {
+    filter: blur(0);
+    user-select: text;
+    border-style: solid; /* Muda a borda ao revelar */
+}        
+        .solved-badge { color: var(--accent); font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
+
+        .alert { padding: 10px; text-align: center; border-radius: 8px; margin: 10px 20px; font-weight: 500; }
+        .ranking-card { background: var(--bg-card); padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
+        .ranking-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #21262d; font-size: 0.9rem; }
+        
+        .footer { text-align: center; padding: 20px; font-size: 0.8em; color: #8b949e; opacity: 0.6; }
+
+
+
+    </style>
+</head>
+<body>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div id="alert-msg" class="alert" style="background: {% if category == 'danger' %}var(--danger){% else %}var(--accent){% endif %}; color: white;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="nav">
+        <div class="nav-left">
+            ESTÁCIO CARAPICUÍBA
+        </div>
+        
+        <div class="nav-right">
+            <span class="team-info">Time: <strong>{{ session['team_name'] }}</strong></span>
+            <a href="/downloads" class="btn-nav btn-download">Downloads</a>
+            <a href="/logout" class="btn-nav btn-logout">Sair</a>
+        </div>
+    </div>
+
+    <div class="main">
+        <section>
+            <h2 style="font-size: 1.2rem; margin-bottom: 15px;">Operações Ativas</h2>
+            {% for c in challenges %}
+            <div class="challenge-row {% if c.id in solved_ids %}solved{% endif %}">
+                <div class="challenge-info">
+                    <span class="challenge-title">{{ c.title }}</span>
+                    <span class="challenge-points">+{{ c.points }} PTS</span>
+                </div>
+
+                {% if c.id in solved_ids %}
+                    <div class="solved-badge">✔ Resolvido</div>
+                {% else %}
+                    <div class="challenge-form">
+    <button onclick="verDica({{ c.id }})" class="btn-nav" 
+            style="background:{% if c.id in purchased_ids %}#e3b341{% else %}#30363d{% endif %}; color:white; border:none; padding: 5px 10px;">
+        {% if c.id in purchased_ids %}Dica Liberada{% else %}Dica (-25){% endif %}
+    </button>
+    
+    <form action="/submit" method="post" style="display:flex; gap:5px;">
+        <input type="hidden" name="challenge_id" value="{{ c.id }}"> 
+        <input type="text" name="flag" class="compact" placeholder="HCB{...}" required autocomplete="off">
+        <button type="submit" class="btn-submit">Enviar</button>
+    </form>
+</div>
+
+                {% endif %}
+            </div>
+{% if c.id in purchased_ids %}
+<div class="hint-container">
+    <p id="hint-{{ c.id }}" 
+       class="hint-text" 
+       onmousedown="this.classList.add('reveal')" 
+       onmouseup="this.classList.remove('reveal')"
+       onmouseleave="this.classList.remove('reveal')"
+       ontouchstart="this.classList.add('reveal')" 
+       ontouchend="this.classList.remove('reveal')">
+       {{ c.hint }}
+    </p>
+</div>
+{% else %}
+    <div id="container-hint-{{ c.id }}" class="hint-container" style="display:none;">
+        <p id="hint-{{ c.id }}" class="hint-text"></p>
+    </div>
+{% endif %}
+
+            {% endfor %}
+        </section>
+
+        <aside>
+            <h2 style="font-size: 1.2rem; margin-bottom: 15px;">Placar de Líderes</h2>
+            <div class="ranking-card">
+                {% for r in ranking %}
+                <div class="ranking-item">
+                    <span>{{ loop.index }}º {{ r.name }}</span>
+                    <span style="font-weight:bold;">{{ r.score }}</span>
+                 </div>
+                {% endfor %}
+            </div>
+        </aside>
+    </div>
+
+    <div class="footer">&copy; 2026 ASYNCX - Soluções em TI e Segurança Digital</div>
+
+<script>
+
+    const alertMsg = document.getElementById('alert-msg');
+
+    function verDica(id) {
+        if(confirm("Deseja ver a dica? Isso descontará 25 pontos do seu time!")) {
+            fetch('/hint/' + id)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.hint);
+                    } else {
+                        const hintEl = document.getElementById('hint-' + id);
+                        hintEl.innerText = data.hint;
+                        hintEl.style.display = 'block';
+                        alert("Dica revelada! -25 pontos aplicados.");
+                        location.reload(); 
+                    }
+                });
+        }
+    }
+    
+    if (alertMsg) {
+        setTimeout(() => {
+            alertMsg.style.display = 'none';
+        }, 3000);
+    }
+
+</script>
+<!-- flag=START_HACKATHON_2026 -->
+</body>
+</html>
