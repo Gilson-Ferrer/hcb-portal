@@ -1,21 +1,22 @@
 import os
 import time
+import psycopg2
+from psycopg2.extras import RealDictCursor
 from flask import Flask, render_template, request, redirect, session, flash
-import sqlite3
 from datetime import datetime
 
-# Defina EXATAMENTE quando o evento termina (Ano, Mês, Dia, Hora, Minuto)
-EVENT_END = datetime(2026, 2, 15, 13, 50, 0)
+# (Ano mês, dia, hora, minuto, segundo)
+date_str = os.environ.get('EVENT_END_STR', '2026-02-15 13:50:00')
+EVENT_END = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
 
 app = Flask(__name__)
-app.secret_key = 'chave_mestra_asyncx'
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, 'hcb.db')
+app.secret_key = os.environ.get('SECRET_KEY', 'asyncx_hack_2026_safe_key')
+
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
 def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
+    conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
     return conn
 
 @app.route('/')
@@ -27,8 +28,13 @@ def index():
 def login():
     name = request.form['name']
     password = request.form['password']
-    db = get_db()
-    team = db.execute('SELECT * FROM teams WHERE name = ? AND password = ?', (name, password)).fetchone()
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM teams WHERE name = %s AND password = %s', (name, password))
+    team = cur.fetchone()
+    cur.close()
+    conn.close()
+    
     if team:
         session['team_id'] = team['id']
         session['team_name'] = team['name']
@@ -38,33 +44,37 @@ def login():
 @app.route('/dashboard')
 def dashboard():
     if 'team_id' not in session: return redirect('/')
-    db = get_db()
+    conn = get_db()
+    cur = conn.cursor()
     
-    challenges = db.execute('SELECT * FROM challenges').fetchall()
-    solved_rows = db.execute('SELECT challenge_id FROM solves WHERE team_id = ?', 
-                            (session['team_id'],)).fetchall()
-    solved_ids = [row['challenge_id'] for row in solved_rows]
+    cur.execute('SELECT * FROM challenges')
+    challenges = cur.fetchall()
     
-    purchased_rows = db.execute('SELECT challenge_id FROM hint_purchases WHERE team_id = ?', 
-                               (session['team_id'],)).fetchall()
-    purchased_ids = [row['challenge_id'] for row in purchased_rows]
+    cur.execute('SELECT challenge_id FROM solves WHERE team_id = %s', (session['team_id'],))
+    solved_ids = [row['challenge_id'] for row in cur.fetchall()]
     
-    ranking = db.execute('''
+    cur.execute('SELECT challenge_id FROM hint_purchases WHERE team_id = %s', (session['team_id'],))
+    purchased_ids = [row['challenge_id'] for row in cur.fetchall()]
+    
+    cur.execute('''
         SELECT name, score 
         FROM teams 
         ORDER BY score DESC, last_solve ASC
-    ''').fetchall()
+    ''')
+    ranking = cur.fetchall()
+    
+    cur.close()
+    conn.close()
     
     vms = [{"name": "Máquina Ciberdetetive (.OVA)", "url": "https://drive.google.com/..."}]
     
     return render_template('dashboard.html', 
                            challenges=challenges, 
                            solved_ids=solved_ids, 
-                           purchased_ids=purchased_ids, # Passa para o HTML
+                           purchased_ids=purchased_ids,
                            ranking=ranking, 
                            vms=vms,
-                           end_time=EVENT_END.isoformat()) # Garante o relógio
-
+                           end_time=EVENT_END.isoformat())
 
 @app.route('/hint/<int:id>')
 def get_hint(id):
@@ -72,25 +82,38 @@ def get_hint(id):
     if datetime.now() > EVENT_END:
         return {"hint": "O evento terminou! Não é mais possível solicitar dicas.", "error": True}
 
-    db = get_db()
+    conn = get_db()
+    cur = conn.cursor()
     
-    already_purchased = db.execute('SELECT 1 FROM hint_purchases WHERE team_id = ? AND challenge_id = ?', 
-                                  (session['team_id'], id)).fetchone()
+    cur.execute('SELECT 1 FROM hint_purchases WHERE team_id = %s AND challenge_id = %s', 
+                (session['team_id'], id))
+    already_purchased = cur.fetchone()
     
     if already_purchased:
-        hint = db.execute('SELECT hint FROM challenges WHERE id = ?', (id,)).fetchone()
+        cur.execute('SELECT hint FROM challenges WHERE id = %s', (id,))
+        hint = cur.fetchone()
+        cur.close()
+        conn.close()
         return {"hint": hint['hint']}
 
-    already_solved = db.execute('SELECT 1 FROM solves WHERE team_id = ? AND challenge_id = ?', 
-                               (session['team_id'], id)).fetchone()
+    cur.execute('SELECT 1 FROM solves WHERE team_id = %s AND challenge_id = %s', 
+                (session['team_id'], id))
+    already_solved = cur.fetchone()
+    
     if already_solved:
+        cur.close()
+        conn.close()
         return {"hint": "Desafio já concluído!", "error": True}
     
-    db.execute('UPDATE teams SET score = score - 25 WHERE id = ?', (session['team_id'],))
-    db.execute('INSERT INTO hint_purchases (team_id, challenge_id) VALUES (?, ?)', (session['team_id'], id))
-    db.commit()
+    cur.execute('UPDATE teams SET score = score - 25 WHERE id = %s', (session['team_id'],))
+    cur.execute('INSERT INTO hint_purchases (team_id, challenge_id) VALUES (%s, %s)', 
+                (session['team_id'], id))
+    conn.commit()
     
-    hint = db.execute('SELECT hint FROM challenges WHERE id = ?', (id,)).fetchone()
+    cur.execute('SELECT hint FROM challenges WHERE id = %s', (id,))
+    hint = cur.fetchone()
+    cur.close()
+    conn.close()
     return {"hint": hint['hint']}
 
 @app.route('/submit', methods=['POST'])
@@ -101,27 +124,30 @@ def submit():
 
     challenge_id = request.form.get('challenge_id')
     flag = request.form['flag'].strip()
-    db = get_db()
+    conn = get_db()
+    cur = conn.cursor()
     
-    challenge = db.execute('SELECT * FROM challenges WHERE id = ? AND flag = ?', 
-                          (challenge_id, flag)).fetchone()
+    cur.execute('SELECT * FROM challenges WHERE id = %s AND flag = %s', (challenge_id, flag))
+    challenge = cur.fetchone()
     
     if challenge:
-        already = db.execute('SELECT * FROM solves WHERE team_id = ? AND challenge_id = ?',
-                            (session['team_id'], challenge['id'])).fetchone()
-        if not already:
-            db.execute('INSERT INTO solves (team_id, challenge_id) VALUES (?, ?)', 
-                      (session['team_id'], challenge['id']))
+        cur.execute('SELECT * FROM solves WHERE team_id = %s AND challenge_id = %s', 
+                    (session['team_id'], challenge['id']))
+        if not cur.fetchone():
+            cur.execute('INSERT INTO solves (team_id, challenge_id) VALUES (%s, %s)', 
+                        (session['team_id'], challenge['id']))
             
-            agora = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            db.execute('UPDATE teams SET score = score + ?, last_solve = ? WHERE id = ?', 
-                      (challenge['points'], agora, session['team_id']))
-            
-            db.commit()
+            agora = datetime.now()
+            cur.execute('UPDATE teams SET score = score + %s, last_solve = %s WHERE id = %s', 
+                        (challenge['points'], agora, session['team_id']))
+            conn.commit()
             flash("Flag correta! Pontos adicionados.", "success")
     else:
         flash("Flag incorreta! Tente novamente em 3 segundos.", "danger")
-        time.sleep(3)        
+        time.sleep(3) 
+        
+    cur.close()
+    conn.close()
     return redirect('/dashboard')
 
 @app.route('/logout')
@@ -133,7 +159,6 @@ def logout():
 def downloads():
     if 'team_id' not in session: return redirect('/')
     
-    # Lista com as 12 máquinas (Grade 3x4)
     maquinas = [
         {"nome": "01. GENESIS", "img": "m1.png", "link": "https://drive.google.com/file/d/1OrzgoWxRZ_LCZinrhRX9bmy19kbWGeNu/view?usp=sharing"},
         {"nome": "02. DATALEAKY", "img": "m2.png", "link": "https://drive.google.com/file/d/1d5mg4RcFEymEgWGs3mo8jQnTuiCTd2qg/view?usp=sharing"},
@@ -151,25 +176,30 @@ def downloads():
     
     return render_template('downloads.html', maquinas=maquinas)
 
-
 @app.route('/leaderboard')
 def leaderboard_public():
-    db = get_db()
-    # Busca o ranking com o critério de desempate por tempo (last_solve)
-    ranking = db.execute('''
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute('''
         SELECT name, score 
         FROM teams 
         ORDER BY score DESC, last_solve ASC
-    ''').fetchall()
-
+    ''')
+    ranking = cur.fetchall()
+    cur.close()
+    conn.close()
     return render_template('leaderboard_public.html', ranking=ranking, end_time=EVENT_END.isoformat())
 
 @app.route('/api/score')
 def api_score():
-    db = get_db()
-    ranking = db.execute('SELECT name, score FROM teams ORDER BY score DESC, last_solve ASC').fetchall()
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute('SELECT name, score FROM teams ORDER BY score DESC, last_solve ASC')
+    ranking = cur.fetchall()
+    cur.close()
+    conn.close()
     return {"ranking": [dict(row) for row in ranking]}
 
-
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
