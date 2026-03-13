@@ -5,9 +5,8 @@ from psycopg2.extras import RealDictCursor
 from flask import Flask, render_template, request, redirect, session, flash
 from datetime import datetime
 
-# (Ano mês, dia, hora, minuto, segundo)
-date_str = os.environ.get('EVENT_END_STR', '2026-02-15 13:50:00')
-EVENT_END = datetime.strptime(date_str, '%Y-%m-%d %H:%M:%S')
+# (Ano, mês, dia, hora, minuto, segundo)
+EVENT_END = datetime(2026, 3, 15, 22, 0, 0)
 
 app = Flask(__name__)
 
