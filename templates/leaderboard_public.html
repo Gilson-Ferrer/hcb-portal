@@ -80,7 +80,7 @@
     <div class="header">
         <div>
             <div style="font-size: 1.2rem; color: #555; letter-spacing: 5px;">ASYNCX DIGITAL SECURITY</div>
-            <div style="font-size: 3rem; font-weight: 900;">HACKATHON BOX</div>
+            <a href="login.html"><div style="font-size: 3rem; font-weight: 900;">HACKATHON BOX</div></a>
         </div>
         <div class="timer-box">
             <div class="timer-label" style="color: #444; font-weight: bold;">TEMPO RESTANTE</div>
@@ -145,12 +145,9 @@
     }
 
     const timerInterval = setInterval(updateTimer, 1000);
-    updateTimer(); // Executa imediatamente para não ver o 00:00:00 inicial
+    updateTimer(); 
 
     setInterval(function() {
-        // Em vez de recarregar a página toda (location.reload), 
-        // o ideal no futuro é atualizar apenas a lista, mas por hora
-        // o reload garante que o 'end_time' e o ranking venham frescos do banco.
         location.reload(); 
     }, 30000);
 
