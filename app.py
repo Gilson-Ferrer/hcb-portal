@@ -159,18 +159,18 @@ def downloads():
     if 'team_id' not in session: return redirect('/')
     
     maquinas = [
-        {"nome": "12. Final Boss Challenge", "img": "m0.png", "link": "https://drive.google.com/link12"},
+        {"nome": "00. INTRODUÇÃO", "img": "m0.png", "link": "https://drive.google.com/link12"},
         {"nome": "01. GENESIS", "img": "m1.png", "link": "https://drive.google.com/file/d/1OrzgoWxRZ_LCZinrhRX9bmy19kbWGeNu/view?usp=sharing"},
         {"nome": "02. DATALEAKY", "img": "m2.png", "link": "https://drive.google.com/file/d/1d5mg4RcFEymEgWGs3mo8jQnTuiCTd2qg/view?usp=sharing"},
-        {"nome": "03. Forensic Analyst", "img": "m3.png", "link": "https://drive.google.com/link3"},
-        {"nome": "04. SQL Injector Pro", "img": "m4.png", "link": "https://drive.google.com/link4"},
-        {"nome": "05. Cryptography Basics", "img": "m5.png", "link": "https://drive.google.com/link5"},
-        {"nome": "06. Network Scanner", "img": "m6.png", "link": "https://drive.google.com/link6"},
-        {"nome": "07. Linux Hardening", "img": "m7.png", "link": "https://drive.google.com/link7"},
-        {"nome": "08. Brute Force Defense", "img": "m8.png", "link": "https://drive.google.com/link8"},
-        {"nome": "09. Malware Analysis", "img": "m9.png", "link": "https://drive.google.com/link9"},
-        {"nome": "10. Cloud Security", "img": "m10.png", "link": "https://drive.google.com/link10"},
-        {"nome": "11. Buffer Overflow", "img": "m11.png", "link": "https://drive.google.com/link11"},
+        {"nome": "03. AUTOMATOR", "img": "m3.png", "link": "https://drive.google.com/link3"},
+        {"nome": "04. DEPENDENCY", "img": "m4.png", "link": "https://drive.google.com/link4"},
+        {"nome": "05. MEMORYLANE", "img": "m5.png", "link": "https://drive.google.com/link5"},
+        {"nome": "06. NIGHTMARE", "img": "m6.png", "link": "https://drive.google.com/link6"},
+        {"nome": "07. OVERSEER", "img": "m7.png", "link": "https://drive.google.com/link7"},
+        {"nome": "08. LEAKYREPO", "img": "m8.png", "link": "https://drive.google.com/link8"},
+        {"nome": "09. SHAREDFILE", "img": "m9.png", "link": "https://drive.google.com/link9"},
+        {"nome": "10. GATEKEEPER", "img": "m10.png", "link": "https://drive.google.com/link10"},
+        {"nome": "11. REQUEST", "img": "m11.png", "link": "https://drive.google.com/link11"},
     ]
     
     return render_template('downloads.html', maquinas=maquinas)
