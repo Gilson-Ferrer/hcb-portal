@@ -2,3 +2,4 @@ hcb.db
 __pycache__/
 .env
 venv/
+add_challenge.py

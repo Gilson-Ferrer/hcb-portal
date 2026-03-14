@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, redirect, session, flash
 from datetime import datetime
 
 # (Ano, mês, dia, hora, minuto, segundo)
-EVENT_END = datetime(2026, 3, 15, 22, 0, 0)
+EVENT_END = datetime(2026, 3, 14, 12, 0, 0)
 
 app = Flask(__name__)
 
