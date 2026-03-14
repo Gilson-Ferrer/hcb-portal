@@ -47,10 +47,6 @@
         transition: transform 0.5s ease;
     }
 
-    .maquina-card:hover .capa {
-        transform: scale(1.1);
-    }
-
     .info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
     
     .maquina-nome { 
@@ -82,7 +78,7 @@
 </head>
 <body>
     <div class="header">
-        <a href="/dashboard" style="color: #00f2ff; text-decoration: none;"> < Voltar</a>
+        <a href="/dashboard" style="color: #00f2ff; text-decoration: none;"> Voltar</a>
         <div style="font-weight: bold;">ASYNCX - machines </div>
     </div>
 
@@ -90,7 +86,7 @@
     {% for m in maquinas %}
     <div class="maquina-card">
         <div class="capa-container">
-            <img src="/static/img/{{ m.img }}" class="capa" alt="{{ m.nome }}">
+            <img src="{{ url_for('static', filename='img/' + m.img) }}" class="capa" alt="{{ m.nome }}">
         </div>
         <div class="info">
             <div class="maquina-nome">{{ m.nome }}</div>
