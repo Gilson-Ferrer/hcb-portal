@@ -159,6 +159,7 @@ def downloads():
     if 'team_id' not in session: return redirect('/')
     
     maquinas = [
+        {"nome": "12. Final Boss Challenge", "img": "m0.png", "link": "https://drive.google.com/link12"},
         {"nome": "01. GENESIS", "img": "m1.png", "link": "https://drive.google.com/file/d/1OrzgoWxRZ_LCZinrhRX9bmy19kbWGeNu/view?usp=sharing"},
         {"nome": "02. DATALEAKY", "img": "m2.png", "link": "https://drive.google.com/file/d/1d5mg4RcFEymEgWGs3mo8jQnTuiCTd2qg/view?usp=sharing"},
         {"nome": "03. Forensic Analyst", "img": "m3.png", "link": "https://drive.google.com/link3"},
@@ -170,7 +171,6 @@ def downloads():
         {"nome": "09. Malware Analysis", "img": "m9.png", "link": "https://drive.google.com/link9"},
         {"nome": "10. Cloud Security", "img": "m10.png", "link": "https://drive.google.com/link10"},
         {"nome": "11. Buffer Overflow", "img": "m11.png", "link": "https://drive.google.com/link11"},
-        {"nome": "12. Final Boss Challenge", "img": "m12.png", "link": "https://drive.google.com/link12"},
     ]
     
     return render_template('downloads.html', maquinas=maquinas)
