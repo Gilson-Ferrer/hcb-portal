@@ -39,18 +39,46 @@
 
         .btn-nav {
             text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 6px 14px;
-            border-radius: 8px;
-            transition: 0.3s ease;
+            font-size: 0.75rem;
+            font-weight: 800; 
+            padding: 8px 18px;
+            border-radius: 4px; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .btn-download { color: var(--cyan); border: 1px solid var(--cyan); }
-        .btn-download:hover { background: rgba(0, 242, 255, 0.1); }
+        .btn-download { 
+            color: var(--cyan); 
+            background: rgba(0, 242, 255, 0.05); 
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            box-shadow: inset 0 0 0 0 rgba(0, 242, 255, 0.2);
+        }
 
-        .btn-logout { color: var(--danger); border: 1px solid var(--danger); }
-        .btn-logout:hover { background: rgba(255, 77, 77, 0.1); }
+        .btn-download:hover { 
+            background: var(--cyan); 
+            color: #000; 
+            border-color: var(--cyan);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); 
+            transform: translateY(-2px);
+        }
+
+        .btn-logout { 
+            color: var(--danger); 
+            background: rgba(255, 77, 77, 0.05);
+            border: 1px solid rgba(255, 77, 77, 0.3);
+        }
+
+        .btn-logout:hover { 
+            background: var(--danger); 
+            color: #fff; 
+            border-color: var(--danger);
+            box-shadow: 0 0 20px rgba(255, 77, 77, 0.4); 
+            transform: translateY(-2px);
+        }
 
         .main { display: grid; grid-template-columns: 2.5fr 1fr; gap: 20px; padding: 20px; }
 
@@ -92,29 +120,29 @@
             filter: grayscale(1);
         }
 
-.hint-container {
-    margin: 10px 0 15px 30px; 
-}
+        .hint-container {
+            margin: 10px 0 15px 30px; 
+        }
 
-.hint-text {
-    color: #e3b341;
-    font-size: 0.8rem;
-    filter: blur(5px);
-    transition: filter 0.3s ease;
-    user-select: none;
-    cursor: pointer;
-    background: rgba(227, 179, 65, 0.05); /* Fundo mais sutil */
-    padding: 8px 15px;
-    border-radius: 6px;
-    border: 1px dashed rgba(227, 179, 65, 0.2); /* Borda para indicar área clicável */
-    display: inline-block; /* Faz a caixa se ajustar ao texto */
-}
+        .hint-text {
+            color: #e3b341;
+            font-size: 0.8rem;
+            filter: blur(5px);
+            transition: filter 0.3s ease;
+            user-select: none;
+            cursor: pointer;
+            background: rgba(227, 179, 65, 0.05); 
+            padding: 8px 15px;
+            border-radius: 6px;
+            border: 1px dashed rgba(227, 179, 65, 0.2); 
+            display: inline-block; 
+        }
 
-.hint-text.reveal {
-    filter: blur(0);
-    user-select: text;
-    border-style: solid; /* Muda a borda ao revelar */
-}        
+        .hint-text.reveal {
+            filter: blur(0);
+            user-select: text;
+            border-style: solid; 
+        }        
         .solved-badge { color: var(--accent); font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
 
         .alert { padding: 10px; text-align: center; border-radius: 8px; margin: 10px 20px; font-weight: 500; }
@@ -123,6 +151,17 @@
         
         .footer { text-align: center; padding: 20px; font-size: 0.8em; color: #8b949e; opacity: 0.6; }
 
+        @media (max-width: 768px) {
+            .nav-right {
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+            .btn-nav {
+                flex: 1; 
+                text-align: center;
+            }
+        }
 
 
     </style>
