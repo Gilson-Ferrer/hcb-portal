@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>LIVE RANKING | ASYNCX HCB</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <style>
         :root {
             --bg: #000000;
@@ -80,7 +81,7 @@
     <div class="header">
         <div>
             <div style="font-size: 1.2rem; color: #555; letter-spacing: 5px;">ASYNCX DIGITAL SECURITY</div>
-            <a href="#" style="text-decoration: none; color: inherit;"><div style="font-size: 3rem; font-weight: 900;">HACKATHON BOX</div>
+            <a href="/" style="text-decoration: none; color: inherit;"><div style="font-size: 3rem; font-weight: 900;">HACKATHON BOX</div>
             </a>
         </div>
         <div class="timer-box">
@@ -101,7 +102,7 @@
         </div>
 
         <div class="ranking-list">
-            {% for r in ranking[1:11] %} <div class="rank-item">
+            {% for r in ranking[1:20] %} <div class="rank-item">
                 <div>
                     <span class="pos">{{ loop.index + 1 }}º</span>
                     <span>{{ r.name }}</span>
