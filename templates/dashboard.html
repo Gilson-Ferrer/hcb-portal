@@ -2,6 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASYNCX - Hackathon Challenge Box</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
     <style>
@@ -29,6 +30,7 @@
             justify-content: space-between; 
             align-items: center; 
             border-bottom: 2px solid var(--accent); 
+            flex-wrap: wrap;
         }
 
         .nav-left { font-weight: bold; color: #8b949e; letter-spacing: 1px; }
@@ -80,7 +82,12 @@
             transform: translateY(-2px);
         }
 
-        .main { display: grid; grid-template-columns: 2.5fr 1fr; gap: 20px; padding: 20px; }
+        .main { 
+            display: grid; 
+            grid-template-columns: 2.5fr 1fr; 
+            gap: 20px; 
+            padding: 20px; 
+        }
 
         .challenge-row {
             background: var(--bg-card);
@@ -91,6 +98,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
             transition: transform 0.2s;
         }
 
@@ -107,6 +116,7 @@
             padding: 5px 10px;
             color: white;
             font-size: 0.8rem;
+            flex: 1;
             width: 150px;
         }
 
@@ -151,16 +161,19 @@
         
         .footer { text-align: center; padding: 20px; font-size: 0.8em; color: #8b949e; opacity: 0.6; }
 
-        @media (max-width: 768px) {
-            .nav-right {
-                width: 100%;
-                justify-content: center;
-                margin-top: 10px;
-            }
-            .btn-nav {
-                flex: 1; 
-                text-align: center;
-            }
+        @media (max-width: 850px) {
+            .main { grid-template-columns: 1fr; padding: 10px; } 
+            
+            .nav { justify-content: center; flex-direction: column; gap: 15px; text-align: center; }
+            .nav-right { width: 100%; justify-content: center; }
+
+            .challenge-row { flex-direction: column; align-items: stretch; text-align: center; }
+            .challenge-info { justify-content: center; margin-bottom: 5px; }
+            .challenge-form { justify-content: center; flex-direction: column; width: 100%; }
+            input.compact { max-width: 100%; width: 100%; }
+            
+            .btn-submit { width: 100%; }
+            .btn-nav { flex: 1; padding: 12px; }
         }
 
 
