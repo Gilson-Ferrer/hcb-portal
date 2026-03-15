@@ -141,11 +141,11 @@
 
     <div class="nav">
         <div class="nav-left">
-            ESTÁCIO CARAPICUÍBA
+            ESTÁCIO
         </div>
         
         <div class="nav-right">
-            <span class="team-info">Time: <strong>{{ session['team_name'] }}</strong></span>
+            <span class="team-info">[ <strong>{{ session['team_name'] }}</strong> ]</span>
             <a href="/downloads" class="btn-nav btn-download">Downloads</a>
             <a href="/logout" class="btn-nav btn-logout">Sair</a>
         </div>
@@ -153,7 +153,7 @@
 
     <div class="main">
         <section>
-            <h2 style="font-size: 1.2rem; margin-bottom: 15px;">Operações Ativas</h2>
+            <h2 style="font-size: 1.2rem; margin-bottom: 15px;">Desafios</h2>
             {% for c in challenges %}
             <div class="challenge-row {% if c.id in solved_ids %}solved{% endif %}">
                 <div class="challenge-info">
