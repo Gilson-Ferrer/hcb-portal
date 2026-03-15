@@ -56,9 +56,12 @@ def dashboard():
     purchased_ids = [row['challenge_id'] for row in cur.fetchall()]
     
     cur.execute('''
-        SELECT name, score 
-        FROM teams 
-        ORDER BY score DESC, last_solve ASC
+    SELECT name, score 
+    FROM teams 
+    ORDER BY 
+        score DESC,               
+        last_solve ASC NULLS LAST, 
+        name ASC                  
     ''')
     ranking = cur.fetchall()
     
@@ -143,7 +146,6 @@ def submit():
             flash("Flag correta! Pontos adicionados.", "success")
     else:
         flash("Flag incorreta! Tente novamente em 3 segundos.", "danger")
-        time.sleep(3) 
         
     cur.close()
     conn.close()
@@ -180,9 +182,12 @@ def leaderboard_public():
     conn = get_db()
     cur = conn.cursor()
     cur.execute('''
-        SELECT name, score 
-        FROM teams 
-        ORDER BY score DESC, last_solve ASC
+    SELECT name, score 
+    FROM teams 
+    ORDER BY 
+        score DESC,               
+        last_solve ASC NULLS LAST, 
+        name ASC                  
     ''')
     ranking = cur.fetchall()
     cur.close()
@@ -193,7 +198,14 @@ def leaderboard_public():
 def api_score():
     conn = get_db()
     cur = conn.cursor()
-    cur.execute('SELECT name, score FROM teams ORDER BY score DESC, last_solve ASC')
+    cur.execute('''
+    SELECT name, score 
+    FROM teams 
+    ORDER BY 
+        score DESC,               
+        last_solve ASC NULLS LAST, 
+        name ASC                  
+    ''')
     ranking = cur.fetchall()
     cur.close()
     conn.close()
