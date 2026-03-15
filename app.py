@@ -159,18 +159,18 @@ def downloads():
     if 'team_id' not in session: return redirect('/')
     
     maquinas = [
-        {"nome": "00. INTRODUÇÃO", "img": "m0.png", "link": "https://drive.google.com/link12"},
-        {"nome": "01. GENESIS", "img": "m1.png", "link": "https://drive.google.com/file/d/1OrzgoWxRZ_LCZinrhRX9bmy19kbWGeNu/view?usp=sharing"},
-        {"nome": "02. DATALEAKY", "img": "m2.png", "link": "https://drive.google.com/file/d/1d5mg4RcFEymEgWGs3mo8jQnTuiCTd2qg/view?usp=sharing"},
-        {"nome": "03. AUTOMATOR", "img": "m3.png", "link": "https://drive.google.com/link3"},
-        {"nome": "04. DEPENDENCY", "img": "m4.png", "link": "https://drive.google.com/link4"},
-        {"nome": "05. MEMORYLANE", "img": "m5.png", "link": "https://drive.google.com/link5"},
-        {"nome": "06. NIGHTMARE", "img": "m6.png", "link": "https://drive.google.com/link6"},
-        {"nome": "07. OVERSEER", "img": "m7.png", "link": "https://drive.google.com/link7"},
-        {"nome": "08. LEAKYREPO", "img": "m8.png", "link": "https://drive.google.com/link8"},
-        {"nome": "09. SHAREDFILE", "img": "m9.png", "link": "https://drive.google.com/link9"},
-        {"nome": "10. GATEKEEPER", "img": "m10.png", "link": "https://drive.google.com/link10"},
-        {"nome": "11. REQUEST", "img": "m11.png", "link": "https://drive.google.com/link11"},
+        {"nome": "00. INTRODUÇÃO", "img": "m0.png", "link": "https://drive.google.com/file/d/1jtQxB2gZjab9Rz-qBUbakgvfvRd469aw/view?usp=sharing"},
+        {"nome": "01. GENESIS", "img": "m1.png", "link": "https://drive.google.com/file/d/1M7BlJNNsjYLndwG_J5AMpezzU0MPMFS-/view?usp=sharing"},
+        {"nome": "02. DATALEAKY", "img": "m2.png", "link": "https://drive.google.com/file/d/1MoNQFvU6Qyg60NGWsRqoa7tiqegDlpSz/view?usp=sharing"},
+        {"nome": "03. AUTOMATOR", "img": "m3.png", "link": "https://drive.google.com/file/d/1da-p3aUWp8DI1kvlSTcT-eUnfj6x5X7r/view?usp=sharing"},
+        {"nome": "04. DEPENDENCY", "img": "m4.png", "link": "https://drive.google.com/file/d/1urPjKbCQL3LjY6LTI6VGH5oVcO3kqyHd/view?usp=sharing"},
+        {"nome": "05. MEMORYLANE", "img": "m5.png", "link": "https://drive.google.com/file/d/1cM-TrEBjzERaoKp1DrqvMmN200XjGq-K/view?usp=sharing"},
+        {"nome": "06. NIGHTMARE", "img": "m6.png", "link": "https://drive.google.com/file/d/1NX4s3y6E4dO_DQLOojhTdVrccTU8sOUs/view?usp=sharing"},
+        {"nome": "07. OVERSEER", "img": "m7.png", "link": "https://drive.google.com/file/d/1daMoHSo90F1SSwNyZ62FJTJe3EpNlRn7/view?usp=sharing"},
+        {"nome": "08. LEAKYREPO", "img": "m8.png", "link": "https://drive.google.com/file/d/1pwaDvFhes4BMlscflzDrv49pp3mnPsRu/view?usp=sharing"},
+        {"nome": "09. SHAREDFILE", "img": "m9.png", "link": "https://drive.google.com/file/d/1VPqhevy5pNmmSk3Q2uRnxPAbr-QWv02r/view?usp=sharing"},
+        {"nome": "10. GATEKEEPER", "img": "m10.png", "link": "https://drive.google.com/file/d/1Mt9vk-DESA-541tqgPiRkcF2p6rkBrIr/view?usp=sharing"},
+        {"nome": "11. REQUEST", "img": "m11.png", "link": "https://drive.google.com/file/d/1hRinaOeLORk5jdqVqeY7005iVPfxalsq/view?usp=sharing"},
     ]
     
     return render_template('downloads.html', maquinas=maquinas)
