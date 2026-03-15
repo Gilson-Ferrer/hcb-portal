@@ -91,23 +91,36 @@
 
         .challenge-row {
             background: var(--bg-card);
-            padding: 8px 18px;
-            margin-bottom: 6px;
+            padding: 12px 18px;
+            margin-bottom: 8px;
             border-radius: 10px;
             border: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 15px;
-            transition: transform 0.2s;
+            flex-wrap: wrap; 
+            gap: 10px;
         }
 
         .challenge-info { display: flex; align-items: center; gap: 15px; flex: 1; }
         .challenge-title { font-weight: 500; font-size: 0.9rem; min-width: 180px; }
         .challenge-points { color: var(--accent); font-size: 0.8rem; font-weight: bold; }
 
-        .challenge-form { display: flex; gap: 8px; align-items: center; }
+        .challenge-form { 
+            display: flex; 
+            gap: 10px; 
+            align-items: center; 
+            flex: 1; 
+            min-width: 280px; 
+            justify-content: flex-end;
+        }
+
+        .challenge-form form {
+            display: flex;
+            gap: 5px;
+            flex: 1;
+            width: 100%;
+        }
         
         input.compact {
             background: var(--bg-body);
@@ -116,8 +129,8 @@
             padding: 5px 10px;
             color: white;
             font-size: 0.8rem;
-            flex: 1;
-            width: 150px;
+            flex: 2;
+            min-width: 100px;
         }
 
         .btn-submit { background: var(--accent); color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
@@ -162,20 +175,32 @@
         .footer { text-align: center; padding: 20px; font-size: 0.8em; color: #8b949e; opacity: 0.6; }
 
         @media (max-width: 850px) {
-            .main { grid-template-columns: 1fr; padding: 10px; } 
+            .main { grid-template-columns: 1fr; padding: 10px; }
             
-            .nav { justify-content: center; flex-direction: column; gap: 15px; text-align: center; }
-            .nav-right { width: 100%; justify-content: center; }
+            .nav { flex-direction: column; gap: 15px; }
 
-            .challenge-row { flex-direction: column; align-items: stretch; text-align: center; }
-            .challenge-info { justify-content: center; margin-bottom: 5px; }
-            .challenge-form { justify-content: center; flex-direction: column; width: 100%; }
-            input.compact { max-width: 100%; width: 100%; }
-            
-            .btn-submit { width: 100%; }
-            .btn-nav { flex: 1; padding: 12px; }
+            .challenge-row { 
+                flex-direction: column; 
+                align-items: stretch; 
+                padding: 15px;
+            }
+
+            .challenge-info { 
+                justify-content: space-between; 
+                margin-bottom: 10px; 
+            }
+
+            .challenge-form { 
+                width: 100%; 
+                flex-direction: row; 
+                flex-wrap: wrap;
+            }
+
+            .challenge-form form {
+                width: 100%;
+                display: flex;
+            }
         }
-
 
     </style>
 </head>
