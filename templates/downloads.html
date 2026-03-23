@@ -2,116 +2,175 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASYNCX | Repositório de Máquinas</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
-<style>
-    body { background: #050505; color: white; font-family: 'Inter', sans-serif; margin: 0; }
-    .header { 
-        background: #0f0f0f; 
-        padding: 20px 0; 
-        display: flex; 
-        justify-content: center; 
-        border-bottom: 1px solid #1f1f1f; 
-    }
+    <style>
+        body { 
+            background: #050505; 
+            color: white; 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .header { 
+            background: #0f0f0f; 
+            padding: 20px 0; 
+            display: flex; 
+            justify-content: center; 
+            border-bottom: 1px solid #1f1f1f; 
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            width: 100%;
+            max-width: 1100px; 
+            padding: 0 20px;   
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 30px;
+            padding: 40px 20px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .maquina-card {
+            background: #0f0f0f;
+            border-radius: 18px; 
+            overflow: hidden;
+            border: 1px solid #1f1f1f;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .maquina-card:hover { 
+            border-color: #00f2ff; 
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.15);
+        }
+
+        .capa-container {
+            width: 100%;
+            aspect-ratio: 1 / 1; 
+            overflow: hidden;
+            background: #151515;
+            border-bottom: 1px solid #1f1f1f;
+        }
+
+        .capa { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: transform 0.5s ease;
+        }
+
+        .maquina-card:hover .capa {
+            transform: scale(1.05);
+        }
+
+        .info { 
+            padding: 20px; 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+        }
+        
+        .maquina-nome { 
+            font-weight: 600; 
+            font-size: 1rem; 
+            margin-bottom: 20px; 
+            color: #e0e0e0;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .btn-download {
+            display: block;
+            background: transparent;
+            color: #00f2ff;
+            border: 1px solid rgba(0, 242, 255, 0.4);
+            padding: 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.8rem;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-download:hover {
+            background: #00f2ff;
+            color: black;
+            border-color: #00f2ff;
+        }
 
 
-    .header-content {
-        width: 100%;
-        max-width: 1100px; 
-        padding: 0 40px;   
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .grid-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); 
-        gap: 30px;
-        padding: 40px;
-        max-width: 1100px;
-        margin: auto;
-    }
+        @media (max-width: 900px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
 
-    .maquina-card {
-        background: #0f0f0f;
-        border-radius: 18px; 
-        overflow: hidden;
-        border: 1px solid #1f1f1f;
-        text-align: center;
-        transition: all 0.3s ease;
-        display: flex;
-        flex-direction: column;
-    }
+        @media (max-width: 600px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+                padding: 20px;
+                gap: 25px;
+            }
 
-    .maquina-card:hover { 
-        border-color: #00f2ff; 
-        transform: translateY(-8px);
-        box-shadow: 0 10px 20px rgba(0, 242, 255, 0.1);
-    }
+            .header-content {
+                padding: 0 20px;
+            }
 
-    .capa-container {
-        width: 100%;
-        aspect-ratio: 1 / 1; 
-        overflow: hidden;
-        background: #151515;
-    }
+            .maquina-nome {
+                font-size: 1.1rem; 
+            }
 
-    .capa { 
-        width: 100%; 
-        height: 100%; 
-        object-fit: cover; 
-        transition: transform 0.5s ease;
-    }
-
-    .info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-    
-    .maquina-nome { 
-        font-weight: 600; 
-        font-size: 1rem; 
-        margin-bottom: 15px; 
-        color: #e0e0e0;
-        letter-spacing: 0.5px;
-    }
-
-    .btn-download {
-        display: block;
-        background: transparent;
-        color: #00f2ff;
-        border: 1px solid #00f2ff;
-        padding: 10px;
-        border-radius: 10px;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 0.8rem;
-        transition: 0.3s;
-    }
-
-    .btn-download:hover {
-        background: #00f2ff;
-        color: black;
-    }
-</style>
+            .btn-download {
+                padding: 15px; 
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="header">
         <div class="header-content">
-            <a href="/dashboard" style="color: #00f2ff; text-decoration: none;"> < Voltar</a>
-            <div style="font-weight: bold; letter-spacing: 2px;">ASYNCX - machines</div>
+            <a href="/dashboard" style="color: #00f2ff; text-decoration: none; font-weight: bold; font-size: 0.9rem;"> 
+                VOLTAR 
+            </a>
+            <div style="font-weight: 800; letter-spacing: 2px; font-size: 0.8rem; color: #8b949e; text-transform: uppercase;">
+                AsyncX <span style="color: #30363d;">/</span> Machines
+            </div>
         </div>
     </div>
 
-<div class="grid-container">
-    {% for m in maquinas %}
-    <div class="maquina-card">
-        <div class="capa-container">
-            <img src="{{ url_for('static', filename='img/' + m.img) }}" class="capa" alt="{{ m.nome }}">
+    <div class="grid-container">
+        {% for m in maquinas %}
+        <div class="maquina-card">
+            <div class="capa-container">
+                <img src="{{ url_for('static', filename='img/' + m.img) }}" class="capa" alt="{{ m.nome }}">
+            </div>
+            <div class="info">
+                <div class="maquina-nome">{{ m.nome }}</div>
+                <a href="{{ m.link }}" class="btn-download" target="_blank">Download .OVA</a>
+            </div>
         </div>
-        <div class="info">
-            <div class="maquina-nome">{{ m.nome }}</div>
-            <a href="{{ m.link }}" class="btn-download" target="_blank">Download .OVA</a>
-        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
 </body>
 </html>
