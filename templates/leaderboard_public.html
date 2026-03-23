@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>LIVE RANKING | ASYNCX HCB</title>
+    <title>ASYNCX | LIVE PLACAR</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
     <style>
         :root {
@@ -38,7 +38,6 @@
             text-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
         }
 
-        /* Destaque do 1º Lugar */
         .champion-card {
             background: linear-gradient(145deg, #111, #000);
             border: 2px solid var(--gold);
@@ -54,7 +53,6 @@
         .champion-info h1 { font-size: 4rem; margin: 0; text-transform: uppercase; }
         .champion-score { font-size: 5rem; font-weight: 900; color: var(--gold); }
 
-        /* Lista dos demais times */
         .ranking-list {
             display: grid;
             grid-template-columns: 1fr 1fr; 
@@ -80,7 +78,7 @@
 
     <div class="header">
         <div>
-            <div style="font-size: 1.2rem; color: #555; letter-spacing: 5px;">ASYNCX DIGITAL SECURITY</div>
+            <div style="font-size: 1.2rem; color: #555; letter-spacing: 5px;">PLACAR GERAL</div>
             <a href="/" style="text-decoration: none; color: inherit;"><div style="font-size: 3rem; font-weight: 900;">HACKATHON BOX</div>
             </a>
         </div>

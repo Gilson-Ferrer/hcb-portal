@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASYNCX - Hackathon Challenge Box</title>
+    <title>ASYNCX | Hackathon Challenge Box</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
     <style>
         :root {
@@ -79,8 +79,8 @@
         }
 
         .team-display strong {
-            color: var(--cyan) !important; /* Azul em destaque */
-            text-transform: uppercase;    /* Força Letra Maiúscula */
+            color: var(--cyan) !important; 
+            text-transform: uppercase;    
             font-size: 1.1rem;
             letter-spacing: 1px;
             text-shadow: 0 0 12px rgba(0, 242, 255, 0.4);
@@ -317,7 +317,7 @@
     
     <form action="/submit" method="post" style="display:flex; gap:5px;">
         <input type="hidden" name="challenge_id" value="{{ c.id }}"> 
-        <input type="text" name="flag" class="compact" placeholder="HCB{...}" required autocomplete="off">
+        <input type="text" name="flag" class="compact" placeholder="Flag..." required autocomplete="off">
         <button type="submit" class="btn-submit">Enviar</button>
     </form>
 </div>
@@ -394,6 +394,6 @@
     }
 
 </script>
-<!-- flag=START_HACKATHON_2026 -->
+<!-- Flag=START_HACKATHON_2026 -->
 </body>
 </html>
