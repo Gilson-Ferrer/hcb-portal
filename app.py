@@ -10,7 +10,7 @@ EVENT_END = datetime(2026, 3, 14, 12, 0, 0)
 
 app = Flask(__name__)
 
-app.secret_key = os.environ.get('SECRET_KEY', 'asyncx_hack_2026_safe_key')
+app.secret_key = os.environ.get('SECRET_KEY')
 
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
