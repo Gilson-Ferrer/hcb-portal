@@ -47,7 +47,7 @@ def dashboard():
     conn = get_db()
     cur = conn.cursor()
     
-    cur.execute('SELECT * FROM challenges')
+    cur.execute('SELECT * FROM challenges ORDER BY id ASC')
     challenges = cur.fetchall()
     
     cur.execute('SELECT challenge_id FROM solves WHERE team_id = %s', (session['team_id'],))
