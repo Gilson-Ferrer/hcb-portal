@@ -4,3 +4,4 @@ __pycache__/
 venv/
 add_challenge.py
 stress.py
+logs.py
