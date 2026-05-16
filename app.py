@@ -7,7 +7,7 @@ from datetime import datetime
 
 # (Ano, mês, dia, hora, minuto, segundo)
 # (2026, 5, 10, 23, 59, 59) fim do evento dia 10/05/2026 as 23:59:59
-EVENT_END = datetime(2026, 5, 10, 23, 59, 59)
+EVENT_END = datetime(2026, 5, 24, 23, 59, 59)
 
 app = Flask(__name__)
 
