@@ -15,7 +15,7 @@ RAYSSA SILVA MARTINS
 
 ---------------------------------------------------------------
 Team03:
-- Integrantes dicas [] - [] - []
+- Integrantes dicas [x] - [x] - [x]
 
 GUSTAVO SOARES DA SILVA
 GERALDO BORGES
@@ -57,7 +57,7 @@ KADU BASTOS DE JESUS
 Team08:
 - Integrantes dicas [] - [] - []
 
-NIGUEL MORAES BRITO
+MIGUEL MORAES BRITO
 JUAN DE PAULA
 MARCOS VINÍCIUS SIQUEIRA
 

@@ -3,397 +3,1649 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASYNCX | Hackathon Challenge Box</title>
+    <title>ASYNCX | HCB - DASHBOARD</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-body: #0d1117;
-            --bg-card: #161b22;
-            --border: #30363d;
-            --accent: #238636;
-            --cyan: #00f2ff;
-            --danger: #ff4d4d;
-            --text: #c9d1d9;
+            --bg: #1a1a1a;
+            --surface: #222222;
+            --card: #2a2a2a;
+            --card-hover: #2f2f2f;
+            --border: #333333;
+            --border-light: #3a3a3a;
+            --cyan: #00bcd4;
+            --cyan-dark: #0097a7;
+            --green: #4caf50;
+            --green-bright: #66bb6a;
+            --yellow: #ffc107;
+            --red: #f44336;
+            --orange: #ff9800;
+            --text: #e0e0e0;
+            --text-muted: #888888;
+            --text-dim: #666666;
+            --font-display: 'Orbitron', monospace;
+            --font-ui: 'Rajdhani', sans-serif;
+            --font-mono: 'Share Tech Mono', monospace;
+            --sidebar-w: 260px;
         }
 
-        body { 
-            background: var(--bg-body); 
-            color: var(--text); 
-            font-family: 'Segoe UI', Roboto, sans-serif; 
-            margin: 0; 
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .nav { 
-            background: #090c10;
-            padding: 15px 40px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: 1px solid var(--border); 
-        }
-
-        .nav-left { 
-            font-weight: 800; 
-            color: #f0f6fc; 
-            letter-spacing: 2px; 
-            font-size: 1.1rem;
-        }
-
-        .nav-right { 
-            display: flex; 
-            align-items: center; 
-            gap: 25px; 
-        }
-
-        .nav-link {
-            text-decoration: none;
+        body {
+            background: var(--bg);
             color: var(--text);
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-family: var(--font-ui);
+            font-size: 16px;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .nav-link:hover {
-            color: var(--cyan);
-            text-decoration: none;
-        }
-
-        .btn-logout-modern {
-            background: #000;
-            color: #fff;
-            border: 1px solid #30363d;
-            padding: 6px 18px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
-
-        .btn-logout-modern:hover {
-            background: #161b22;
-            border-color: #8b949e;
-        }
-
-        .team-display strong {
-            color: var(--cyan) !important; 
-            text-transform: uppercase;    
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-            text-shadow: 0 0 12px rgba(0, 242, 255, 0.4);
-        }
-
-        .menu-icon {
-            display: none;
-            cursor: pointer;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .menu-icon div {
-            width: 25px;
-            height: 3px;
-            background-color: white;
-            border-radius: 2px;
-        }
-
-        .btn-nav {
-            text-decoration: none;
-            font-size: 0.75rem;
-            font-weight: 800; 
-            padding: 8px 18px;
-            border-radius: 4px; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: inline-flex;
+        /* ── HEADER ── */
+        .header {
+            background: #111111;
+            border-bottom: 1px solid var(--border);
+            height: 70px;
+            display: grid;
+            grid-template-columns: var(--sidebar-w) 1fr auto;
             align-items: center;
+            padding: 0 1.5rem 0 0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .brand {
+            padding: 0 1.5rem;
+            border-right: 1px solid var(--border);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
         }
 
-        .btn-download { 
-            color: var(--cyan); 
-            background: rgba(0, 242, 255, 0.05); 
-            border: 1px solid rgba(0, 242, 255, 0.3);
-            box-shadow: inset 0 0 0 0 rgba(0, 242, 255, 0.2);
+        .brand-name {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 2px;
+            line-height: 1;
         }
 
-        .btn-download:hover { 
-            background: var(--cyan); 
-            color: #000; 
-            border-color: var(--cyan);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); 
-            transform: translateY(-2px);
+        .brand-name span { color: var(--cyan); }
+
+        .brand-sub {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 4px;
         }
 
-        .btn-logout { 
-            color: var(--danger); 
-            background: rgba(255, 77, 77, 0.05);
-            border: 1px solid rgba(255, 77, 77, 0.3);
+        .header-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
         }
 
-        .btn-logout:hover { 
-            background: var(--danger); 
-            color: #fff; 
-            border-color: var(--danger);
-            box-shadow: 0 0 20px rgba(255, 77, 77, 0.4); 
-            transform: translateY(-2px);
+        .event-label {
+            font-family: var(--font-ui);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 1px;
         }
 
-        .main { 
-            display: grid; 
-            grid-template-columns: 2.5fr 1fr; 
-            gap: 20px; 
-            padding: 20px; 
+        .timer {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--red);
+            letter-spacing: 2px;
         }
 
-        .challenge-row {
-            background: var(--bg-card);
-            padding: 12px 18px;
-            margin-bottom: 8px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
+        .header-actions {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap; 
+            gap: 1rem;
+        }
+
+        .btn-header {
+            background: var(--cyan);
+            color: #111;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 6px;
+            font-family: var(--font-ui);
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: opacity 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-header:hover { opacity: 0.85; }
+
+        .btn-logout {
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            font-family: var(--font-ui);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-logout:hover { color: var(--red); }
+
+        /* ── LAYOUT ── */
+        .workspace {
+            display: grid;
+            grid-template-columns: var(--sidebar-w) 1fr;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            background: #1e1e1e;
+            border-right: 1px solid var(--border);
+            padding: 1.5rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            overflow-y: auto;
+        }
+
+        .team-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.2rem;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2a8a9f, #1a5a6a);
+            border: 3px solid var(--cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .team-name {
+            font-family: var(--font-ui);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .team-inst {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .team-inst::before {
+            content: '|';
+            color: var(--cyan);
+        }
+
+        /* Sidebar nav links */
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 8px;
+            font-family: var(--font-ui);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            text-align: left;
+            width: 100%;
+            border-bottom: 1px solid transparent;
+            transition: color 0.2s;
+            text-decoration: none;
+            letter-spacing: 0.3px;
+        }
+
+        .nav-item:hover { color: var(--text); }
+        .nav-item.highlight { color: var(--yellow); }
+        .nav-item.highlight:hover { color: #ffd54f; }
+
+        /* Sidebar stats */
+        .stat-row {
+            padding: 10px 8px;
+            font-family: var(--font-ui);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
             gap: 10px;
         }
 
-        .challenge-info { display: flex; align-items: center; gap: 15px; flex: 1; }
-        .challenge-title { font-weight: 500; font-size: 0.9rem; min-width: 180px; }
-        .challenge-points { color: var(--accent); font-size: 0.8rem; font-weight: bold; }
-
-        .challenge-form { 
-            display: flex; 
-            gap: 10px; 
-            align-items: center; 
-            flex: 1; 
-            min-width: 280px; 
-            justify-content: flex-end;
+        .stat-row strong {
+            color: var(--text);
+            margin-left: auto;
         }
 
-        .challenge-form form {
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            padding: 2rem 2rem;
+            background: var(--bg);
+        }
+
+        .section-title {
+            font-family: var(--font-ui);
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+
+        /* ── TABS ── */
+        .tab-bar {
             display: flex;
-            gap: 5px;
-            flex: 1;
-            width: 100%;
+            gap: 0;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 2rem;
+            overflow-x: auto;
         }
-        
-        input.compact {
-            background: var(--bg-body);
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            color: var(--text-muted);
+            padding: 10px 24px;
+            font-family: var(--font-ui);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+
+        .tab-btn:hover { color: var(--text); }
+
+        .tab-btn.active {
+            color: #fff;
+            border-bottom-color: var(--cyan);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ── CHALLENGE GRID ── */
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* ── CHALLENGE CARD ── */
+        .challenge-card {
+            background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 5px 10px;
-            color: white;
-            font-size: 0.8rem;
-            flex: 2;
-            min-width: 100px;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.25s;
+            position: relative;
         }
 
-        .btn-submit { background: var(--accent); color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+        .challenge-card:hover {
+            border-color: #555;
+            background: var(--card-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
 
-        .challenge-row.solved {
-            opacity: 0.3;
-            background: #090c10;
-            border-color: var(--accent);
+        .challenge-card.solved-box {
+            border-color: var(--green);
+            opacity: 0.75;
+        }
+
+        /* Card cover image */
+        .card-cover {
+            width: 100%;
+            height: 160px;
+            background: #111;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 5;
             pointer-events: none;
-            filter: grayscale(1);
+            background: linear-gradient(180deg, transparent 70%, var(--card));
         }
 
-        .hint-container {
-            margin: 10px 0 15px 30px; 
+        .rec-indicator {
+            position: absolute;
+            top: 10px; right: 10px;
+            background: rgba(244, 67, 54, 0.15);
+            color: var(--red);
+            border: 1px solid var(--red);
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-weight: bold;
+            animation: pulse 1.5s infinite;
+            z-index: 6;
         }
 
-        .hint-text {
-            color: #e3b341;
+        .card-cover-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at 50% 50%, #1f3040 0%, #111 100%);
+            color: rgba(0,188,212,0.15);
+            font-size: 3rem;
+            font-family: var(--font-mono);
+        }
+
+        /* Solved checkmark overlay */
+        .solved-check {
+            position: absolute;
+            bottom: 10px;
+            right: 12px;
+            background: var(--green);
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+
+        /* Card body */
+        .card-body {
+            padding: 1.2rem 1.2rem 1rem;
+        }
+
+        .card-title {
+            font-family: var(--font-ui);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .card-label {
+            font-family: var(--font-ui);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+            font-family: var(--font-ui);
+        }
+
+        .card-desc .more {
+            color: var(--text-dim);
+            cursor: pointer;
+        }
+
+        /* CTA button inside card */
+        .btn-start {
+            display: block;
+            width: 100%;
+            background: var(--cyan);
+            color: #111;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: var(--font-ui);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-decoration: none;
+            margin: 1rem 0 0.8rem;
+            transition: opacity 0.2s;
+        }
+
+        .btn-start:hover { opacity: 0.85; }
+
+        /* Points + hint row */
+        .card-footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .pts-badge {
+            font-family: var(--font-ui);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--green-bright);
+        }
+
+        .pts-badge.solved { color: var(--text-dim); text-decoration: line-through; }
+
+        .btn-hint {
+            background: var(--yellow);
+            color: #111;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 5px;
+            font-family: var(--font-ui);
             font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: opacity 0.2s;
+        }
+
+        .btn-hint:hover { opacity: 0.85; }
+        .btn-hint:disabled { opacity: 0.4; cursor: default; }
+
+        /* Flag form */
+        .flag-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-flag {
+            background: #1a1a1a;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            padding: 9px 12px;
+            color: var(--text-muted);
+            font-family: var(--font-ui);
+            font-size: 0.9rem;
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+
+        .input-flag::placeholder { color: var(--text-dim); }
+
+        .input-flag:focus {
+            outline: none;
+            border-color: var(--cyan);
+            color: #fff;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--green);
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: var(--font-ui);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover { background: var(--green-bright); }
+
+        /* Hint reveal */
+        .hint-box {
+            margin-top: 0.6rem;
+            background: rgba(255, 152, 0, 0.05);
+            border: 1px dashed rgba(255, 152, 0, 0.3);
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .hint-box .hint-label { color: var(--orange); font-weight: 700; }
+
+        .blur-hint {
             filter: blur(5px);
-            transition: filter 0.3s ease;
             user-select: none;
             cursor: pointer;
-            background: rgba(227, 179, 65, 0.05); 
-            padding: 8px 15px;
-            border-radius: 6px;
-            border: 1px dashed rgba(227, 179, 65, 0.2); 
-            display: inline-block; 
+            transition: filter 0.3s;
+        }
+        .blur-hint.reveal { filter: blur(0); user-select: text; }
+
+        /* ── FOOTER BAR ── */
+        .footer-bar {
+            background: #111;
+            border-top: 1px solid var(--border);
+            padding: 14px 2rem;
+            text-align: center;
+            font-family: var(--font-ui);
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .hint-text.reveal {
-            filter: blur(0);
-            user-select: text;
-            border-style: solid; 
-        }        
-        .solved-badge { color: var(--accent); font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
+        .footer-social { display: flex; gap: 12px; }
 
-        .alert { padding: 10px; text-align: center; border-radius: 8px; margin: 10px 20px; font-weight: 500; }
-        .ranking-card { background: var(--bg-card); padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
-        .ranking-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #21262d; font-size: 0.9rem; }
-        
-        .footer { text-align: center; padding: 20px; font-size: 0.8em; color: #8b949e; opacity: 0.6; }
-        
-        @media (max-width: 850px) {
-            .menu-icon { display: flex; } 
-
-            .nav-right {
-                display: none; 
-                flex-direction: column;
-                position: absolute;
-                top: 60px; 
-                left: 0;
-                width: 100%;
-                background: #090c10;
-                padding: 20px;
-                border-bottom: 1px solid var(--border);
-                z-index: 1000;
-                gap: 20px;
-            }
-
-            .nav-right.active { display: flex; } 
-
-            .team-display { border-right: none; padding-bottom: 15px; border-bottom: 1px solid var(--border); width: 100%; text-align: center; }
-            
-            .main { grid-template-columns: 1fr; padding: 10px; }
-            .challenge-row { flex-direction: column; text-align: center; padding: 20px; }
-            .challenge-form, .challenge-form form { width: 100%; flex-direction: column; }
-            input.compact, .btn-submit, .btn-nav { width: 100%; }
+        .footer-social a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.2s;
         }
 
+        .footer-social a:hover { color: var(--cyan); }
+
+        /* ── MODALS ── */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .modal-content {
+            background: var(--card);
+            border: 1px solid var(--border-light);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 14px; right: 18px;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-close:hover { color: #fff; }
+
+        /* ── FLASH ALERTS ── */
+        .flash-container {
+            position: fixed;
+            top: 20px; left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+            width: 90%; max-width: 380px;
+        }
+
+        .alert {
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-align: center;
+            font-family: var(--font-ui);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        /* ── ARSENAL MODAL SPECIFICS ── */
+        .modal-arsenal .modal-content { max-width: 800px; }
+        
+        .decoder-box { background: var(--bg); border: 1px solid var(--border-light); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; }
+        .decoder-controls { display: flex; gap: 8px; margin: 10px 0; flex-wrap: wrap; }
+        
+        .btn-decode { background: var(--surface); color: var(--text); border: 1px solid var(--border); padding: 6px 12px; border-radius: 4px; cursor: pointer; transition: 0.2s; font-family: var(--font-mono); font-size: 0.85rem;}
+        .btn-decode:hover { border-color: var(--cyan); color: var(--cyan); }
+        
+        .decoder-output { background: #0a0a0a; color: var(--green-bright); padding: 10px; border-radius: 4px; min-height: 50px; font-family: var(--font-mono); word-break: break-all; border: 1px solid #111;}
+        
+        .arsenal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
+        .arsenal-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; align-items: flex-start; gap: 12px; text-decoration: none; transition: 0.2s; }
+        .arsenal-card:hover { border-color: var(--cyan); transform: translateY(-2px); background: var(--card-hover); }
+        
+        .arsenal-icon { width: 28px; height: 28px; flex-shrink: 0; fill: var(--cyan); }
+        .arsenal-info h4 { color: #fff; font-size: 0.95rem; margin-bottom: 3px; font-family: var(--font-ui); }
+        .arsenal-info p { color: var(--text-muted); font-size: 0.75rem; line-height: 1.3; font-family: var(--font-ui); }
+
+        /* ── PLAYER BLINDADO ASYNCX ── */
+        .video-shield-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* Proporção 16:9 perfeita */
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden; /* Corta tudo que sobrar do scale */
+            border: 1px solid var(--border-light);
+        }
+
+        /* O Iframe sofre um zoom para as bordas originais sumirem */
+        #yt-player-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            transform: scale(1.3); /* Remove título e logo do YouTube */
+            pointer-events: none; /* TRUQUE MÁXIMO: Mouse atravessa o vídeo */
+        }
+
+        /* A Barreira Física */
+        .glass-shield {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 10; /* Fica por cima do iframe */
+            background: linear-gradient(180deg, rgba(0,188,212,0.05) 0%, transparent 50%, rgba(0,0,0,0.4) 100%);
+        }
+
+        /* Botões Nativos */
+        .custom-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            align-items: center;
+        }
+
+        .btn-control {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-family: var(--font-ui);
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: 0.2s;
+        }
+
+        .btn-control.play { background: var(--cyan); color: #000; }
+        .btn-control.play:hover { background: var(--cyan-dark); color: #fff; }
+        .btn-control.pause { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-control.pause:hover { border-color: var(--yellow); color: var(--yellow); }
+
+        .feed-status {
+            margin-left: auto;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
+
+        .avatar-option:hover {
+            border-color: var(--neon-cyan) !important;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
+            transform: scale(1.05);
+        }
+        .avatar-option { transition: all 0.2s ease; }
+
+        @media (max-width: 900px) {
+            .workspace { grid-template-columns: 1fr; }
+            .header { grid-template-columns: auto 1fr auto; }
+            .brand { border-right: none; }
+        }
     </style>
 </head>
 <body>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div id="alert-msg" class="alert" style="background: {% if category == 'danger' %}var(--danger){% else %}var(--accent){% endif %}; color: white;">
-            {{ message }}
-          </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
+    <div class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert" style="background: {% if category == 'danger' %}var(--red){% else %}var(--green){% endif %};">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
 
-        <div class="nav">
-            <div class="nav-left">
-                ESTÁCIO <span style="font-weight: 300; color: var(--border);">|</span> HACKATHON
-            </div>
+    <!-- HEADER -->
+    <div class="header">
+        <div class="brand">
+            <div class="brand-name">Asyn<span>X</span></div>
+            <div class="brand-sub">Hackathon Challenge Box</div>
+        </div>
 
-            <div class="menu-icon" onclick="toggleMenu()">
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
+        <div class="header-center">
+            <span class="event-label">Evento</span>
+            <div class="timer" id="countdown"></div>
+        </div>
+
+        <div class="header-actions">
+            <button class="btn-header" onclick="openModal('modalTutorial')">Tutorial</button>
+            <a href="/logout" class="btn-logout">[→ sair]</a>
+        </div>
+    </div>
+
+    <div class="workspace">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
             
-            <div class="nav-right" id="navMenu">
-                <span class="team-display"><strong>{{ session['team_name'] }}</strong></span>
+            <div class="team-block">
+                <div class="profile-card" style="text-align: center;">
+                    
+                    <div class="avatar-box" onclick="openModal('modalAvatar')" 
+                        style="cursor: pointer; width: 80px; height: 80px; margin: 0 auto 0.8rem auto; border-radius: 50%; border: 2px solid var(--neon-cyan); overflow: hidden; background-color: #000; box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);">
+                        
+                        <img id="current-avatar" 
+                            src="{{ url_for('static', filename='img/avatars/' + team_avatar) }}" 
+                            alt="Team Badge" 
+                            style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
+                    </div>
+
+                    <h2 style="font-size: 1.2rem; margin-bottom: 4px; font-family: var(--font-display); letter-spacing: 1px;">
+                        {{ session['team_name'] if session else 'NOME TIME' }}
+                    </h2>
+                    <div class="team-inst" style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; font-family: var(--font-mono);">
+                        {{ institution_name }}
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="sidebar-nav">
                 
-                <a href="/downloads" class="nav-link">Downloads</a>
-                <a href="https://www.youtube.com/playlist?list=PLRi-lwsw_LPH4vGBznOiwjRgxK-EER8CL" target="_blank" class="nav-link">Vídeos</a>
-                <a href="/logout" class="btn-logout-modern">Sair</a>
+                <div style="display: flex; gap: 10px; margin-bottom: 25px;">
+                    
+                    <div style="flex: 1; background: rgba(0, 242, 255, 0.05); border: 1px solid var(--neon-cyan); border-radius: 8px; padding: 12px 5px; text-align: center; box-shadow: inset 0 0 15px rgba(0, 242, 255, 0.05);">
+                        <span style="display: block; font-size: 0.65rem; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 2px; font-family: var(--font-mono); margin-bottom: 5px;">
+                            Resolvidos
+                        </span>
+                        <strong style="display: block; font-size: 1.4rem; color: #fff; font-family: var(--font-display);">
+                            {{ solved_ids|length if solved_ids else '0' }} / {{ all_challenges|length if all_challenges else '18' }}
+                        </strong>
+                    </div>
+
+                    <div style="flex: 1; background: rgba(0, 242, 255, 0.05); border: 1px solid var(--neon-cyan); border-radius: 8px; padding: 12px 5px; text-align: center; box-shadow: inset 0 0 15px rgba(0, 242, 255, 0.05);">
+                        <span style="display: block; font-size: 0.65rem; color: var(--neon-cyan); text-transform: uppercase; letter-spacing: 2px; font-family: var(--font-mono); margin-bottom: 5px;">
+                            Pontuação
+                        </span>
+                        <strong style="display: block; font-size: 1.4rem; color: #fff; font-family: var(--font-display);">
+                            {% set team_score = namespace(value=0) %}
+                            {% if ranking %}
+                                {% for r in ranking %}
+                                    {% if r.name == session['team_name'] %}
+                                        {% set team_score.value = r.score %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            {{ team_score.value }} <span style="font-size: 0.8rem; color: #ffd700;">XP</span>
+                        </strong>
+                    </div>
+
+                </div>
+                <button class="nav-item" onclick="openModal('modalPlacar')">Placar geral</button>
+                <button class="nav-item" onclick="openModal('modalIntegrantes')">Equipe</button>
+                <button class="nav-item" onclick="openModal('modalMaterial')">Central de Apoio</button>
+                
+                <button class="nav-item" onclick="openModal('modalArsenal')">Ferramentas</button>
+                <button class="nav-item" onclick="openModalDicas()">Mensagens de apoio</button>
+                <button class="nav-item" onclick="openModal('modalPremio')">Prêmio exclusivo</button>
+                <button class="nav-item" style="border-color: rgba(255, 215, 0, 0.3);" onclick="openModal('modalCertificado')">Emitir Certificado</button>
+                <button class="nav-item" onclick="openModal('modalSobre')">Sobre</button>
             </div>
         </div>
 
-    <div class="main">
-        <section>
-            <h2 style="font-size: 1.2rem; margin-bottom: 15px;">Desafios</h2>
-            {% for c in challenges %}
-            <div class="challenge-row {% if c.id in solved_ids %}solved{% endif %}">
-                <div class="challenge-info">
-                    <span class="challenge-title">{{ c.title }}</span>
-                    <span class="challenge-points">+{{ c.points }} PTS</span>
-                </div>
+        <!-- MAIN -->
+        <div class="main-content">
+            <div class="section-title">Desafios</div>
 
-                {% if c.id in solved_ids %}
-                    <div class="solved-badge">✔ Resolvido</div>
-                {% else %}
-                    <div class="challenge-form">
-    <button onclick="verDica({{ c.id }})" class="btn-nav" 
-            style="background:{% if c.id in purchased_ids %}#e3b341{% else %}#30363d{% endif %}; color:white; border:none; padding: 5px 10px;">
-        {% if c.id in purchased_ids %}Dica Liberada{% else %}Dica (-25){% endif %}
-    </button>
+            <div class="tab-bar">
+                <button class="tab-btn active" onclick="switchTab(event, 'Cyberdetective')">Cyberdetective</button>
+                <button class="tab-btn" onclick="switchTab(event, 'Invasion')">Invasion</button>
+                <button class="tab-btn" onclick="switchTab(event, 'Defense')">Defense</button>
+                <button class="tab-btn" onclick="switchTab(event, 'Code')">Code</button>
+                <button class="tab-btn" onclick="switchTab(event, 'Arcade')">Arcade</button>
+                <button class="tab-btn" onclick="switchTab(event, 'Hardware')">Hardware</button>
+            </div>
+
+            {% for category, list in challenges_by_category.items() %}
+                <div id="{{ category }}" class="tab-content {% if loop.first %}active{% endif %}">
+                    <div class="challenge-grid">
+                        {% if not list %}
+                            <p style="color:var(--text-muted); font-family:var(--font-mono); font-size:0.85rem;">
+                                [!] Nenhum artefato detectado nesta camada.
+                            </p>
+                        {% endif %}
+
+                        {% for c in list %}
+                            <div class="challenge-card {% if c.id in solved_ids %}solved-box{% endif %}">
+
+                                <!-- Cover -->
+                                <div class="card-cover">
     
-    <form action="/submit" method="post" style="display:flex; gap:5px;">
-        <input type="hidden" name="challenge_id" value="{{ c.id }}"> 
-        <input type="text" name="flag" class="compact" placeholder="Flag..." required autocomplete="off">
-        <button type="submit" class="btn-submit">Enviar</button>
-    </form>
-</div>
+                                    {% if c.action_type == 'iframe' and c.action_url %}
+                                        <div class="video-wrapper">
+                                            <div class="video-overlay"></div>
+                                            <div class="rec-indicator">LIVE FEED</div>
+                                            <img class="card-cover-img" id="thumb-{{ c.id }}" src="" style="display: none; filter: grayscale(20%) contrast(110%);">
+                                            <script>
+                                                (function() {
+                                                    var url = "{{ c.action_url }}";
+                                                    var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                                                    var match = url.match(regExp);
+                                                    var videoId = (match && match[2].length === 11) ? match[2] : null;
+                                                    if(videoId) {
+                                                        var imgElement = document.getElementById("thumb-{{ c.id }}");
+                                                        imgElement.src = "https://img.youtube.com/vi/" + videoId + "/maxresdefault.jpg";
+                                                        imgElement.style.display = "block";
+                                                    }
+                                                })();
+                                            </script>
+                                        </div>
+                                        
+                                    {% elif c.cover_image %}
+                                        <img class="card-cover-img" src="{{ c.cover_image }}" alt="Capa do Desafio" style="filter: grayscale(20%) contrast(110%);">
+                                        
+                                    {% else %}
+                                        <div class="card-cover-placeholder">&lt;/&gt;</div>
+                                    {% endif %}
 
+                                    {% if c.id in solved_ids %}
+                                        <div class="solved-check">✓</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="card-title">{{ c.title }}</div>
+
+                                    {% if c.description %}
+                                        <div class="card-label">Descrição</div>
+                                        <div class="card-desc">
+                                            {{ c.description[:100] }}{% if c.description|length > 100 %}<br><span class="more">mais ...</span>{% endif %}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if c.id not in solved_ids %}
+    
+                                        {% if c.action_type == 'iframe' and c.action_url %}
+                                            <button class="btn-start" onclick="openVideoModal('{{ c.action_url }}', '{{ c.title|escape }}')">COMEÇAR FEED</button>
+                                        
+                                        {% elif c.action_type == 'download' and c.action_url %}
+                                            <a href="{{ c.action_url }}" target="_blank" class="btn-start">BAIXAR ARTEFATO</a>
+                                            
+                                        {% elif c.action_type == 'link' and c.action_url %}
+                                            <a href="{{ c.action_url }}" target="_blank" class="btn-start">ACESSAR ALVO</a>
+                                            
+                                        {% else %}
+                                            <button class="btn-start" style="cursor: default; opacity: 0.8;" onclick="return false;">INICIAR ANÁLISE</button>
+                                        {% endif %}
+
+                                        <div class="card-footer-row">
+                                            <span class="pts-badge">{{ c.points }} pts</span>
+                                            <button onclick="comprarDica({{ c.id }})" class="btn-hint">
+                                                {% if c.id in purchased_ids %}RESGATADO{% else %}DICA{% endif %}
+                                            </button>
+                                        </div>
+
+                                        {% if c.id in purchased_ids %}
+                                            <div class="hint-box">
+                                                <span class="hint-label">Dica: </span>
+                                                <span class="blur-hint" onmousedown="this.classList.add('reveal')" onmouseup="this.classList.remove('reveal')" onmouseleave="this.classList.remove('reveal')">{{ c.hint }}</span>
+                                            </div>
+                                        {% endif %}
+
+                                        <form action="/submit" method="post" class="flag-form" style="margin-top: 0.6rem;">
+                                            <input type="hidden" name="challenge_id" value="{{ c.id }}">
+                                            <input type="text" name="flag" class="input-flag" placeholder="Flag ..." required autocomplete="off">
+                                            <button type="submit" class="btn-submit">ENVIAR</button>
+                                        </form>
+                                    {% else %}
+                                        <div class="card-footer-row" style="margin-top:1rem;">
+                                            <span class="pts-badge solved">{{ c.points }} pts</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer-bar">
+        <span>Asyncx - Soluções em TI e Segurança digital - todos os direitos reservados</span>
+        <div class="footer-social">
+            <a href="#" title="Facebook">f</a>
+            <a href="#" title="Instagram">@</a>
+        </div>
+    </div>
+
+    <!-- MODAL: Tutorial -->
+    <div id="modalTutorial" class="modal" style="display: {% if solved_ids is defined and solved_ids|length == 0 and purchased_ids is defined and purchased_ids|length == 0 %}flex{% else %}none{% endif %};">
+        <div class="modal-content" style="max-width: 640px;">
+            <span class="modal-close" onclick="closeModal('modalTutorial')">&times;</span>
+            <h2 style="margin-bottom:1rem; color:var(--cyan); font-family:var(--font-display); font-size:1.1rem; letter-spacing:1px;">⚙️ BRIEFING DE MISSÃO</h2>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.2rem; font-family:var(--font-ui);">Assista ao vídeo estratégico do Professor Gilson para entender as regras da Arena, uso do terminal e os critérios de desempate.</p>
+            <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:8px; border:1px solid var(--border);">
+                <iframe style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;" src="https://www.youtube.com/embed/PLRi-lwsw_LPH4vGBznOiwjRgxK-EER8CL?modestbranding=1&rel=0&controls=0" frameborder="0" loading="lazy"></iframe>
+            </div>
+            <button class="btn-start" onclick="closeModal('modalTutorial')" style="margin-top:1.2rem;">Entendi as Regras</button>
+        </div>
+    </div>
+
+    <!-- MODAL: Integrantes -->
+    <div id="modalIntegrantes" class="modal">
+        <div class="modal-content" style="max-width: 500px; background: #0a0a0a; border: 1px solid #333; box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);">
+            <span class="modal-close" onclick="closeModal('modalIntegrantes')">&times;</span>
+            
+            <h2 style="margin-bottom: 0.3rem; color: var(--neon-cyan); font-family: var(--font-display); letter-spacing: 2px;">OPERADORES DA EQUIPE</h2>
+            <p style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 1.5rem; font-family: var(--font-mono); letter-spacing: 1px;">
+                [ STATUS: AGENTES ATIVOS NA REDE ]
+            </p>
+
+            <div style="background: rgba(0, 242, 255, 0.02); border: 1px solid #1a1a1a; border-radius: 8px; padding: 15px; font-family: var(--font-ui);">
+                {% if team_members %}
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        {# O Jinja quebra os nomes por vírgula automaticamente e remove espaços extras com o .strip() #}
+                        {% for integrante in team_members.split(',') %}
+                            {% if integrante.strip() %}
+                            <li style="color: #e0e0e0; font-size: 1rem; padding: 10px 5px; border-bottom: 1px solid #151515; display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span style="color: var(--neon-cyan); font-size: 0.6rem; animation: pulse 2s infinite;">🟢</span>
+                                    <span style="font-weight: 500; letter-spacing: 0.5px;">{{ integrante.strip() }}</span>
+                                </div>
+                                <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">[ ONLINE ]</span>
+                            </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div style="text-align: center; padding: 15px 0; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.85rem;">
+                        Nenhum operador registrado nesta credencial.
+                    </div>
                 {% endif %}
             </div>
-{% if c.id in purchased_ids %}
-<div class="hint-container">
-    <p id="hint-{{ c.id }}" 
-       class="hint-text" 
-       onmousedown="this.classList.add('reveal')" 
-       onmouseup="this.classList.remove('reveal')"
-       onmouseleave="this.classList.remove('reveal')"
-       ontouchstart="this.classList.add('reveal')" 
-       ontouchend="this.classList.remove('reveal')">
-       {{ c.hint }}
-    </p>
-</div>
-{% else %}
-    <div id="container-hint-{{ c.id }}" class="hint-container" style="display:none;">
-        <p id="hint-{{ c.id }}" class="hint-text"></p>
+        </div>
     </div>
-{% endif %}
 
-            {% endfor %}
-        </section>
-
-        <aside>
-            <h2 style="font-size: 1.2rem; margin-bottom: 15px;">Placar de Líderes</h2>
-            <div class="ranking-card">
+    <div id="modalPlacar" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('modalPlacar')">&times;</span>
+            <h2 style="margin-bottom:1.2rem; color:var(--cyan); font-family:var(--font-display); font-size:1rem; letter-spacing:1px;">RANKING</h2>
+            
+            <div style="max-height:300px; overflow-y:auto; padding-right: 5px;">
                 {% for r in ranking %}
-                <div class="ranking-item">
-                    <span>{{ loop.index }}º {{ r.name }}</span>
-                    <span style="font-weight:bold;">{{ r.score }}</span>
-                 </div>
+                    <div style="display:flex; justify-content:space-between; padding:10px 15px; border-bottom:1px solid var(--border); font-family:var(--font-ui); font-size:0.95rem;">
+                        
+                        <span style="{% if r.name == session['team_name'] %}color:var(--cyan); font-weight:700;{% else %}color:var(--text-muted);{% endif %}">
+                            {{ loop.index }}º {{ r.name }}
+                        </span>
+                        
+                        <strong style="color:var(--green)">{{ r.score }} XP</strong>
+                    </div>
                 {% endfor %}
             </div>
-        </aside>
+
+        </div>
     </div>
 
-    <div class="footer">&copy; 2026 ASYNCX - Soluções em TI e Segurança Digital</div>
+    <!-- MODAL: Prêmio -->
+    <div id="modalPremio" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('modalPremio')">&times;</span>
+            <h2 style="margin-bottom:1rem; color:var(--yellow); font-family:var(--font-display); font-size:1rem;">⚡ Prêmio Exclusivo Sorteio</h2>
+            <p style="color:var(--text); line-height:1.5; margin-bottom:0.8rem; font-family:var(--font-ui); font-size:0.9rem;">Quer ganhar o kit hacker de Lockpicking ou uma camiseta Root?</p>
+            <p style="color:var(--text-muted); line-height:1.5; font-family:var(--font-ui); font-size:0.85rem;">Tire uma foto do seu monitor no escuro operando o HCB, poste nos Stories marcando a instituição e o perfil da <strong>@AsyncXSecurity</strong>. O sorteio rodará na Live de encerramento!</p>
+        </div>
+    </div>
 
-<script>
+    <!-- MODAL: Sobre -->
+    <div id="modalSobre" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal('modalSobre')">&times;</span>
+            <h2 style="margin-bottom:1rem; font-family:var(--font-display); font-size:1rem;">Sobre a AsyncX</h2>
+            <p style="color:var(--text-muted); line-height:1.5; font-family:var(--font-ui); font-size:0.9rem;">A AsyncX é uma aceleradora de engenharia de sistemas e segurança defensiva. Conheça nossos ecossistemas avançados de Hardening de Kernel Linux e arquiteturas em Nuvem.</p>
+        </div>
+    </div>
 
-    const alertMsg = document.getElementById('alert-msg');
+    <!-- MODAL: Dicas Aleatórias -->
+    <div id="modalDicasAleatorias" class="modal">
+        <div class="modal-content" style="max-width: 500px; background: #0a0a0a; border: 1px solid var(--orange, #ff5500); box-shadow: 0 0 30px rgba(255, 85, 0, 0.1);">
+            <span class="modal-close" onclick="closeModal('modalDicasAleatorias')">&times;</span>
+            <h2 style="margin-bottom: 0.3rem; color: var(--orange, #ff5500); font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 1px;">WIRELESS INTEL DEBUG</h2>
+            <p style="color: var(--text-muted); font-size: 0.7rem; margin-bottom: 1.2rem; font-family: var(--font-mono);">
+                DICA DO HACKATHON
+            </p>
+            
+            <div id="textoDicaAleatoria" style="background:#111; padding:16px; border-radius:8px; border-left:4px solid var(--orange, #ff5500); font-family:var(--font-mono); font-size:0.85rem; color:#fff; line-height:1.6; min-height: 60px; white-space: pre-wrap;">
+                Carregando dados...
+            </div>
+        </div>
+    </div>
 
-    function verDica(id) {
-        if(confirm("Deseja ver a dica? Isso descontará 25 pontos do seu time!")) {
-            fetch('/hint/' + id)
-                .then(r => r.json())
-                .then(data => {
-                    if (data.error) {
-                        alert(data.hint);
-                    } else {
-                        const hintEl = document.getElementById('hint-' + id);
-                        hintEl.innerText = data.hint;
-                        hintEl.style.display = 'block';
-                        alert("Dica revelada! -25 pontos aplicados.");
-                        location.reload(); 
-                    }
-                });
+    <!-- MODAL: Arsenal -->
+    <div id="modalArsenal" class="modal modal-arsenal">
+        <div class="modal-content" style="max-width: 900px;"> <div class="modal-close" onclick="closeModal('modalArsenal')">×</div>
+            <h2 class="section-title" style="margin-bottom: 1rem; font-size: 1.5rem; color: var(--neon-cyan);">FERRAMENTAS</h2>
+
+            <div class="decoder-box" style="background: #0f0f0f; border: 1px solid #333; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="font-size: 1rem; color: #fff; margin-bottom: 8px; font-family: var(--font-display);">DECODIFICADOR</h3>
+                <textarea id="decodeInput" class="input-flag" rows="3" placeholder="Cole a flag encriptada, hash ou string binária aqui..." style="width: 100%; background: #000; color: #00f2ff; border: 1px solid #222; padding: 10px; font-family: var(--font-mono); border-radius: 4px; resize: vertical;"></textarea>
+                
+                <div class="decoder-controls" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
+                    <button class="btn-decode" onclick="runDecode('b64')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">Base64</button>
+                    <button class="btn-decode" onclick="runDecode('b32')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">Base32</button>
+                    <button class="btn-decode" onclick="runDecode('b45')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">Base45</button>
+                    
+                    <button class="btn-decode" onclick="runDecode('bin')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">Binário</button>
+                    <button class="btn-decode" onclick="runDecode('oct')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">Octal</button>
+                    <button class="btn-decode" onclick="runDecode('hex')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">Hexadecimal</button>
+                    
+                    <button class="btn-decode" onclick="runDecode('rot')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">César (ROT 1-25)</button>
+                    <button class="btn-decode" onclick="runDecode('url')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">URL Decode</button>
+                    
+                    <button class="btn-decode" onclick="document.getElementById('decodeInput').value=''; document.getElementById('decodeOutput').innerText='';" style="margin-left: auto; background: transparent; color: #ff4444; border: 1px solid #ff4444; padding: 6px 12px; cursor: pointer; border-radius: 4px;">Limpar</button>
+                </div>
+                
+                <div id="decodeOutput" class="decoder-output" style="margin-top: 15px; background: rgba(0, 242, 255, 0.05); border: 1px solid var(--neon-cyan); padding: 12px; font-family: var(--font-mono); color: #fff; white-space: pre-wrap; word-break: break-all; min-height: 50px; border-radius: 4px;">Resultado da análise...</div>
+            </div>
+
+            <h3 style="font-size: 1rem; color: #fff; margin-bottom: 15px; font-family: var(--font-display);">FERRAMENTAS DE EXTRAÇÃO E PESQUISA</h3>
+        
+            <div class="arsenal-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+            
+                <a href="https://www.virustotal.com/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
+                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                    <div>
+                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">VirusTotal</h4>
+                        <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Análise de IoCs, arquivos e URLs suspeitas contra múltiplos motores de antivírus.</p>
+                    </div>
+                </a>
+
+                <a href="https://gchq.github.io/CyberChef/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
+                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.5 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+                    <div>
+                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">CyberChef</h4>
+                        <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">O "Canivete Suíço" para operações criptográficas, encodings e análise de pacotes.</p>
+                    </div>
+                </a>
+
+                <a href="https://crackstation.net/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
+                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                    <div>
+                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">CrackStation</h4>
+                        <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Quebra massiva de Hashes (MD5, SHA1) em segundos através de Rainbow Tables.</p>
+                    </div>
+                </a>
+
+                <a href="https://www.shodan.io/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
+                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                    <div>
+                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">Shodan.io</h4>
+                        <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">O motor de busca global para Reconnaissance de dispositivos conectados e servidores.</p>
+                    </div>
+                </a>
+
+                <a href="https://www.metadata2go.com/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
+                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                    <div>
+                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">Metadata2Go</h4>
+                        <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Forense Digital. Extraia dados ocultos, coordenadas e EXIF de imagens e PDFs.</p>
+                    </div>
+                </a>
+
+                <a href="https://haveibeenpwned.com/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
+                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                    <div>
+                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">HIBP</h4>
+                        <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Consulta de inteligência em bases de dados sobre vazamento massivo de credenciais.</p>
+                    </div>
+                </a>
+
+                <a href="https://dencode.com/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
+                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                    <div>
+                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">Dencode</h4>
+                        <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Conversor universal de strings e payloads de codificação web simultâneos.</p>
+                    </div>
+                </a>
+
+                <a href="https://gtfobins.github.io/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
+                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zM7.5 17l-1.41-1.41L8.67 13l-2.58-2.59L7.5 9l4 4-4 4z"/></svg>
+                    <div>
+                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">GTFOBins</h4>
+                        <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Lista curada de binários Unix para bypass e Escalação de Privilégio (PrivEsc).</p>
+                    </div>
+                </a>
+
+                <a href="https://www.revshells.com/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
+                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+                    <div>
+                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">RevShells</h4>
+                        <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Gerador de conexões de Reverse Shell automatizado em dezenas de linguagens.</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Vídeos -->
+    <div id="modalVideo" class="modal">
+        <div class="modal-content" style="max-width: 800px; padding: 1.5rem; background: #0a0a0a; border: 1px solid var(--cyan);">
+            <div class="modal-close" onclick="closeVideoModal()">×</div>
+            <h2 id="videoModalTitle" style="margin-bottom: 1rem; color: var(--cyan); font-family: var(--font-display); font-size: 1.2rem; letter-spacing: 1px;">DECRYPTING FEED...</h2>
+            
+            <div class="video-shield-container">
+                <div class="glass-shield"></div>
+                <div id="yt-player-container"></div>
+            </div>
+
+            <div class="custom-controls">
+                <button class="btn-control play" onclick="asyncxPlay()">▶ INICIAR DESCRIPTOGRAFIA</button>
+                <button class="btn-control pause" onclick="asyncxPause()">⏸ PAUSAR</button>
+                <div class="feed-status">STATUS: <span style="color: var(--green-bright); animation: pulse 2s infinite;">SECURE CONNECTION</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Avatar -->
+    <div id="modalAvatar" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeModal('modalAvatar')">&times;</span>
+            <h2 style="margin-bottom:1.5rem; color:var(--neon-cyan)">SELECIONE SEU AVATAR</h2>
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">
+                {% for i in range(1, 26) %}
+                <div class="avatar-option" onclick="updateTeamAvatar('avatar{{ i }}.webp')" 
+                    style="cursor:pointer; border: 2px solid var(--border-cyber); border-radius: 50%; padding: 4px;">
+                    <img src="{{ url_for('static', filename='img/avatars/avatar' ~ i ~ '.webp') }}" style="width:100%; border-radius:50%;">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Materiais para download -->
+    <div id="modalMaterial" class="modal">
+        <div class="modal-content" style="max-width: 700px; background: #0a0a0a; border: 1px solid #333;">
+            <span class="modal-close" onclick="closeModal('modalMaterial')">&times;</span>
+            
+            <h2 style="margin-bottom: 0.5rem; color: var(--neon-cyan); font-family: var(--font-display); letter-spacing: 2px;">CENTRAL DE INTELIGÊNCIA</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">
+                Documentação oficial e Cheat Sheets autorizados para consulta durante a operação.
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                
+                <div style="background: rgba(0, 242, 255, 0.03); border: 1px solid #222; border-radius: 8px; padding: 15px; display: flex; align-items: center; justify-content: space-between; transition: border 0.2s;" onmouseover="this.style.borderColor='var(--neon-cyan)'" onmouseout="this.style.borderColor='#222'">
+                    <div>
+                        <strong style="color: #fff; display: block; font-size: 1rem; margin-bottom: 3px;">Linux Sysadmin</strong>
+                        <span style="color: var(--text-dim); font-size: 0.75rem;">Comandos, File System e Permissões.</span>
+                    </div>
+                    <a href="{{ url_for('static', filename='materials/linux_cheat.pdf') }}" target="_blank" 
+                       style="background: var(--neon-cyan); color: #000; padding: 8px 12px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 0.75rem;">
+                       ACESSAR
+                    </a>
+                </div>
+
+                <div style="background: rgba(0, 242, 255, 0.03); border: 1px solid #222; border-radius: 8px; padding: 15px; display: flex; align-items: center; justify-content: space-between; transition: border 0.2s;" onmouseover="this.style.borderColor='var(--neon-cyan)'" onmouseout="this.style.borderColor='#222'">
+                    <div>
+                        <strong style="color: #fff; display: block; font-size: 1rem; margin-bottom: 3px;">Nmap & Recon</strong>
+                        <span style="color: var(--text-dim); font-size: 0.75rem;">Flags essenciais e varredura de portas.</span>
+                    </div>
+                    <a href="{{ url_for('static', filename='materials/nmap_guide.pdf') }}" target="_blank" 
+                       style="background: var(--neon-cyan); color: #000; padding: 8px 12px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 0.75rem;">
+                       ACESSAR
+                    </a>
+                </div>
+
+                <div style="background: rgba(0, 242, 255, 0.03); border: 1px solid #222; border-radius: 8px; padding: 15px; display: flex; align-items: center; justify-content: space-between; transition: border 0.2s;" onmouseover="this.style.borderColor='var(--neon-cyan)'" onmouseout="this.style.borderColor='#222'">
+                    <div>
+                        <strong style="color: #fff; display: block; font-size: 1rem; margin-bottom: 3px;">Criptografia Base</strong>
+                        <span style="color: var(--text-dim); font-size: 0.75rem;">Hashes, Base64, Hex e Encodings.</span>
+                    </div>
+                    <a href="{{ url_for('static', filename='materials/crypto_cheat.pdf') }}" target="_blank" 
+                       style="background: var(--neon-cyan); color: #000; padding: 8px 12px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 0.75rem;">
+                       ACESSAR
+                    </a>
+                </div>
+
+                <div style="background: rgba(0, 242, 255, 0.03); border: 1px solid #222; border-radius: 8px; padding: 15px; display: flex; align-items: center; justify-content: space-between; transition: border 0.2s;" onmouseover="this.style.borderColor='var(--neon-cyan)'" onmouseout="this.style.borderColor='#222'">
+                    <div>
+                        <strong style="color: #fff; display: block; font-size: 1rem; margin-bottom: 3px;">AsyncX Toolkit</strong>
+                        <span style="color: var(--text-dim); font-size: 0.75rem;">Pacote offline (.ZIP) completo.</span>
+                    </div>
+                    <a href="{{ url_for('static', filename='materials/asyncx_toolkit.zip') }}" download 
+                       style="background: transparent; border: 1px solid var(--neon-cyan); color: var(--neon-cyan); padding: 7px 12px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 0.75rem;">
+                       BAIXAR
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Emissão de certificado -->
+<div id="modalCertificado" class="modal">
+        <div class="modal-content" style="max-width: 500px; background: #0a0a0a; border: 1px solid #333; box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);">
+            <span class="modal-close" onclick="closeModal('modalCertificado')">&times;</span>
+            
+            <h2 style="margin-bottom: 0.3rem; color: var(--yellow-bright); font-family: var(--font-display); letter-spacing: 2px;">EMISSÃO DO CERTIFICADO</h2>
+            
+            <p id="cert-status-msg" style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 1.5rem; font-family: var(--font-mono);">
+                SELECIONE O INTEGRANTE PARA GERAR O CERTIFICADO
+            </p>
+
+            {% if team_members %}
+                <form action="/generate_certificate" method="POST" target="_blank" style="display: flex; flex-direction: column; gap: 15px;">
+                    
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                        <label style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.75rem;">Selecione abaixo:</label>
+                        
+                        <select id="cert-select" name="member_name" required style="background: #111; color: #fff; border: 1px solid #222; padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; width: 100%; outline: none; cursor: pointer;" onchange="this.style.borderColor='var(--yellow-bright)'">
+                            <option value="" disabled selected>Nome do integrante...</option>
+                            {% for integrante in team_members.split(',') %}
+                                {% if integrante.strip() %}
+                                    <option value="{{ integrante.strip() }}">{{ integrante.strip() }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button id="cert-btn" type="submit" class="btn-start" style="background: var(--yellow-bright); color: #000; font-weight: 700; letter-spacing: 1px; width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 4px; cursor: pointer;">
+                        GERAR CERTIFICADO
+                    </button>
+                </form>
+            {% else %}
+                <div style="text-align: center; padding: 15px 0; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.85rem;">
+                    Cadastre os integrantes para liberar a emissão.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        // TABS
+        function switchTab(evt, categoryName) {
+            const tabcontents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabcontents.length; i++) {
+                tabcontents[i].style.display = "none";
+            }
+            const tablinks = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(categoryName).style.display = "block";
+            evt.currentTarget.classList.add("active");
         }
-    }
-    
-    if (alertMsg) {
+
+        // MODALS
+        function openModal(id) { document.getElementById(id).style.display = "flex"; }
+        function closeModal(id) { document.getElementById(id).style.display = "none"; }
+        window.addEventListener('click', function(e) {
+            document.querySelectorAll('.modal').forEach(m => {
+                if (e.target === m) m.style.display = 'none';
+            });
+        });
+
+        // HINTS
+        function comprarDica(id) {
+            if(confirm("Essa dica terá um desconto de -25 PONTOS no ranking geral da equipe.")) {
+                fetch('/hint/' + id)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.hint);
+                        } else {
+                            location.reload();
+                        }
+                    });
+            }
+        }
+
+        // COUNTDOWN
+        const endTimeStr = "{{ end_time }}";
+        if (endTimeStr) {
+            const countDownDate = new Date(endTimeStr).getTime();
+            const x = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = countDownDate - now;
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                document.getElementById("countdown").innerHTML = days + "d " +
+                    String(hours).padStart(2,'0') + ":" +
+                    String(minutes).padStart(2,'0') + ":" +
+                    String(seconds).padStart(2,'0');
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.getElementById("countdown").innerHTML = "ENCERRADO";
+                }
+            }, 1000);
+        }
+
+        // MOTOR DO ARSENAL DE DECODIFICAÇÃO
+        function runDecode(type) {
+            const input = document.getElementById('decodeInput').value.trim();
+            const output = document.getElementById('decodeOutput');
+            
+            if (!input) {
+                output.innerText = "[!] Insira um payload para análise.";
+                return;
+            }
+
+            try {
+                let result = "";
+                
+                switch (type) {
+                    case 'b64':
+                        result = atob(input);
+                        break;
+                        
+                    case 'url':
+                        result = decodeURIComponent(input);
+                        break;
+                        
+                    case 'hex':
+                        // Remove espaços e processa pares de hexadecimais
+                        const cleanHex = input.replace(/\s/g, '');
+                        result = cleanHex.match(/.{1,2}/g).map(byte => String.fromCharCode(parseInt(byte, 16))).join('');
+                        break;
+                        
+                    case 'bin':
+                        // Processa binários (separados por espaço ou blocos de 8 bits contínuos)
+                        const binBlocks = input.includes(' ') ? input.split(' ') : input.match(/.{1,8}/g);
+                        result = binBlocks.map(b => String.fromCharCode(parseInt(b, 2))).join('');
+                        break;
+                        
+                    case 'oct':
+                        // Processa octais separados por espaço
+                        result = input.split(/\s+/).map(o => String.fromCharCode(parseInt(o, 8))).join('');
+                        break;
+                        
+                    case 'b32':
+                        // Decodificador RFC 4648 Base32
+                        const b32chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+                        let bits = "";
+                        let str32 = input.replace(/=+$/, '').toUpperCase();
+                        for (let i = 0; i < str32.length; i++) {
+                            let val = b32chars.indexOf(str32.charAt(i));
+                            if (val === -1) continue;
+                            bits += val.toString(2).padStart(5, '0');
+                        }
+                        for (let i = 0; i + 8 <= bits.length; i += 8) {
+                            result += String.fromCharCode(parseInt(bits.substr(i, 8), 2));
+                        }
+                        break;
+                        
+                    case 'b45':
+                        // Decodificador Base45 (Comum em QR Codes modernos e CTFs)
+                        const charset45 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
+                        let res45 = [];
+                        for (let i = 0; i < input.length; i += 3) {
+                            let chunk = input.substring(i, i + 3);
+                            let val = 0;
+                            for (let j = 0; j < chunk.length; j++) {
+                                val += charset45.indexOf(chunk[j]) * Math.pow(45, j);
+                            }
+                            if (chunk.length === 3) {
+                                res45.push(Math.floor(val / 256), val % 256);
+                            } else if (chunk.length === 2) {
+                                res45.push(val);
+                            }
+                        }
+                        result = String.fromCharCode.apply(null, res45);
+                        break;
+
+                    case 'rot':
+                        // Brute-force: Processa todas as 25 rotações de César de uma vez
+                        result = "--- BRUTE FORCE CIFRA DE CÉSAR ---\n\n";
+                        for (let i = 1; i <= 25; i++) {
+                            let rotStr = input.replace(/[a-zA-Z]/g, function(c) {
+                                let base = c <= 'Z' ? 65 : 97;
+                                return String.fromCharCode((c.charCodeAt(0) - base + i) % 26 + base);
+                            });
+                            result += `[ROT ${i.toString().padStart(2, '0')}] ${rotStr}\n`;
+                        }
+                        break;
+                }
+                
+                output.innerText = result || "[!] Formato inválido ou impossível decodificar.";
+                
+            } catch (e) {
+                output.innerText = "[!] ERRO DE PARSER: O payload inserido não corresponde à base matemática selecionada.";
+            }
+        }
+
+        // Adicione este script no final do seu dashboard.html
+        function updateTeamAvatar(avatarName) {
+            // 1. Envia a requisição POST invisível para o Flask
+            fetch('/update_avatar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ avatar_name: avatarName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 2. Se o Flask confirmar que salvou, atualizamos a foto na tela na mesma hora!
+                    const avatarImg = document.getElementById('current-avatar');
+                    avatarImg.src = "/static/img/avatars/" + avatarName;
+                    
+                    // 3. Fecha o modal
+                    closeModal('modalAvatar');
+                } else {
+                    alert("Erro ao comunicar com o servidor da AsyncX.");
+                }
+            })
+            .catch(error => {
+                console.error('Falha na comunicação de rede:', error);
+            });
+        }
+
+        // ── ENGENHARIA DE PLAYER YOUTUBE FACADE ──
+        
+        // 1. Carrega a API do Iframe do YouTube de forma assíncrona
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var asyncxPlayer;
+
+        // 2. Extrai o ID de qualquer link do YouTube (watch?v=, youtu.be, etc)
+        function extractVideoID(url) {
+            var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            var match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        // 3. Abre o Modal e Instancia o Vídeo
+        function openVideoModal(videoUrl, title) {
+            document.getElementById('videoModalTitle').innerText = "> " + title.toUpperCase();
+            document.getElementById('modalVideo').style.display = 'flex';
+            
+            var videoId = extractVideoID(videoUrl);
+
+            // Se o player já existe, destrói para criar o novo do zero limpo
+            if (asyncxPlayer) { asyncxPlayer.destroy(); }
+
+            // Cria o player usando a API oficial
+            asyncxPlayer = new YT.Player('yt-player-container', {
+                height: '100%',
+                width: '100%',
+                videoId: videoId,
+                playerVars: {
+                    'autoplay': 1,        // Inicia sozinho (geralmente mutado se navegador barrar)
+                    'controls': 0,        // Tira todos os controles do YT
+                    'disablekb': 1,       // Tira atalhos de teclado do YT
+                    'fs': 0,              // Tira Fullscreen
+                    'modestbranding': 1,  // Tira logo
+                    'rel': 0              // Não mostra vídeos relacionados
+                },
+                events: {
+                    'onReady': function(event) {
+                        event.target.playVideo(); // Força o play na nossa interface
+                    }
+                }
+            });
+        }
+
+        // 4. Funções dos botões nativos
+        function asyncxPlay() { if(asyncxPlayer && asyncxPlayer.playVideo) asyncxPlayer.playVideo(); }
+        function asyncxPause() { if(asyncxPlayer && asyncxPlayer.pauseVideo) asyncxPlayer.pauseVideo(); }
+        
+        function closeVideoModal() {
+            if(asyncxPlayer) { asyncxPlayer.destroy(); } // Mata o vídeo ao fechar
+            document.getElementById('modalVideo').style.display = 'none';
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // A variável end_time já foi injetada pelo Flask no Jinja2
+            const eventEndTime = new Date("{{ end_time }}").getTime();
+            const now = new Date().getTime();
+            
+            if (now < eventEndTime) {
+                // O evento ainda está ativo! Trava a interface.
+                const btn = document.getElementById("cert-btn");
+                const select = document.getElementById("cert-select");
+                const msg = document.getElementById("cert-status-msg");
+                
+                if(btn && select && msg) {
+                    btn.disabled = true;
+                    btn.style.background = "#333";
+                    btn.style.color = "#666";
+                    btn.style.cursor = "not-allowed";
+                    btn.innerText = "SISTEMA BLOQUEADO";
+                    
+                    select.disabled = true;
+                    
+                    msg.innerHTML = '<span style="color: #ff4444;">Emissão disponével após o término do evento.</span>';
+                }
+            }
+        });
+
+        const BANCO_DICAS_HCB = [
+            "Recon: Lembrem-se de checar arquivos como `robots.txt` e `sitemap.xml` no servidor alvo. Eles costumam revelar diretórios proibidos.",
+            "Forense Digital: O arquivo parece normal? Verifique metadados ocultos com `exiftool` ou extraia dados embutidos usando `steghide`.",
+            "Web Hacking: Bypass de autenticação simples costuma falhar se o backend sanitizar os inputs. Teste sempre injeções básicas como ' OR '1'='1.",
+            "Enumeração: Backups compactados (.zip, .tar.gz, .bak) deixados no diretório raiz do servidor web são vetores comuns de vazamento de código-fonte.",
+            "Redes: O uso da flag `-sV` no Nmap ajuda a levantar a versão exata do serviço em execução, permitindo buscar CVEs conhecidas no Exploit-DB.",
+            "WAF Bypass: Payloads em Base64 ou URL Encode são frequentemente usados para burlar firewalls web. Pratique a decodificação no Arsenal Hacker.",
+            "Privilege Escalation (Linux): Se o terminal do alvo responder, verifique as permissões SUID executando o comando: `find / -perm -4000 -type f 2>/dev/null`.",
+            "Reconhecimento: Ao analisar cabeçalhos HTTP com o comando `curl -I`, preste atenção redobrada no campo 'Server' e em cookies customizados.",
+            "Análise de Binários: Encontrou um arquivo sem extensão? Use o comando `strings arquivo | grep -i flag` ou verifique os Magic Bytes com o comando `file`.",
+            "Criptografia: Hash não se decripta, se quebra. Identifique a assinatura do hash com ferramentas online e use o CrackStation para senhas fracas.",
+            "OSINT: O Google Dorking é seu melhor amigo. Tente buscar por arquivos de configuração expostos com operadores como ext:env ou intitle:\"index of\".",
+            "Esteganografia: O arquivo de áudio ou imagem é suspeitamente pesado? Ferramentas como `binwalk` e `zsteg` podem revelar arquivos escondidos lá dentro.",
+            "Redes (DNS): A porta 53 está aberta? Tente realizar uma Transferência de Zona (AXFR) usando o comando `dig` para mapear subdomínios ocultos da corporação.",
+            "Privilege Escalation (Linux): Sempre verifique o que você pode rodar como superusuário digitando `sudo -l`. Se houver binários permitidos, consulte o GTFOBins.",
+            "Web Hacking: Fique de olho no código-fonte HTML da página (Ctrl+U). Desenvolvedores costumam deixar comentários com senhas ou rotas secretas.",
+            "Falhas de Lógica de Negócio: Em lojas virtuais vulneráveis, tente interceptar a requisição com o Burp Suite e alterar o valor do produto para números negativos.",
+            "LFI (Local File Inclusion): Se a URL parecer com `?arquivo=texto.txt`, tente voltar diretórios injetando `../../../../etc/passwd` para ler arquivos do sistema.",
+            "Redes (FTP): A porta 21 está aberta? Teste o login 'Anonymous' (usuário: anonymous, senha: em branco). É surpreendente o que sysadmins esquecem lá dentro.",
+            "Forense de Rede: Em arquivos de captura .pcap no Wireshark, filtre por `http.request.method == \"POST\"` para encontrar credenciais sendo enviadas em texto claro.",
+            "Privilege Escalation (Cron): Verifique as tarefas agendadas em `/etc/crontab`. Scripts rodando como root com permissão de escrita por usuários comuns são portas abertas.",
+            "Criptografia Clássica: O texto está embaralhado mas mantém a estrutura de palavras? Use o decodificador de Cifra de César (ROT) no Arsenal Hacker.",
+            "OSINT (Github): Desenvolvedores cometem erros. Busque por chaves de API ou tokens de banco de dados vazados no histórico de commits (git log).",
+            "Web Hacking (APIs): APIs REST frequentemente escondem versões antigas. Se a rota atual é `/api/v2/users`, verifique se a `/api/v1/users` ainda responde sem autenticação.",
+            "Linux Básico: O histórico de comandos do administrador pode conter senhas digitadas acidentalmente. Sempre verifique o `cat ~/.bash_history`.",
+            "Codificação Múltipla: Às vezes, o atacante codifica o payload em camadas. Você pode decodificar em Hexadecimal e descobrir que o resultado é um Base64 oculto.",
+            "Sessões Inseguras: Analise seus Cookies. Se for um JWT (JSON Web Token), jogue-o no jwt.io. Às vezes, basta alterar o campo de 'role' para 'admin'.",
+            "Forense de IoT: Baixou um arquivo de firmware .bin de um roteador? Use o comando `binwalk -e arquivo.bin` para extrair o sistema de arquivos inteiro.",
+            "Movimentação Lateral (SSH): Ganhou acesso como usuário comum? Vá até `~/.ssh/`. Se a chave privada (`id_rsa`) estiver legível, você pode invadir outros servidores.",
+            "Reconhecimento Criptográfico: Base64 tem letras maiúsculas, minúsculas e números. Base32 só usa MAIÚSCULAS e números de 2 a 7. Reconhecer padrões poupa tempo.",
+            "Dica de Ouro CTF: Se você está há 3 horas tentando quebrar um hash hiper complexo, pare. A solução geralmente é mais simples (como checar um diretório óbvio)."
+        ];
+
+
+        function openModalDicas() {
+            const elementoTexto = document.getElementById('textoDicaAleatoria');
+            if (elementoTexto) {
+                // Sorteia um índice do array matemático
+                const indiceAleatorio = Math.floor(Math.random() * BANCO_DICAS_HCB.length);
+                // Injeta a dica correspondente
+                elementoTexto.innerText = `"${BANCO_DICAS_HCB[indiceAleatorio]}"`;
+            }
+            // Abre o modal chamando a função padrão que você já tem no sistema
+            openModal('modalDicasAleatorias');
+        }
+
+
+        // AUTO-DISMISS ALERTS
         setTimeout(() => {
-            alertMsg.style.display = 'none';
+            document.querySelectorAll('.alert').forEach(a => a.style.display = 'none');
         }, 3000);
-    }
-
-    function toggleMenu() {
-        const menu = document.getElementById('navMenu');
-        menu.classList.toggle('active');
-    }
-
-</script>
-<!-- Flag=START_HACKATHON_2026 -->
+    </script>
 </body>
 </html>
