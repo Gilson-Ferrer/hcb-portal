@@ -147,9 +147,15 @@
     <div class="modal-content-global">
         <h2 class="modal-title-global">Sorteio Exclusivo</h2>
         <div class="modal-rules-global">
-            <p style="margin-bottom: 12px;">1. Siga o perfil oficial da <b>AsyncX</b> e da <b>Faculdade</b> no LinkedIn.</p>
+            <p style="margin-bottom: 12px;">
+                1. Siga o perfil oficial da 
+                <a href="https://www.linkedin.com/company/asyncxtecnologia" target="_blank" style="color: var(--cyan); text-decoration: none; transition: 0.2s;" onmouseover="this.style.textShadow='0 0 8px var(--cyan)'" onmouseout="this.style.textShadow='none'">
+                    <b>AsyncX</b>
+                </a> 
+                e da <b>Faculdade</b> no LinkedIn.
+            </p>
             <p style="margin-bottom: 12px;">2. Publique uma foto no evento utilizando a hashtag institucional <span class="modal-highlight-text-global" id="hashtag-rule">#HackathonAsyncx{{ start_time[:4] if start_time else '' }}</span>.</p>
-            <p>3. Insira suas credenciais abaixo para registrar seu perfil na roleta automatizada da arena.</p>
+            <p>3. Insira suas credenciais abaixo para registrar seu perfil e participar do sorteio.</p>
         </div>
         
         <form id="form-sorteio-global" onsubmit="enviarInscricaoGlobal(event)" style="margin-top: 24px;">
