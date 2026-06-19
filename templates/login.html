@@ -35,6 +35,35 @@
             overflow: hidden;
         }
 
+        .alert-box {
+            background-color: #d32f2f;
+            border-radius: 12px; 
+            padding: 14px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+            text-align: center;
+            opacity: 1;
+            transform: scale(1);
+            /* Transição suave de opacidade, escala e margem para não quebrar o layout no fechamento */
+            transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                        margin 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                        padding 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                        max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 100px; 
+            overflow: hidden;
+        }
+
+        .alert-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            color: #ffffff;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
         .login-container {
             background-color: var(--card-bg);
             padding: 2.5rem;
@@ -155,10 +184,21 @@
 <body>
 
     <div class="login-container">
+
         <div class="contractor-brand">Ambiente Restrito</div>
         <h1>HCB Platform</h1>
-        
-        <form action="/login" method="post">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert-box" id="login-alert-ticket">
+                        <p class="alert-text">
+                            {{ message }}
+                        </p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form action="/login" method="post" onsubmit="showLoader('Autenticando...')">
             <div class="input-group">
                 <input type="text" name="name" placeholder="ID do Time" required autocomplete="off">
             </div>
@@ -167,12 +207,35 @@
             </div>
             <button type="submit">Entrar</button>
         </form>
-        <a href="/leaderboard" class="btn-secondary">Acompanhar Placar</a>
+        <a href="/leaderboard" class="btn-secondary" onclick="showLoader('Acessando Placar...')">Acompanhar Placar</a>
 
         <div class="footer-logo">
             Desenvolvido por <span>ASYNCX</span>
         </div>
     </div>
+    {% include 'loader_global.html' %}
 
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const alertBox = document.getElementById('login-alert-ticket');
+            
+            if (alertBox) {
+                // Aguarda 5000ms (5 segundos) visível na tela antes de iniciar o sumiço
+                setTimeout(() => {
+                    // Inicia o colapso visual do elemento de forma suave
+                    alertBox.style.opacity = "0";
+                    alertBox.style.transform = "scale(0.95)";
+                    alertBox.style.maxHeight = "0";
+                    alertBox.style.padding = "0 14px";
+                    alertBox.style.margin = "0";
+                    
+                    // Remove completamente do DOM do navegador após o término da animação (500ms)
+                    setTimeout(() => {
+                        alertBox.remove();
+                    }, 500);
+                }, 5000);
+            }
+        });
+    </script>
 </body>
 </html>

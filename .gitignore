@@ -2,6 +2,5 @@ hcb.db
 __pycache__/
 .env
 venv/
-add_challenge.py
 stress.py
 logs.py

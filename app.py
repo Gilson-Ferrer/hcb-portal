@@ -1,11 +1,13 @@
 import os
+import io
 import time
+import uuid
+import html
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from flask import Flask, render_template, request, redirect, session, flash, jsonify
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
-import io
 from flask import send_file, jsonify, request, session
 from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
@@ -55,16 +57,41 @@ def login():
         WHERE name = %s AND password = %s AND tenant_id = %s
     ''', (name, password, TENANT_ID))
     team = cur.fetchone()
-    cur.close()
-    conn.close()
     
     if team:
+        # =================================================================
+        # BLOCKER DA LARGADA (Verifica se o evento já começou)
+        # =================================================================
+        event = get_event_details(cur)
+        if event and event.get('start_time'):
+            fuso_br = ZoneInfo('America/Sao_Paulo')
+            agora = datetime.now(fuso_br)
+            
+            # Formata a data vinda do banco para o fuso do Brasil
+            inicio_banco = event['start_time']
+            if inicio_banco.tzinfo is None:
+                inicio_banco = inicio_banco.replace(tzinfo=fuso_br)
+            
+            if agora < inicio_banco:
+                data_formatada = inicio_banco.strftime('%d/%m às %H:%M')
+                flash(f"Acesso Negado: A arena só será liberada dia {data_formatada}.", "danger")
+                cur.close()
+                conn.close()
+                return redirect('/')
+        # =================================================================
+
+        # Se passou pelo Blocker (o evento já começou), cria a sessão!
         session['team_id'] = team['id']
         session['team_name'] = team['name']
         session['tenant_id'] = TENANT_ID
+        cur.close()
+        conn.close()
         return redirect('/dashboard')
         
-    flash("Credenciais Incorretas ou time não cadastrado nesta unidade.", "danger")
+    # Se errou a senha ou o time não existe
+    cur.close()
+    conn.close()
+    flash("Credenciais Incorretas.", "danger")
     return redirect('/')
 
 @app.route('/dashboard')
@@ -82,11 +109,6 @@ def dashboard():
         conn.close()
         return "Este evento não está ativo.", 404
 
-    # === 1. NOVO: BUSCA O AVATAR DA EQUIPE LOGADA ===
-    cur.execute('SELECT avatar_url FROM teams WHERE id = %s', (session['team_id'],))
-    current_team = cur.fetchone()
-
-    # === ATUALIZADO: BUSCA AVATAR E INTEGRANTES DA EQUIPE LOGADA ===
     cur.execute('SELECT score, avatar_url, members FROM teams WHERE id = %s', (session['team_id'],))
     current_team = cur.fetchone()
     # Se o avatar for nulo no banco, define 'default.webp' como padrão
@@ -99,7 +121,12 @@ def dashboard():
     all_teams = cur.fetchall()
 
     # Busca todos os desafios desta faculdade
-    cur.execute('SELECT * FROM challenges WHERE tenant_id = %s ORDER BY id ASC', (TENANT_ID,))
+    cur.execute('''
+        SELECT c.* FROM challenges c
+        JOIN tenant_challenges tc ON c.id = tc.challenge_id
+        WHERE tc.tenant_id = %s 
+        ORDER BY c.id ASC
+    ''', (TENANT_ID,))
     all_challenges = cur.fetchall()
     
     # Busca todos os solves para montar a matriz
@@ -126,6 +153,8 @@ def dashboard():
     
     cur.close()
     conn.close()
+
+    voting_link = os.environ.get('VOTING_FORM_LINK', 'https://link-pendente.asyncx.com.br')
     
     return render_template('dashboard.html', 
                            event_name=event['name'],
@@ -139,6 +168,7 @@ def dashboard():
                            team_avatar=team_avatar,
                            institution_name=INSTITUTION_NAME,
                            team_members=team_members,
+                           voting_link=voting_link,
                            end_time=event['end_time'].isoformat())
 
 @app.route('/leaderboard')
@@ -150,7 +180,12 @@ def leaderboard():
     cur.execute('SELECT id, name, score FROM teams WHERE tenant_id = %s ORDER BY score DESC, name ASC', (TENANT_ID,))
     all_teams = cur.fetchall()
     
-    cur.execute('SELECT * FROM challenges WHERE tenant_id = %s ORDER BY id ASC', (TENANT_ID,))
+    cur.execute('''
+        SELECT c.* FROM challenges c
+        JOIN tenant_challenges tc ON c.id = tc.challenge_id
+        WHERE tc.tenant_id = %s 
+        ORDER BY c.id ASC
+    ''', (TENANT_ID,))
     all_challenges = cur.fetchall()
     
     cur.execute('SELECT team_id, challenge_id FROM solves')
@@ -160,18 +195,23 @@ def leaderboard():
         if s['team_id'] not in solves_matrix: solves_matrix[s['team_id']] = set()
         solves_matrix[s['team_id']].add(s['challenge_id'])
 
-    # Busca tempo final para o timer
-    cur.execute('SELECT end_time FROM tenants WHERE id = %s', (TENANT_ID,))
+    # Busca tempo inicial e final para o timer
+    cur.execute('SELECT start_time, end_time FROM tenants WHERE id = %s', (TENANT_ID,))
     event = cur.fetchone()
     
     cur.close()
     conn.close()
     
+    # Usamos o .get() que é mais seguro e não quebra a tela se estiver vazio
+    start_time_iso = event.get('start_time').isoformat() if event and event.get('start_time') else ''
+    end_time_iso = event.get('end_time').isoformat() if event and event.get('end_time') else ''
+    
     return render_template('leaderboard_public.html', 
                            all_teams=all_teams, 
                            all_challenges=all_challenges, 
                            solves_matrix=solves_matrix,
-                           end_time=event['end_time'].isoformat())
+                           start_time=start_time_iso,
+                           end_time=end_time_iso)
 
 @app.route('/hint/<int:id>')
 def get_hint(id):
@@ -219,34 +259,62 @@ def submit():
     cur = conn.cursor()
     
     event = get_event_details(cur)
-    if not event or (event['end_time'] and datetime.now() > event['end_time']):
+    
+    # =========================================================================
+    # 🔒 BARREIRA TEMPORAL BLINDADA (Fuso Horário BR)
+    # =========================================================================
+    if not event:
         cur.close()
         conn.close()
-        flash("O evento terminou! Submissões encerradas.", "danger")
+        flash("Evento não encontrado ou inativo.", "danger")
         return redirect('/dashboard')
+        
+    if event['end_time']:
+        fuso_br = ZoneInfo('America/Sao_Paulo')
+        agora = datetime.now(fuso_br)
+        fim_banco = event['end_time']
+        
+        # Adiciona o fuso BR à data do banco caso seja Naive (sem fuso)
+        if fim_banco.tzinfo is None:
+            fim_banco = fim_banco.replace(tzinfo=fuso_br)
+            
+        if agora > fim_banco:
+            cur.close()
+            conn.close()
+            flash("O evento terminou! Submissões encerradas pelo servidor.", "danger")
+            return redirect('/dashboard')
+    # =========================================================================
 
     challenge_id = request.form.get('challenge_id')
     flag = request.form['flag'].strip()
     
     # Valida a flag batendo contra o ID do desafio e garantindo o tenant correto
-    cur.execute('SELECT * FROM challenges WHERE id = %s AND flag = %s AND tenant_id = %s', 
-                (challenge_id, flag, TENANT_ID))
+    cur.execute('''
+            SELECT c.* FROM challenges c
+            JOIN tenant_challenges tc ON c.id = tc.challenge_id
+            WHERE c.id = %s AND c.flag = %s AND tc.tenant_id = %s
+    ''', (challenge_id, flag, TENANT_ID))
     challenge = cur.fetchone()
     
     if challenge:
         cur.execute('SELECT * FROM solves WHERE team_id = %s AND challenge_id = %s', 
                     (session['team_id'], challenge['id']))
+        
+        # Se não resolveu ainda, processa a pontuação
         if not cur.fetchone():
             cur.execute('INSERT INTO solves (team_id, challenge_id) VALUES (%s, %s)', 
                         (session['team_id'], challenge['id']))
             
-            agora = datetime.now()
+            # Utiliza a hora exata do fuso BR para o critério de desempate (last_solve)
+            fuso_br = ZoneInfo('America/Sao_Paulo')
+            agora_solve = datetime.now(fuso_br)
+            
             cur.execute('UPDATE teams SET score = score + %s, last_solve = %s WHERE id = %s', 
-                        (challenge['points'], agora, session['team_id']))
+                        (challenge['points'], agora_solve, session['team_id']))
             conn.commit()
-            flash("Flag correta! Sistema atualizado.", "success")
+            flash("Flag correta! Pontuação atualizada.", "success")
     else:
-        flash("Flag incorreta! Vetor de ataque rejeitado.", "danger")
+        flash("Flag incorreta!", "danger")
         
     cur.close()
     conn.close()
@@ -271,6 +339,8 @@ def update_avatar():
 
     session['team_avatar'] = avatar_name    
     return jsonify({"success": True})
+
+###### LEMBRAR DE COLOCAR UM AVISO NO FRONT END QUE A VERIFICAÇÃO DE AUTENTICIDADE DO DOCUMENTO OCORRE EM ATÉ 10 DIAS ÚTEIS APÓS A EMISSÃO
 
 @app.route('/generate_certificate', methods=['POST'])
 def generate_certificate():
@@ -332,6 +402,42 @@ def generate_certificate():
     date_range_str = f"no período de {start_date.day} a {end_date.day} de {month_name} de {year_name}"
 
     # =========================================================================
+    # 1.5. VERIFICAÇÃO/GERAÇÃO DO HASH ÚNICO E REGISTRO DE AUTENTICIDADE
+    # =========================================================================
+    conn = get_db()
+    cur_cert = conn.cursor()
+    
+    try:
+        # Verifica se o aluno já emitiu o certificado para este evento
+        cur_cert.execute("""
+            SELECT hash_code FROM certificados_emitidos 
+            WHERE member_name = %s AND event_name = %s
+        """, (member_name, event_title))
+        
+        registro_existente = cur_cert.fetchone()
+        
+        if registro_existente:
+            # ALUNO JÁ TEM CERTIFICADO: Reaproveita o código único!
+            certificado_hash = registro_existente['hash_code']
+            # Não fazemos INSERT. Apenas usamos o hash recuperado para gerar o PDF.
+        else:
+            # ALUNO NOVO: Gera um hash único e grava no banco
+            certificado_hash = uuid.uuid4().hex[:12].upper()
+            data_emissao = datetime.now(fuso_br)
+            
+            cur_cert.execute("""
+                INSERT INTO certificados_emitidos (hash_code, member_name, event_name, issue_date)
+                VALUES (%s, %s, %s, %s)
+            """, (certificado_hash, member_name, event_title, data_emissao))
+            conn.commit()
+            
+    except Exception as e:
+        conn.rollback()
+        return f"Erro ao acessar ou registrar a credencial no banco de dados: {str(e)}", 500
+    finally:
+        cur_cert.close()
+        conn.close()
+    # =========================================================================
     # 2. LEITURA DINÂMICA DAS DIMENSÕES DO SEU CERTIFICADO PREFERIDO
     # =========================================================================
     template_path = os.path.join(app.root_path, 'static', 'materials', 'certificate_background.pdf')
@@ -377,6 +483,16 @@ def generate_certificate():
     can.drawCentredString(center_x, pos_y_texto_inicial - 50, texto_linha3)
     can.drawCentredString(center_x, pos_y_texto_inicial - 75, texto_linha4)
     
+    # --- INJEÇÃO DA VALIDAÇÃO E HASH NO RODAPÉ ---
+    can.setFont("Helvetica-Bold", 10)
+    can.setFillColorRGB(0.4, 0.4, 0.4) # Cinza escuro
+    
+    pos_y_rodape = bg_height * 0.05
+    url_validacao = f"Verifique a autenticidade deste documento em: https://asyncx.com.br/validador com código {certificado_hash}"
+    
+    can.drawCentredString(center_x, pos_y_rodape, url_validacao)
+    # ---------------------------------------------
+    
     can.save()
     packet.seek(0)
 
@@ -405,6 +521,83 @@ def generate_certificate():
     except Exception as e:
         return f"Erro interno ao injetar metadados no certificado: {str(e)}", 500
     
+
+@app.route('/sorteio')
+def sorteio():
+
+    return render_template('sorteio.html')
+
+@app.route('/participar_sorteio', methods=['POST'])
+def participar_sorteio():
+    nome = request.form.get('nome')
+    arroba = request.form.get('arroba')
+    
+    if not nome or not arroba:
+        return jsonify({"status": "error", "message": "Preencha todos os campos."}), 400
+        
+    nome = nome.strip()
+    arroba = "".join(arroba.split()).lower()
+
+    if not arroba.startswith('@'):
+        arroba = '@' + arroba
+
+    conn = get_db()
+    cur = conn.cursor()
+    
+    # -------------------------------------------------------------
+    # VALIDAÇÃO 1: Tempo (48 horas)
+    cur.execute('SELECT end_time FROM tenants WHERE id = %s', (TENANT_ID,))
+    event = cur.fetchone()
+    
+    if event and event.get('end_time'):
+        fuso_br = ZoneInfo('America/Sao_Paulo')
+        agora = datetime.now(fuso_br)
+        fim_banco = event['end_time']
+        
+        if fim_banco.tzinfo is None:
+            fim_banco = fim_banco.replace(tzinfo=fuso_br)
+        
+        limite_sorteio = fim_banco + timedelta(hours=48)
+        
+        if agora > limite_sorteio:
+            cur.close(); conn.close()
+            return jsonify({"status": "error", "message": "Inscrições encerradas."}), 403
+    # -------------------------------------------------------------
+    
+    # -------------------------------------------------------------
+    # VALIDAÇÃO 2: Unicidade do @arroba
+    cur.execute('SELECT id FROM sorteio_participantes WHERE tenant_id = %s AND arroba = %s', (TENANT_ID, arroba))
+    if cur.fetchone():
+        cur.close(); conn.close()
+        return jsonify({"status": "error", "message": f"O perfil {arroba} já está inscrito!"}), 409
+    # -------------------------------------------------------------
+
+    # Se passou em tudo, salva no banco!
+    cur.execute('''
+        INSERT INTO sorteio_participantes (tenant_id, nome, arroba) 
+        VALUES (%s, %s, %s)
+    ''', (TENANT_ID, nome, arroba))
+    conn.commit()
+    cur.close()
+    conn.close()
+    
+    return jsonify({"status": "success"})
+
+
+@app.route('/api/get_sorteio_lista')
+def get_sorteio_lista():
+    conn = get_db()
+    cur = conn.cursor()
+    # Puxa o nome e o arroba embaralhados
+    cur.execute('SELECT nome, arroba FROM sorteio_participantes WHERE tenant_id = %s ORDER BY RANDOM()', (TENANT_ID,))
+    participantes = cur.fetchall()
+    cur.close()
+    conn.close()
+    
+    # Formata a string para o telão mostrar: "Nome Completo (@arroba)"
+    lista_formatada = [f"{p['nome']} ({p['arroba']})" for p in participantes]
+    return jsonify(lista_formatada)
+
 
 @app.route('/logout')
 def logout():

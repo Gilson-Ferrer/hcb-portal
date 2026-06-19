@@ -45,27 +45,29 @@
             flex-direction: column;
         }
 
-        /* ── HEADER ── */
+        /* ── HEADER AJUSTADO ── */
         .header {
             background: #111;
             border-bottom: 1px solid var(--border);
-            height: 70px;
-            display: grid;
-            grid-template-columns: 220px 1fr auto;
+            height: 80px; 
+            display: flex;
             align-items: center;
-            padding: 0 1.5rem 0 0;
+            justify-content: space-between;
+            padding: 0 1.5rem;
             position: sticky;
             top: 0;
             z-index: 50;
+            gap: 1rem;
         }
 
         .brand {
-            padding: 0 1.5rem;
             border-right: 1px solid var(--border);
+            padding-right: 1.5rem;
             height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            flex-shrink: 0; 
         }
 
         .brand-name {
@@ -89,10 +91,11 @@
         }
 
         .header-center {
+            flex-grow: 1; 
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         .event-label {
@@ -138,19 +141,16 @@
             font-size: 0.75rem;
         }
 
-        /* Fixed info columns */
         .col-rank  { width: 36px; min-width: 36px; text-align: center; }
         .col-team  { min-width: 180px; max-width: 240px; text-align: left; }
         .col-score { width: 64px; min-width: 64px; text-align: center; }
 
-        /* Header rows */
         thead th {
             padding: 6px 3px;
             font-weight: 700;
             white-space: nowrap;
         }
 
-        /* Row 1 – category labels */
         thead tr:first-child th.cat-header {
             font-family: var(--font-ui);
             font-size: 0.7rem;
@@ -158,24 +158,21 @@
             text-transform: uppercase;
             border-radius: 4px 4px 0 0;
             text-align: center;
+            padding: 6px 3px;
         }
 
-        /* Row 2 – challenge numbers */
         thead tr:last-child th.cat-num {
             font-family: var(--font-mono);
             font-size: 0.65rem;
             border-radius: 0 0 2px 2px;
             text-align: center;
-            /* Apenas largura travada. Padding vertical mínimo */
             width: 55px !important;
             min-width: 55px !important;
             max-width: 55px !important;
             padding: 4px 0 !important; 
         }
 
-        /* Data cells */
         tbody td {
-            /* 4px em cima/baixo (altura compacta), 0px nas laterais */
             padding: 4px 0 !important; 
             text-align: center;
             border-radius: 3px;
@@ -185,7 +182,6 @@
 
         tbody tr:hover td { filter: brightness(1.2); }
 
-        /* Fixed info cells */
         td.col-rank {
             font-family: var(--font-ui);
             font-size: 0.85rem;
@@ -206,7 +202,6 @@
             color: #fff;
             background: #1a1a1a;
             border-radius: 4px;
-
             position: sticky; 
             left: 0; 
             z-index: 2;
@@ -230,9 +225,7 @@
             letter-spacing: 1px;
         }
 
-        /* Challenge cells */
         td.cell-solved, td.cell-unsolved {
-            /* TRAVA APENAS NA LARGURA */
             width: 55px !important;
             min-width: 55px !important;
             max-width: 55px !important;
@@ -240,10 +233,6 @@
 
         td.cell-solved   { opacity: 1;    color: #fff; font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
         td.cell-unsolved { opacity: 0.22; color: #000; font-weight: 700; }
-
-        td.cell-solved   { opacity: 1;    color: #fff; font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
-        td.cell-unsolved { opacity: 0.22; color: #000; font-weight: 700; }
-        /* Dynamic category color classes injected by Jinja below */
 
         /* ── FOOTER ── */
         .footer-bar {
@@ -260,14 +249,25 @@
         .footer-social { display: flex; gap: 12px; }
         .footer-social a { color: var(--text-dim); text-decoration: none; font-size: 1rem; transition: color .2s; }
         .footer-social a:hover { color: var(--cyan); }
+
+        .sorteio-btn {
+            background: var(--cyan);
+            color: #111;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 6px;
+            font-family: var(--font-ui);
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: opacity 0.2s;
+            text-decoration: none;
+        }
+        .sorteio-btn:hover { opacity: 0.75; }
+
     </style>
 
-    {#
-      Build a unique ordered list of categories from all_challenges,
-      then emit one CSS rule per category mapping name → color slot.
-      This fixes the "group by position" bug: categories are now keyed
-      by their real name, not by floor(index/3).
-    #}
     {% set cat_colors = ['#e53935','#fb8c00','#1565c0','#42a5f5','#8d6e63','#66bb6a','#8e24aa','#ef5350','#388e3c','#ff7043'] %}
     {% set cat_order = namespace(list=[]) %}
     {% for c in all_challenges %}
@@ -288,7 +288,6 @@
 </head>
 <body>
 
-    <!-- HEADER -->
     <div class="header">
         <div class="brand">
             <div class="brand-name">Asyn<span>X</span></div>
@@ -296,25 +295,34 @@
         </div>
 
         <div class="header-center">
-            <span class="event-label">Evento</span>
+            <span class="event-label" id="event-label">Status do Evento</span>
             <div class="timer" id="countdown"></div>
         </div>
-        <div>
+
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <button id="btn-abrir-sorteio" onclick="toggleModalGlobal(true)" class="sorteio-btn">
+                PREMIO EXCLUSIVO
+            </button>
             <a href="/" class="btn-close">Fechar</a>
         </div>
     </div>
 
-    <!-- MATRIX TABLE -->
     <div class="matrix-wrapper">
-        {#
-          Build two lookup maps from all_challenges:
-            cat_index  : category name → slot index (0-based, insertion order)
-            cat_counts : category name → number of challenges in that category
-          These replace the broken `loop.index0 // 3` logic.
-        #}
+        
+        {# 1. BLINDAGEM MÁXIMA: Forçamos a ordenação e agrupamento dos desafios por categoria aqui mesmo no HTML #}
+        {% set ordered_challs = namespace(items=[]) %}
+        {% for cat in cat_order.list %}
+            {% for c in all_challenges %}
+                {% if c.category == cat %}
+                    {% set ordered_challs.items = ordered_challs.items + [c] %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+        {# 2. Recalculamos os índices com a lista perfeitamente agrupada #}
         {% set cat_index  = {} %}
         {% set cat_counts = {} %}
-        {% for c in all_challenges %}
+        {% for c in ordered_challs.items %}
             {% if c.category not in cat_index %}
                 {% set _ = cat_index.update({c.category: cat_index|length}) %}
                 {% set _ = cat_counts.update({c.category: 0}) %}
@@ -324,24 +332,26 @@
 
         <table class="matrix-table">
             <thead>
-                <!-- Row 1: category group labels -->
                 <tr>
                     <th class="col-rank"  style="background:transparent;"></th>
                     <th class="col-team"  style="background:transparent; padding-left:12px; color:var(--text-muted); font-family:var(--font-ui); font-size:0.7rem;">TIME</th>
                     <th class="col-score" style="background:transparent; color:var(--text-muted); font-family:var(--font-ui); font-size:0.7rem;">TOTAL</th>
-                    {% for cat_name, cnt in cat_counts.items() %}
-                        <th class="cat-header cat-header-{{ cat_index[cat_name] }}" colspan="{{ cnt }}">
-                            {{ cat_name }}
+                    
+                    {% for cat_name in cat_order.list %}
+                        <th class="cat-header cat-header-{{ cat_index[cat_name] }}" colspan="{{ cat_counts[cat_name] }}">
+                            {# A MÁGICA ESTÁ AQUI: A div controla o texto, o TH respeita o colspan das colunas #}
+                            <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%;">
+                                {{ cat_name }}
+                            </div>
                         </th>
                     {% endfor %}
                 </tr>
-
-                <!-- Row 2: challenge sequential numbers -->
                 <tr>
                     <th class="col-rank"  style="background:transparent;"></th>
                     <th class="col-team"  style="background:transparent;"></th>
                     <th class="col-score" style="background:transparent;"></th>
-                    {% for c in all_challenges %}
+                    
+                    {% for c in ordered_challs.items %}
                         <th class="cat-num cat-num-{{ cat_index[c.category] }}" style="min-width:28px;">{{ loop.index }}</th>
                     {% endfor %}
                 </tr>
@@ -358,10 +368,11 @@
                             {{ team.name }}
                             {% if team.institution %}<span class="team-inst">{{ team.institution }}</span>{% endif %}
                         </td>
-                            <td class="col-score">
-                                {{ team.score }}
-                            </td>
-                        {% for c in all_challenges %}
+                        <td class="col-score">
+                            {{ team.score }}
+                        </td>
+                        
+                        {% for c in ordered_challs.items %}
                             {% set solved = c.id in team_solves %}
                             <td class="cat-bg-{{ cat_index[c.category] }} {% if solved %}cell-solved{% else %}cell-unsolved{% endif %}">
                                 {{ '✔' if solved else '·' }}
@@ -373,7 +384,6 @@
         </table>
     </div>
 
-    <!-- FOOTER -->
     <div class="footer-bar">
         <span>Asyncx - Soluções em TI e Segurança digital - todos os direitos reservados</span>
         <div class="footer-social">
@@ -381,41 +391,73 @@
             <a href="#" title="Instagram">@</a>
         </div>
     </div>
-
+    {% include 'modal_sorteio.html' %}
+    {% include 'loader_global.html' %}
+    
     <script>
-    const eventEndTime = new Date("{{ end_time }}").getTime();
+    // Resgata as datas do backend injetadas pelo Jinja
+    const startStr = "{{ start_time }}";
+    const endStr = "{{ end_time }}";
+    
+    const eventStartTime = startStr ? new Date(startStr).getTime() : null;
+    const eventEndTime = new Date(endStr).getTime();
+    
     const display = document.getElementById('countdown');
+    const label = document.getElementById('event-label');
 
     function updateTimer() {
         const now = new Date().getTime();
-        const distance = eventEndTime - now;
         
-        // Se o tempo esgotar, trava no zero e muda a cor para vermelho
-        if (distance < 0) {
-            display.textContent = "ENCERRADO"; // Ou "0d 00:00:00" se preferir
+        // 🔒 BLINDAGEM DO BOTÃO DE SORTEIO (48h após o fim do evento)
+        const limitTimeSorteio = eventEndTime + (48 * 60 * 60 * 1000); 
+        const btnAbrirSorteio = document.getElementById('btn-abrir-sorteio');
+        
+        if (btnAbrirSorteio && now > limitTimeSorteio) {
+            btnAbrirSorteio.textContent = "INSCRIÇÕES ENCERRADAS";
+            btnAbrirSorteio.style.opacity = "0.4";
+            btnAbrirSorteio.style.cursor = "not-allowed";
+            btnAbrirSorteio.onclick = null; 
+        }
+        
+        // 1. ESTADO: PRÉ-JOGO
+        if (eventStartTime && now < eventStartTime) {
+            const distance = eventStartTime - now;
+            label.textContent = "O EVENTO INICIA EM:";
+            display.style.color = "#00e5ff"; 
+            renderTime(distance);
+            return;
+        }
+
+        const distanceToEnd = eventEndTime - now;
+        
+        // 2. ESTADO: FIM DE JOGO
+        if (distanceToEnd < 0) {
+            label.textContent = "EVENTO";
+            display.textContent = "ENCERRADO"; 
             display.style.color = "#f44336"; 
             return;
         }
         
-        // Matemática completa (Dias, Horas, Minutos e Segundos)
+        // 3. ESTADO: EM ANDAMENTO
+        label.textContent = "TEMPO RESTANTE:";
+        display.style.color = ""; 
+        renderTime(distanceToEnd);
+    }
+
+    function renderTime(distance) {
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
         
-        // Renderização com padding de zeros
-        display.textContent = days + "d " +
+        display.textContent = (days > 0 ? days + "d " : "") +
             String(hours).padStart(2, '0') + ':' +
             String(minutes).padStart(2, '0') + ':' +
             String(seconds).padStart(2, '0');
     }
 
-    // Atualiza a cada segundo
     setInterval(updateTimer, 1000);
-    updateTimer(); // Chama imediatamente para não ter delay de 1 seg no load da página
-
-    // Descomente para auto-refresh a cada 30s:
-    // setInterval(() => location.reload(), 30000);
+    updateTimer(); 
     </script>
 </body>
 </html>

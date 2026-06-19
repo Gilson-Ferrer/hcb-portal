@@ -130,7 +130,7 @@
             text-decoration: none;
         }
 
-        .btn-header:hover { opacity: 0.85; }
+        .btn-header:hover { opacity: 0.75; }
 
         .btn-logout {
             background: transparent;
@@ -290,6 +290,17 @@
             border-bottom: 2px solid var(--border);
             margin-bottom: 2rem;
             overflow-x: auto;
+            overflow-y: hidden; /* Evita qualquer scroll vertical fantasma */
+            
+            /* Oculta a barra no Firefox */
+            scrollbar-width: none; 
+            /* Oculta a barra no Internet Explorer 10+ e Edge */
+            -ms-overflow-style: none; 
+        }
+
+        /* Oculta a barra de rolagem no Chrome, Safari e Opera (Motor WebKit) */
+        .tab-bar::-webkit-scrollbar {
+            display: none;
         }
 
         .tab-btn {
@@ -344,7 +355,10 @@
 
         .challenge-card.solved-box {
             border-color: var(--green);
-            opacity: 0.75;
+            opacity: 0.45;
+            filter: brightness(0.65); 
+            transition: all 0.3s ease; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(0, 0, 0, 0.9) !important;
         }
 
         /* Card cover image */
@@ -373,7 +387,7 @@
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: 5;
             pointer-events: none;
-            background: linear-gradient(180deg, transparent 70%, var(--card));
+            background: transparent;
         }
 
         .rec-indicator {
@@ -611,7 +625,8 @@
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0, 0, 0, 0.8); 
+            backdrop-filter: blur(8px);
             z-index: 100;
             justify-content: center;
             align-items: center;
@@ -676,66 +691,229 @@
         
         .decoder-output { background: #0a0a0a; color: var(--green-bright); padding: 10px; border-radius: 4px; min-height: 50px; font-family: var(--font-mono); word-break: break-all; border: 1px solid #111;}
         
-        .arsenal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1rem; }
-        .arsenal-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; align-items: flex-start; gap: 12px; text-decoration: none; transition: 0.2s; }
-        .arsenal-card:hover { border-color: var(--cyan); transform: translateY(-2px); background: var(--card-hover); }
+        .modal-arsenal-custom .decoder-box {
+            background: #0f0f0f;
+            border: 1px solid #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
         
-        .arsenal-icon { width: 28px; height: 28px; flex-shrink: 0; fill: var(--cyan); }
-        .arsenal-info h4 { color: #fff; font-size: 0.95rem; margin-bottom: 3px; font-family: var(--font-ui); }
-        .arsenal-info p { color: var(--text-muted); font-size: 0.75rem; line-height: 1.3; font-family: var(--font-ui); }
+        .modal-arsenal-custom .input-flag {
+            width: 100%;
+            background: #050505;
+            color: var(--neon-cyan, #00f2ff);
+            border: 1px solid #333;
+            padding: 14px;
+            font-family: var(--font-mono, monospace);
+            font-size: 0.95rem;
+            border-radius: 4px;
+            resize: vertical;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-arsenal-custom .input-flag:focus {
+            border-color: var(--neon-cyan, #00f2ff);
+            box-shadow: 0 0 12px rgba(0, 242, 255, 0.15);
+        }
 
+        /* O Segredo da Simetria: CSS Grid */
+        .modal-arsenal-custom .decoder-controls {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .modal-arsenal-custom .btn-decode {
+            background: #161616;
+            color: #aaa;
+            border: 1px solid #2d2d2d;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: var(--font-ui, sans-serif);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+        }
+
+        .modal-arsenal-custom .btn-decode:hover {
+            background: rgba(0, 242, 255, 0.05);
+            border-color: var(--neon-cyan, #00f2ff);
+            color: var(--neon-cyan, #00f2ff);
+            transform: translateY(-2px);
+        }
+
+        .modal-arsenal-custom .btn-clear {
+            grid-column: span 4; /* Ocupa as 4 colunas perfeitamente */
+            background: rgba(244, 67, 54, 0.05);
+            color: #ff4444;
+            border: 1px dashed #ff4444;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: var(--font-ui, sans-serif);
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+            margin-top: 5px;
+        }
+
+        .modal-arsenal-custom .btn-clear:hover {
+            background: #ff4444;
+            color: #000;
+            border-style: solid;
+            box-shadow: 0 0 15px rgba(244, 67, 54, 0.3);
+        }
+
+        .modal-arsenal-custom .decoder-output {
+            margin-top: 20px;
+            background: #050505;
+            border-left: 3px solid var(--neon-cyan, #00f2ff);
+            border-radius: 0 4px 4px 0;
+            padding: 15px;
+            font-family: var(--font-mono, monospace);
+            font-size: 0.95rem;
+            color: #fff;
+            white-space: pre-wrap;
+            word-break: break-all;
+            min-height: 60px;
+        }
+
+        .modal-arsenal-custom .arsenal-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .modal-arsenal-custom .arsenal-card {
+            background: #111;
+            padding: 18px 15px;
+            border: 1px solid #222;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #fff;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-arsenal-custom .arsenal-card:hover {
+            border-color: var(--neon-cyan, #00f2ff);
+            background: #161616;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .modal-arsenal-custom .arsenal-icon {
+            width: 28px;
+            height: 28px;
+            fill: var(--neon-cyan, #00f2ff);
+            flex-shrink: 0;
+            transition: fill 0.3s, filter 0.3s;
+        }
+
+        .modal-arsenal-custom .arsenal-card:hover .arsenal-icon {
+            fill: #fff;
+            filter: drop-shadow(0 0 6px var(--neon-cyan, #00f2ff));
+        }
+
+        /* ── SCROLLBAR CYBERPUNK PARA O MODAL ── */
+        .modal-arsenal-custom .modal-content {
+            max-height: 85vh; /* Trava o modal em 85% da altura da tela */
+            overflow-y: auto; /* Cria o scroll automaticamente se o conteúdo passar */
+            
+            /* Estilização do Scrollbar para Firefox */
+            scrollbar-width: thin;
+            scrollbar-color: var(--neon-cyan, #00f2ff) #111;
+        }
+
+        /* Estilização do Scrollbar para Chrome, Edge e Safari */
+        .modal-arsenal-custom .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .modal-arsenal-custom .modal-content::-webkit-scrollbar-track {
+            background: #0a0a0a; /* Fundo do trilho escuro */
+            border-radius: 8px;
+            border: 1px solid #222;
+        }
+        .modal-arsenal-custom .modal-content::-webkit-scrollbar-thumb {
+            background: var(--neon-cyan, #00f2ff); /* A barra em Ciano Neon */
+            border-radius: 8px;
+        }
+        .modal-arsenal-custom .modal-content::-webkit-scrollbar-thumb:hover {
+            background: #00acc1; /* Cor levemente mais escura ao passar o mouse */
+        }
         /* ── PLAYER BLINDADO ASYNCX ── */
         .video-shield-container {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%; /* Proporção 16:9 perfeita */
+            padding-bottom: 56.25%; /* Proporção 16:9 perfeita mantida */
             background: #000;
             border-radius: 8px;
-            overflow: hidden; /* Corta tudo que sobrar do scale */
-            border: 1px solid var(--border-light);
+            overflow: hidden; 
+            /* Borda removida, usaremos box-shadow no HTML para profundidade */
         }
 
-        /* O Iframe sofre um zoom para as bordas originais sumirem */
         #yt-player-container {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            transform: scale(1.3); /* Remove título e logo do YouTube */
-            pointer-events: none; /* TRUQUE MÁXIMO: Mouse atravessa o vídeo */
+            /* TRUQUES REMOVIDOS: Fim do scale(1.3) e do pointer-events: none */
         }
 
-        /* A Barreira Física */
-        .glass-shield {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 10; /* Fica por cima do iframe */
-            background: linear-gradient(180deg, rgba(0,188,212,0.05) 0%, transparent 50%, rgba(0,0,0,0.4) 100%);
-        }
 
-        /* Botões Nativos */
+        /* ── CONTROLOS DO VÍDEO (ÍCONES MINIMALISTAS) ── */
         .custom-controls {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-top: 15px;
             align-items: center;
         }
 
-        .btn-control {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            font-family: var(--font-ui);
-            font-weight: 700;
+        .btn-icon {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #333;
+            border-radius: 6px;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            letter-spacing: 1px;
-            transition: 0.2s;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #ffffff; /* Define os ícones como estritamente brancos */
         }
 
-        .btn-control.play { background: var(--cyan); color: #000; }
-        .btn-control.play:hover { background: var(--cyan-dark); color: #fff; }
-        .btn-control.pause { background: transparent; color: var(--text); border: 1px solid var(--border); }
-        .btn-control.pause:hover { border-color: var(--yellow); color: var(--yellow); }
+        .btn-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor; /* O SVG herda o branco perfeitamente */
+            transition: transform 0.2s ease;
+        }
+
+        /* Efeito Hover Elegante (Acende o fundo e a borda levemente) */
+        .btn-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #666;
+        }
+
+        /* Efeito de "Clique" (O ícone encolhe levemente ao clicar) */
+        .btn-icon:active {
+            transform: scale(0.92);
+        }
+
+        .btn-icon:hover svg {
+            transform: scale(1.1); /* O ícone cresce subtilmente no hover */
+        }
 
         .feed-status {
             margin-left: auto;
@@ -743,34 +921,109 @@
             font-size: 0.8rem;
             color: var(--text-dim);
         }
+        /* ── AVATAR UNIFICADO (Fim dos Conflitos) ── */
+        .avatar-option {
+            cursor: pointer;
+            width: 80px;  /* Defina o tamanho fixo aqui */
+            height: 80px; /* Deve ser idêntico ao width para ser um círculo perfeito */
+            border-radius: 50%;
+            padding: 4px;
+            background: transparent;
+            border: 3px solid var(--border-cyber, #333); /* Borda neutra inicial */
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
 
+        .avatar-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            filter: saturate(1.2); /* Brilho inicial leve */
+        }
+
+        /* Efeito de Brilho apenas no HOVER */
         .avatar-option:hover {
             border-color: var(--neon-cyan) !important;
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
-            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.6);
+            transform: scale(1.1);
+            filter: brightness(1.2);
         }
         .avatar-option { transition: all 0.2s ease; }
 
+        .sorteio-btn {
+            background: var(--text);
+            color: #111;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 6px;
+            font-family: var(--font-ui);
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer; 
+            letter-spacing: 0.5px;
+            transition: opacity 0.2s;
+        }
+
+        .sorteio-btn:hover { 
+            opacity: 0.75; 
+        }
+
+        /* ==========================================================================
+           🛡️ ASYNCX MOBILE ARMOR - PASSO 2: BLINDAGEM DE EXTRAVASAMENTO
+           ========================================================================== */
         @media (max-width: 900px) {
+            /* 0. Trava Mestre (Evita o balanço horizontal de tela) */
+            body { max-width: 100vw; overflow-x: hidden; }
+
+            /* 1. Fundação do Layout */
             .workspace { grid-template-columns: 1fr; }
-            .header { grid-template-columns: auto 1fr auto; }
-            .brand { border-right: none; }
+            .header { height: auto; grid-template-columns: 1fr; padding: 1rem; gap: 15px; }
+            .brand { border-right: none; padding: 0; align-items: center; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+            .header-center { width: 100%; justify-content: space-between; }
+            .header-actions { width: 100%; justify-content: center; }
+
+            /* 2. Compactação da Sidebar e Perfil (Conserta o Card Enorme) */
+            .sidebar { border-right: none; border-bottom: 1px solid var(--border); padding: 1rem; }
+            .team-block { flex-direction: row; justify-content: flex-start; text-align: left; border-bottom: none; padding-bottom: 0; margin-bottom: 15px; }
+            .team-block .profile-card { text-align: left !important; display: flex; align-items: center; gap: 15px; width: 100%; }
+            .avatar-box { margin: 0 !important; width: 50px !important; height: 50px !important; }
+            .team-name { font-size: 1rem; }
+            .team-inst { font-size: 0.65rem; }
+
+            /* 3. Escala a Caixa de Pontuação para caber na tela */
+            .sidebar-nav > div[style*="display: flex"] { flex-direction: row !important; gap: 5px !important; margin-bottom: 10px !important; }
+            .sidebar-nav > div > div { padding: 8px 4px !important; }
+            .sidebar-nav > div > div > strong { font-size: 1.1rem !important; }
+            .sidebar-nav > div > div > span { font-size: 0.55rem !important; }
+
+            /* 4. Menu Compactado (Evita que botões laterais estiquem a tela) */
+            .sidebar-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+            .nav-item { padding: 8px 5px; font-size: 0.8rem; text-align: center; justify-content: center; border: 1px solid var(--border-light); border-radius: 4px; }
+            .sidebar-nav > div.linha-divisoria { display: none; }
+            .sorteio-btn { grid-column: span 2; margin: 5px 0 !important; padding: 10px !important; font-size: 0.85rem; }
+
+            /* 5. Ajuste Principal dos Cards (Limita a largura e o grid) */
+            .main-content { padding: 1rem; max-width: 100vw; }
+            .challenge-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .challenge-card { width: 100%; max-width: 100%; }
+            .card-cover { height: 140px; } /* Reduz a altura da imagem de capa do card */
+            .card-title { font-size: 1.05rem; }
+
+            /* 6. Tabs Ocultando o Scroll Vertical */
+            .tab-bar { padding-bottom: 5px; margin-bottom: 1.5rem; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; }
+            .tab-btn { font-size: 0.85rem; padding: 10px 15px; }
+
+            /* 7. Footer Quebrado Correto */
+            .footer-bar { flex-direction: column; gap: 10px; text-align: center; padding: 1rem; }
+            .footer-social { justify-content: center; }
         }
     </style>
 </head>
 <body>
-
-    <div class="flash-container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert" style="background: {% if category == 'danger' %}var(--red){% else %}var(--green){% endif %};">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
 
     <!-- HEADER -->
     <div class="header">
@@ -786,7 +1039,7 @@
 
         <div class="header-actions">
             <button class="btn-header" onclick="openModal('modalTutorial')">Tutorial</button>
-            <a href="/logout" class="btn-logout">[→ sair]</a>
+            <a href="/logout" class="btn-logout" onclick="showLoader('Desconectando...')">[→ sair]</a>
         </div>
     </div>
 
@@ -798,7 +1051,7 @@
             <div class="team-block">
                 <div class="profile-card" style="text-align: center;">
                     
-                    <div class="avatar-box" onclick="openModal('modalAvatar')" 
+                    <div class="avatar-box avatar-option" onclick="openModal('modalAvatar')" 
                         style="cursor: pointer; width: 80px; height: 80px; margin: 0 auto 0.8rem auto; border-radius: 50%; border: 2px solid var(--neon-cyan); overflow: hidden; background-color: #000; box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);">
                         
                         <img id="current-avatar" 
@@ -848,22 +1101,49 @@
                     </div>
 
                 </div>
-                <button class="nav-item" onclick="openModal('modalPlacar')">Placar geral</button>
-                <button class="nav-item" onclick="openModal('modalIntegrantes')">Equipe</button>
-                <button class="nav-item" onclick="openModal('modalMaterial')">Central de Apoio</button>
-                
-                <button class="nav-item" onclick="openModal('modalArsenal')">Ferramentas</button>
-                <button class="nav-item" onclick="openModalDicas()">Mensagens de apoio</button>
-                <button class="nav-item" onclick="openModal('modalPremio')">Prêmio exclusivo</button>
-                <button class="nav-item" style="border-color: rgba(255, 215, 0, 0.3);" onclick="openModal('modalCertificado')">Emitir Certificado</button>
-                <button class="nav-item" onclick="openModal('modalSobre')">Sobre</button>
+                    <button class="nav-item" onclick="openModal('modalPlacar')">Placar geral</button>
+                    <button class="nav-item" onclick="openModal('modalIntegrantes')">Equipe</button>
+                    <button class="nav-item" onclick="openModal('modalMaterial')">Central de Apoio</button>
+                    
+                    <button class="nav-item" onclick="openModal('modalArsenal')">Ferramentas</button>
+                    <button class="nav-item" onclick="openModalDicas()">Mensagens de apoio</button>
+
+                    <button class="nav-item" onclick="openModal('modalCertificado')">Emitir Certificado</button>
+                    <button class="nav-item" onclick="openModal('modalSobre')">Sobre</button>
+                    <div style="height: 1px; background: rgba(255, 215, 0, 0.3); margin: 15px 8px;"></div>
+                    <button onclick="toggleModalGlobal(true)" class="sorteio-btn">
+                        PREMIO EXCLUSIVO
+                    </button><br>
+                    <button onclick="toggleModalVotacao(true)" class="sorteio-btn" style="background: var(--yellow); color: #111; margin-bottom: 15px; width: 100%;">
+                        GANHE 120 XP
+                    </button>
+                </div>
             </div>
-        </div>
 
         <!-- MAIN -->
         <div class="main-content">
             <div class="section-title">Desafios</div>
-
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% set is_success = 'success' in category %}
+                        <div class="asyncx-alert-ticket" 
+                            style="background: {% if is_success %}rgba(76, 175, 80, 0.05){% else %}rgba(229, 57, 53, 0.05){% endif %}; 
+                                    border: 1px solid {% if is_success %}#4caf50{% else %}#e53935{% endif %}; 
+                                    padding: 14px 20px; 
+                                    border-radius: 6px; 
+                                    margin-bottom: 2rem;
+                                    opacity: 1;
+                                    transition: opacity 0.5s ease, max-height 0.5s ease, margin 0.5s ease;
+                                    max-height: 80px;
+                                    overflow: hidden;">
+                            <p style="font-family: var(--font-mono); font-size: 0.95rem; color: {% if is_success %}#66bb6a{% else %}#ef5350{% endif %}; font-weight: 600; margin: 0; letter-spacing: 0.5px; text-transform: uppercase; text-align: center;">
+                                {% if is_success %}{{ message }}{% else %}{{ message }}{% endif %}
+                            </p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             <div class="tab-bar">
                 <button class="tab-btn active" onclick="switchTab(event, 'Cyberdetective')">Cyberdetective</button>
                 <button class="tab-btn" onclick="switchTab(event, 'Invasion')">Invasion</button>
@@ -878,7 +1158,7 @@
                     <div class="challenge-grid">
                         {% if not list %}
                             <p style="color:var(--text-muted); font-family:var(--font-mono); font-size:0.85rem;">
-                                [!] Nenhum artefato detectado nesta camada.
+                                Nenhum desafio detectado nesta camada.
                             </p>
                         {% endif %}
 
@@ -933,33 +1213,45 @@
                                     {% if c.id not in solved_ids %}
     
                                         {% if c.action_type == 'iframe' and c.action_url %}
-                                            <button class="btn-start" onclick="openVideoModal('{{ c.action_url }}', '{{ c.title|escape }}')">COMEÇAR FEED</button>
+                                            <button class="btn-start" onclick="openVideoModal('{{ c.action_url }}', '{{ c.title|escape }}')">COMEÇAR</button>
                                         
                                         {% elif c.action_type == 'download' and c.action_url %}
-                                            <a href="{{ c.action_url }}" target="_blank" class="btn-start">BAIXAR ARTEFATO</a>
+                                            <a href="{{ c.action_url }}" target="_blank" class="btn-start">BAIXAR</a>
                                             
                                         {% elif c.action_type == 'link' and c.action_url %}
-                                            <a href="{{ c.action_url }}" target="_blank" class="btn-start">ACESSAR ALVO</a>
+                                            <a href="{{ c.action_url }}" target="_blank" class="btn-start">ACESSAR</a>
                                             
                                         {% else %}
-                                            <button class="btn-start" style="cursor: default; opacity: 0.8;" onclick="return false;">INICIAR ANÁLISE</button>
+                                            <button class="btn-start" style="cursor: default; opacity: 0.8;" onclick="return false;">INICIAR</button>
                                         {% endif %}
 
                                         <div class="card-footer-row">
                                             <span class="pts-badge">{{ c.points }} pts</span>
-                                            <button onclick="comprarDica({{ c.id }})" class="btn-hint">
+                                            
+                                            <button onclick="comprarDica({{ c.id }})" 
+                                                    class="btn-hint" 
+                                                    {% if c.id in purchased_ids %}
+                                                        disabled 
+                                                        style="background: #222222; color: #555555; border-color: #2d2d2d; cursor: not-allowed; box-shadow: none;"
+                                                    {% endif %}>
                                                 {% if c.id in purchased_ids %}RESGATADO{% else %}DICA{% endif %}
                                             </button>
                                         </div>
 
                                         {% if c.id in purchased_ids %}
-                                            <div class="hint-box">
-                                                <span class="hint-label">Dica: </span>
-                                                <span class="blur-hint" onmousedown="this.classList.add('reveal')" onmouseup="this.classList.remove('reveal')" onmouseleave="this.classList.remove('reveal')">{{ c.hint }}</span>
+                                            <div class="hint-box" style="margin-top: 12px; background: rgba(0, 188, 212, 0.03); border: 1px solid rgba(0, 188, 212, 0.1); padding: 10px; border-radius: 4px;">
+                                                <span class="hint-label" style="color: var(--cyan); font-family: var(--font-mono); font-weight: bold; font-size: 0.85rem;"></span>
+                                                
+                                                <span class="blur-hint" 
+                                                      onclick="this.classList.toggle('reveal')" 
+                                                      title="Clique para revelar ou esconder a dica"
+                                                      style="cursor: pointer; font-family: var(--font-mono); font-size: 0.9rem; display: inline-block; margin-top: 4px;">
+                                                    {{ c.hint }}
+                                                </span>
                                             </div>
                                         {% endif %}
 
-                                        <form action="/submit" method="post" class="flag-form" style="margin-top: 0.6rem;">
+                                        <form action="/submit" method="post" class="flag-form" style="margin-top: 0.6rem;" onsubmit="return validarEnvioFlag(event)">
                                             <input type="hidden" name="challenge_id" value="{{ c.id }}">
                                             <input type="text" name="flag" class="input-flag" placeholder="Flag ..." required autocomplete="off">
                                             <button type="submit" class="btn-submit">ENVIAR</button>
@@ -989,15 +1281,31 @@
     </div>
 
     <!-- MODAL: Tutorial -->
-    <div id="modalTutorial" class="modal" style="display: {% if solved_ids is defined and solved_ids|length == 0 and purchased_ids is defined and purchased_ids|length == 0 %}flex{% else %}none{% endif %};">
-        <div class="modal-content" style="max-width: 640px;">
-            <span class="modal-close" onclick="closeModal('modalTutorial')">&times;</span>
-            <h2 style="margin-bottom:1rem; color:var(--cyan); font-family:var(--font-display); font-size:1.1rem; letter-spacing:1px;">⚙️ BRIEFING DE MISSÃO</h2>
-            <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.2rem; font-family:var(--font-ui);">Assista ao vídeo estratégico do Professor Gilson para entender as regras da Arena, uso do terminal e os critérios de desempate.</p>
-            <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:8px; border:1px solid var(--border);">
-                <iframe style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;" src="https://www.youtube.com/embed/PLRi-lwsw_LPH4vGBznOiwjRgxK-EER8CL?modestbranding=1&rel=0&controls=0" frameborder="0" loading="lazy"></iframe>
+    <div id="modalTutorial" class="modal" style="display: none;">
+        
+        <div class="modal-content" style="max-width: 720px; background: transparent; border: none; box-shadow: none; padding: 0;">
+            
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; padding: 0 5px;">
+                <div>
+                    <h2 style="color: var(--cyan); font-family: var(--font-display); font-size: 1.1rem; letter-spacing: 2px; margin: 0;">TUTORIAL</h2>
+                    <p style="color: var(--text); font-size: 0.85rem; font-family: var(--font-mono); margin: 0; margin-top: 4px;">Entendendo as regras do game.</p>
+                </div>
+                <span class="modal-close" onclick="closeModal('modalTutorial')" style="position: static; font-size: 2rem; line-height: 1;">&times;</span>
             </div>
-            <button class="btn-start" onclick="closeModal('modalTutorial')" style="margin-top:1.2rem;">Entendi as Regras</button>
+
+            <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:8px; box-shadow: 0 15px 40px rgba(0,0,0,0.8); background: #000;">
+                
+                <iframe style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:auto;" 
+                        src="https://www.youtube.com/embed/PLRi-lwsw_LPH4vGBznOiwjRgxK-EER8CL?modestbranding=1&rel=0&controls=1" 
+                        frameborder="0" loading="lazy" allowfullscreen></iframe>
+            </div>
+            <button class="btn-start" onclick="closeModal('modalTutorial')" 
+                    style="margin-top: 15px; width: 100%; background: #005f6b; color: #ffffff; border: 1px solid var(--cyan); font-family: var(--font-mono); transition: all 0.2s; font-weight: bold; cursor: pointer;"
+                    onmouseover="this.style.background='var(--cyan)'; this.style.color='#000000';" 
+                    onmouseout="this.style.background='#005f6b'; this.style.color='#ffffff';">
+                ENTENDI
+            </button>
+
         </div>
     </div>
 
@@ -1006,15 +1314,15 @@
         <div class="modal-content" style="max-width: 500px; background: #0a0a0a; border: 1px solid #333; box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);">
             <span class="modal-close" onclick="closeModal('modalIntegrantes')">&times;</span>
             
-            <h2 style="margin-bottom: 0.3rem; color: var(--neon-cyan); font-family: var(--font-display); letter-spacing: 2px;">OPERADORES DA EQUIPE</h2>
+            <h2 style="margin-bottom: 0.3rem; color: var(--neon-cyan); font-family: var(--font-display); letter-spacing: 2px;">EQUIPE</h2>
             <p style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 1.5rem; font-family: var(--font-mono); letter-spacing: 1px;">
-                [ STATUS: AGENTES ATIVOS NA REDE ]
+                [ INTEGRANTES ]
             </p>
 
             <div style="background: rgba(0, 242, 255, 0.02); border: 1px solid #1a1a1a; border-radius: 8px; padding: 15px; font-family: var(--font-ui);">
                 {% if team_members %}
                     <ul style="list-style: none; padding: 0; margin: 0;">
-                        {# O Jinja quebra os nomes por vírgula automaticamente e remove espaços extras com o .strip() #}
+                        
                         {% for integrante in team_members.split(',') %}
                             {% if integrante.strip() %}
                             <li style="color: #e0e0e0; font-size: 1rem; padding: 10px 5px; border-bottom: 1px solid #151515; display: flex; align-items: center; justify-content: space-between;">
@@ -1022,14 +1330,14 @@
                                     <span style="color: var(--neon-cyan); font-size: 0.6rem; animation: pulse 2s infinite;">🟢</span>
                                     <span style="font-weight: 500; letter-spacing: 0.5px;">{{ integrante.strip() }}</span>
                                 </div>
-                                <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">[ ONLINE ]</span>
+                                <span style="font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">[ ATIVO ]</span>
                             </li>
                             {% endif %}
                         {% endfor %}
                     </ul>
                 {% else %}
                     <div style="text-align: center; padding: 15px 0; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.85rem;">
-                        Nenhum operador registrado nesta credencial.
+                        Nenhum integrante registrado nessa equipe.
                     </div>
                 {% endif %}
             </div>
@@ -1056,23 +1364,12 @@
 
         </div>
     </div>
-
-    <!-- MODAL: Prêmio -->
-    <div id="modalPremio" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeModal('modalPremio')">&times;</span>
-            <h2 style="margin-bottom:1rem; color:var(--yellow); font-family:var(--font-display); font-size:1rem;">⚡ Prêmio Exclusivo Sorteio</h2>
-            <p style="color:var(--text); line-height:1.5; margin-bottom:0.8rem; font-family:var(--font-ui); font-size:0.9rem;">Quer ganhar o kit hacker de Lockpicking ou uma camiseta Root?</p>
-            <p style="color:var(--text-muted); line-height:1.5; font-family:var(--font-ui); font-size:0.85rem;">Tire uma foto do seu monitor no escuro operando o HCB, poste nos Stories marcando a instituição e o perfil da <strong>@AsyncXSecurity</strong>. O sorteio rodará na Live de encerramento!</p>
-        </div>
-    </div>
-
     <!-- MODAL: Sobre -->
     <div id="modalSobre" class="modal">
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal('modalSobre')">&times;</span>
             <h2 style="margin-bottom:1rem; font-family:var(--font-display); font-size:1rem;">Sobre a AsyncX</h2>
-            <p style="color:var(--text-muted); line-height:1.5; font-family:var(--font-ui); font-size:0.9rem;">A AsyncX é uma aceleradora de engenharia de sistemas e segurança defensiva. Conheça nossos ecossistemas avançados de Hardening de Kernel Linux e arquiteturas em Nuvem.</p>
+            <p style="color:var(--text-muted); line-height:1.5; font-family:var(--font-ui); font-size:0.9rem;">A AsyncX é uma empresa de Tecnologia, que fornece serviços de Treinamentos, Eventos, Infraestrutura e Suporte Técnico. Nosso compromisso está em promover a segurança e alto desempenho de sistemas, em qualquer négocio.</p>
         </div>
     </div>
 
@@ -1092,104 +1389,103 @@
     </div>
 
     <!-- MODAL: Arsenal -->
-    <div id="modalArsenal" class="modal modal-arsenal">
-        <div class="modal-content" style="max-width: 900px;"> <div class="modal-close" onclick="closeModal('modalArsenal')">×</div>
+    <div id="modalArsenal" class="modal modal-arsenal modal-arsenal-custom">
+        <div class="modal-content" style="max-width: 900px;"> 
+            <div class="modal-close" onclick="closeModal('modalArsenal')">×</div>
             <h2 class="section-title" style="margin-bottom: 1rem; font-size: 1.5rem; color: var(--neon-cyan);">FERRAMENTAS</h2>
 
-            <div class="decoder-box" style="background: #0f0f0f; border: 1px solid #333; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                <h3 style="font-size: 1rem; color: #fff; margin-bottom: 8px; font-family: var(--font-display);">DECODIFICADOR</h3>
-                <textarea id="decodeInput" class="input-flag" rows="3" placeholder="Cole a flag encriptada, hash ou string binária aqui..." style="width: 100%; background: #000; color: #00f2ff; border: 1px solid #222; padding: 10px; font-family: var(--font-mono); border-radius: 4px; resize: vertical;"></textarea>
+            <div class="decoder-box">
+                <h3 style="font-size: 1rem; color: #fff; margin-bottom: 12px; font-family: var(--font-display);">DECODIFICADOR MULTI-BASE</h3>
+                <textarea id="decodeInput" class="input-flag" rows="3" placeholder="Cole a flag encriptada, hash ou string binária aqui..."></textarea>
                 
-                <div class="decoder-controls" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
-                    <button class="btn-decode" onclick="runDecode('b64')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">Base64</button>
-                    <button class="btn-decode" onclick="runDecode('b32')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">Base32</button>
-                    <button class="btn-decode" onclick="runDecode('b45')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">Base45</button>
+                <div class="decoder-controls">
+                    <button class="btn-decode" onclick="runDecode('b64')">Base-64</button>
+                    <button class="btn-decode" onclick="runDecode('b32')">Base-32</button>
+                    <button class="btn-decode" onclick="runDecode('b45')">Base-45</button>
+                    <button class="btn-decode" onclick="runDecode('bin')">Binário</button>
+                    <button class="btn-decode" onclick="runDecode('oct')">Octal</button>
+                    <button class="btn-decode" onclick="runDecode('hex')">Hexadec</button>
+                    <button class="btn-decode" onclick="runDecode('rot')">C-César</button>
+                    <button class="btn-decode" onclick="runDecode('url')">URL-Dec</button>
                     
-                    <button class="btn-decode" onclick="runDecode('bin')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">Binário</button>
-                    <button class="btn-decode" onclick="runDecode('oct')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">Octal</button>
-                    <button class="btn-decode" onclick="runDecode('hex')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">Hexadecimal</button>
-                    
-                    <button class="btn-decode" onclick="runDecode('rot')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">César (ROT 1-25)</button>
-                    <button class="btn-decode" onclick="runDecode('url')" style="background: #1a1a1a; color: #fff; border: 1px solid #333; padding: 6px 12px; cursor: pointer; border-radius: 4px;">URL Decode</button>
-                    
-                    <button class="btn-decode" onclick="document.getElementById('decodeInput').value=''; document.getElementById('decodeOutput').innerText='';" style="margin-left: auto; background: transparent; color: #ff4444; border: 1px solid #ff4444; padding: 6px 12px; cursor: pointer; border-radius: 4px;">Limpar</button>
+                    <button class="btn-clear" onclick="document.getElementById('decodeInput').value=''; document.getElementById('decodeOutput').innerText='Resultado da análise...';">Limpar Terminal</button>
                 </div>
                 
-                <div id="decodeOutput" class="decoder-output" style="margin-top: 15px; background: rgba(0, 242, 255, 0.05); border: 1px solid var(--neon-cyan); padding: 12px; font-family: var(--font-mono); color: #fff; white-space: pre-wrap; word-break: break-all; min-height: 50px; border-radius: 4px;">Resultado da análise...</div>
+                <div id="decodeOutput" class="decoder-output">Resultado da análise...</div>
             </div>
 
             <h3 style="font-size: 1rem; color: #fff; margin-bottom: 15px; font-family: var(--font-display);">FERRAMENTAS DE EXTRAÇÃO E PESQUISA</h3>
         
-            <div class="arsenal-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+            <div class="arsenal-grid">
             
-                <a href="https://www.virustotal.com/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
-                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                <a href="https://www.virustotal.com/" target="_blank" class="arsenal-card">
+                    <svg viewBox="0 0 24 24" class="arsenal-icon"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
                     <div>
-                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">VirusTotal</h4>
+                        <h4 style="margin: 0 0 5px 0; color: var(--neon-cyan, #00f2ff); font-size: 1rem;">VirusTotal</h4>
                         <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Análise de IoCs, arquivos e URLs suspeitas contra múltiplos motores de antivírus.</p>
                     </div>
                 </a>
 
-                <a href="https://gchq.github.io/CyberChef/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
-                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.5 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+                <a href="https://gchq.github.io/CyberChef/" target="_blank" class="arsenal-card">
+                    <svg viewBox="0 0 24 24" class="arsenal-icon"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.5 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
                     <div>
-                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">CyberChef</h4>
+                        <h4 style="margin: 0 0 5px 0; color: var(--neon-cyan, #00f2ff); font-size: 1rem;">CyberChef</h4>
                         <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">O "Canivete Suíço" para operações criptográficas, encodings e análise de pacotes.</p>
                     </div>
                 </a>
 
-                <a href="https://crackstation.net/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
-                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                <a href="https://crackstation.net/" target="_blank" class="arsenal-card">
+                    <svg viewBox="0 0 24 24" class="arsenal-icon"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
                     <div>
-                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">CrackStation</h4>
+                        <h4 style="margin: 0 0 5px 0; color: var(--neon-cyan, #00f2ff); font-size: 1rem;">CrackStation</h4>
                         <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Quebra massiva de Hashes (MD5, SHA1) em segundos através de Rainbow Tables.</p>
                     </div>
                 </a>
 
-                <a href="https://www.shodan.io/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
-                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                <a href="https://www.shodan.io/" target="_blank" class="arsenal-card">
+                    <svg viewBox="0 0 24 24" class="arsenal-icon"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
                     <div>
-                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">Shodan.io</h4>
+                        <h4 style="margin: 0 0 5px 0; color: var(--neon-cyan, #00f2ff); font-size: 1rem;">Shodan.io</h4>
                         <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">O motor de busca global para Reconnaissance de dispositivos conectados e servidores.</p>
                     </div>
                 </a>
 
-                <a href="https://www.metadata2go.com/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
-                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                <a href="https://www.metadata2go.com/" target="_blank" class="arsenal-card">
+                    <svg viewBox="0 0 24 24" class="arsenal-icon"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
                     <div>
-                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">Metadata2Go</h4>
+                        <h4 style="margin: 0 0 5px 0; color: var(--neon-cyan, #00f2ff); font-size: 1rem;">Metadata2Go</h4>
                         <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Forense Digital. Extraia dados ocultos, coordenadas e EXIF de imagens e PDFs.</p>
                     </div>
                 </a>
 
-                <a href="https://haveibeenpwned.com/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
-                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <a href="https://haveibeenpwned.com/" target="_blank" class="arsenal-card">
+                    <svg viewBox="0 0 24 24" class="arsenal-icon"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
                     <div>
-                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">HIBP</h4>
+                        <h4 style="margin: 0 0 5px 0; color: var(--neon-cyan, #00f2ff); font-size: 1rem;">HIBP</h4>
                         <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Consulta de inteligência em bases de dados sobre vazamento massivo de credenciais.</p>
                     </div>
                 </a>
 
-                <a href="https://dencode.com/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
-                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                <a href="https://dencode.com/" target="_blank" class="arsenal-card">
+                    <svg viewBox="0 0 24 24" class="arsenal-icon"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
                     <div>
-                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">Dencode</h4>
+                        <h4 style="margin: 0 0 5px 0; color: var(--neon-cyan, #00f2ff); font-size: 1rem;">Dencode</h4>
                         <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Conversor universal de strings e payloads de codificação web simultâneos.</p>
                     </div>
                 </a>
 
-                <a href="https://gtfobins.github.io/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
-                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zM7.5 17l-1.41-1.41L8.67 13l-2.58-2.59L7.5 9l4 4-4 4z"/></svg>
+                <a href="https://gtfobins.github.io/" target="_blank" class="arsenal-card">
+                    <svg viewBox="0 0 24 24" class="arsenal-icon"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zM7.5 17l-1.41-1.41L8.67 13l-2.58-2.59L7.5 9l4 4-4 4z"/></svg>
                     <div>
-                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">GTFOBins</h4>
+                        <h4 style="margin: 0 0 5px 0; color: var(--neon-cyan, #00f2ff); font-size: 1rem;">GTFOBins</h4>
                         <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Lista curada de binários Unix para bypass e Escalação de Privilégio (PrivEsc).</p>
                     </div>
                 </a>
 
-                <a href="https://www.revshells.com/" target="_blank" class="arsenal-card" style="background: #111; padding: 15px; border: 1px solid #222; border-radius: 8px; text-decoration: none; color: #fff; display: flex; align-items: flex-start; gap: 12px; transition: border 0.3s;" onmouseover="this.style.borderColor='#00f2ff'" onmouseout="this.style.borderColor='#222'">
-                    <svg viewBox="0 0 24 24" style="width: 28px; height: 28px; fill: #00f2ff; flex-shrink: 0;"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+                <a href="https://www.revshells.com/" target="_blank" class="arsenal-card">
+                    <svg viewBox="0 0 24 24" class="arsenal-icon"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
                     <div>
-                        <h4 style="margin: 0 0 5px 0; color: #00f2ff; font-size: 1rem;">RevShells</h4>
+                        <h4 style="margin: 0 0 5px 0; color: var(--neon-cyan, #00f2ff); font-size: 1rem;">RevShells</h4>
                         <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Gerador de conexões de Reverse Shell automatizado em dezenas de linguagens.</p>
                     </div>
                 </a>
@@ -1199,21 +1495,36 @@
     </div>
 
     <!-- MODAL: Vídeos -->
-    <div id="modalVideo" class="modal">
-        <div class="modal-content" style="max-width: 800px; padding: 1.5rem; background: #0a0a0a; border: 1px solid var(--cyan);">
-            <div class="modal-close" onclick="closeVideoModal()">×</div>
-            <h2 id="videoModalTitle" style="margin-bottom: 1rem; color: var(--cyan); font-family: var(--font-display); font-size: 1.2rem; letter-spacing: 1px;">DECRYPTING FEED...</h2>
+    <div id="modalVideo" class="modal" style="display: none;">
+        
+        <div class="modal-content" style="max-width: 800px; background: transparent; border: none; box-shadow: none; padding: 0;">
             
-            <div class="video-shield-container">
-                <div class="glass-shield"></div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 12px; padding: 0 5px;">
+                <h2 id="videoModalTitle" style="color: var(--cyan); font-family: var(--font-display); font-size: 1.2rem; letter-spacing: 2px; margin: 0; text-transform: uppercase;">DECRYPTING FEED...</h2>
+                <span class="modal-close" onclick="closeVideoModal()" style="position: static; font-size: 2rem; line-height: 1;">&times;</span>
+            </div>
+            
+            <div class="video-shield-container" style="box-shadow: 0 15px 40px rgba(0,0,0,0.8);">
                 <div id="yt-player-container"></div>
             </div>
 
-            <div class="custom-controls">
-                <button class="btn-control play" onclick="asyncxPlay()">▶ INICIAR DESCRIPTOGRAFIA</button>
-                <button class="btn-control pause" onclick="asyncxPause()">⏸ PAUSAR</button>
-                <div class="feed-status">STATUS: <span style="color: var(--green-bright); animation: pulse 2s infinite;">SECURE CONNECTION</span></div>
+            <div class="custom-controls" style="padding: 0 5px;">
+                
+                <button class="btn-icon" onclick="asyncxPlay()" title="Iniciar Transmissão">
+                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+                
+                <button class="btn-icon" onclick="asyncxPause()" title="Pausar Transmissão">
+                    <svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+                
+                <button class="btn-icon" onclick="asyncxFullscreen()" title="Expandir Ecrã">
+                    <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                </button>
+                
+                <div class="feed-status">STATUS: <span style="color: var(--green-bright); animation: pulse 2s infinite;">CONECTADO</span></div>
             </div>
+
         </div>
     </div>
 
@@ -1221,12 +1532,12 @@
     <div id="modalAvatar" class="modal">
         <div class="modal-content" style="max-width: 600px;">
             <span class="modal-close" onclick="closeModal('modalAvatar')">&times;</span>
-            <h2 style="margin-bottom:1.5rem; color:var(--neon-cyan)">SELECIONE SEU AVATAR</h2>
+            <h2 style="margin-bottom:1.5rem; color:var(--neon-cyan)">SELECIONE SEU EMBLEMA</h2>
             <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">
                 {% for i in range(1, 26) %}
-                <div class="avatar-option" onclick="updateTeamAvatar('avatar{{ i }}.webp')" 
+                <div class="avatar-option avatar-glow" onclick="updateTeamAvatar('avatar{{ i }}.webp')" 
                     style="cursor:pointer; border: 2px solid var(--border-cyber); border-radius: 50%; padding: 4px;">
-                    <img src="{{ url_for('static', filename='img/avatars/avatar' ~ i ~ '.webp') }}" style="width:100%; border-radius:50%;">
+                    <img src="{{ url_for('static', filename='img/avatars/avatar' ~ i ~ '.webp') }}" style="width:100%; border-radius:50%; height: auto;">
                 </div>
                 {% endfor %}
             </div>
@@ -1238,54 +1549,54 @@
         <div class="modal-content" style="max-width: 700px; background: #0a0a0a; border: 1px solid #333;">
             <span class="modal-close" onclick="closeModal('modalMaterial')">&times;</span>
             
-            <h2 style="margin-bottom: 0.5rem; color: var(--neon-cyan); font-family: var(--font-display); letter-spacing: 2px;">CENTRAL DE INTELIGÊNCIA</h2>
+            <h2 style="margin-bottom: 0.5rem; color: var(--neon-cyan); font-family: var(--font-display); letter-spacing: 2px;">CENTRAL DE DOCUMENTOS</h2>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem;">
                 Documentação oficial e Cheat Sheets autorizados para consulta durante a operação.
             </p>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                
-                <div style="background: rgba(0, 242, 255, 0.03); border: 1px solid #222; border-radius: 8px; padding: 15px; display: flex; align-items: center; justify-content: space-between; transition: border 0.2s;" onmouseover="this.style.borderColor='var(--neon-cyan)'" onmouseout="this.style.borderColor='#222'">
+                            
+                <div style="background: rgba(0, 188, 212, 0.05); border: 1px solid #222; border-radius: 8px; padding: 15px; display: flex; align-items: center; justify-content: space-between; transition: border 0.2s;" onmouseover="this.style.borderColor='var(--cyan)'" onmouseout="this.style.borderColor='#222'">
                     <div>
                         <strong style="color: #fff; display: block; font-size: 1rem; margin-bottom: 3px;">Linux Sysadmin</strong>
                         <span style="color: var(--text-dim); font-size: 0.75rem;">Comandos, File System e Permissões.</span>
                     </div>
                     <a href="{{ url_for('static', filename='materials/linux_cheat.pdf') }}" target="_blank" 
-                       style="background: var(--neon-cyan); color: #000; padding: 8px 12px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 0.75rem;">
-                       ACESSAR
+                    style="background: var(--cyan); color: #000; padding: 8px 12px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 0.75rem; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                    ACESSAR
                     </a>
                 </div>
 
-                <div style="background: rgba(0, 242, 255, 0.03); border: 1px solid #222; border-radius: 8px; padding: 15px; display: flex; align-items: center; justify-content: space-between; transition: border 0.2s;" onmouseover="this.style.borderColor='var(--neon-cyan)'" onmouseout="this.style.borderColor='#222'">
+                <div style="background: rgba(0, 188, 212, 0.05); border: 1px solid #222; border-radius: 8px; padding: 15px; display: flex; align-items: center; justify-content: space-between; transition: border 0.2s;" onmouseover="this.style.borderColor='var(--cyan)'" onmouseout="this.style.borderColor='#222'">
                     <div>
                         <strong style="color: #fff; display: block; font-size: 1rem; margin-bottom: 3px;">Nmap & Recon</strong>
                         <span style="color: var(--text-dim); font-size: 0.75rem;">Flags essenciais e varredura de portas.</span>
                     </div>
                     <a href="{{ url_for('static', filename='materials/nmap_guide.pdf') }}" target="_blank" 
-                       style="background: var(--neon-cyan); color: #000; padding: 8px 12px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 0.75rem;">
-                       ACESSAR
+                    style="background: var(--cyan); color: #000; padding: 8px 12px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 0.75rem; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                    ACESSAR
                     </a>
                 </div>
 
-                <div style="background: rgba(0, 242, 255, 0.03); border: 1px solid #222; border-radius: 8px; padding: 15px; display: flex; align-items: center; justify-content: space-between; transition: border 0.2s;" onmouseover="this.style.borderColor='var(--neon-cyan)'" onmouseout="this.style.borderColor='#222'">
+                <div style="background: rgba(0, 188, 212, 0.05); border: 1px solid #222; border-radius: 8px; padding: 15px; display: flex; align-items: center; justify-content: space-between; transition: border 0.2s;" onmouseover="this.style.borderColor='var(--cyan)'" onmouseout="this.style.borderColor='#222'">
                     <div>
                         <strong style="color: #fff; display: block; font-size: 1rem; margin-bottom: 3px;">Criptografia Base</strong>
                         <span style="color: var(--text-dim); font-size: 0.75rem;">Hashes, Base64, Hex e Encodings.</span>
                     </div>
                     <a href="{{ url_for('static', filename='materials/crypto_cheat.pdf') }}" target="_blank" 
-                       style="background: var(--neon-cyan); color: #000; padding: 8px 12px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 0.75rem;">
-                       ACESSAR
+                    style="background: var(--cyan); color: #000; padding: 8px 12px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 0.75rem; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                    ACESSAR
                     </a>
                 </div>
 
-                <div style="background: rgba(0, 242, 255, 0.03); border: 1px solid #222; border-radius: 8px; padding: 15px; display: flex; align-items: center; justify-content: space-between; transition: border 0.2s;" onmouseover="this.style.borderColor='var(--neon-cyan)'" onmouseout="this.style.borderColor='#222'">
+                <div style="background: rgba(0, 188, 212, 0.05); border: 1px solid #222; border-radius: 8px; padding: 15px; display: flex; align-items: center; justify-content: space-between; transition: border 0.2s;" onmouseover="this.style.borderColor='var(--cyan)'" onmouseout="this.style.borderColor='#222'">
                     <div>
                         <strong style="color: #fff; display: block; font-size: 1rem; margin-bottom: 3px;">AsyncX Toolkit</strong>
                         <span style="color: var(--text-dim); font-size: 0.75rem;">Pacote offline (.ZIP) completo.</span>
                     </div>
                     <a href="{{ url_for('static', filename='materials/asyncx_toolkit.zip') }}" download 
-                       style="background: transparent; border: 1px solid var(--neon-cyan); color: var(--neon-cyan); padding: 7px 12px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 0.75rem;">
-                       BAIXAR
+                    style="background: transparent; border: 1px solid var(--cyan); color: var(--cyan); padding: 7px 12px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 0.75rem; transition: all 0.2s;" onmouseover="this.style.background='var(--cyan)'; this.style.color='#000';" onmouseout="this.style.background='transparent'; this.style.color='var(--cyan)';">
+                    BAIXAR
                     </a>
                 </div>
 
@@ -1294,23 +1605,23 @@
     </div>
 
     <!-- MODAL: Emissão de certificado -->
-<div id="modalCertificado" class="modal">
-        <div class="modal-content" style="max-width: 500px; background: #0a0a0a; border: 1px solid #333; box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);">
+    <div id="modalCertificado" class="modal">
+        <div class="modal-content" style="max-width: 500px; background: #0a0a0a; border: 1px solid #333; box-shadow: 0 0 30px rgba(0, 188, 212, 0.15);">
             <span class="modal-close" onclick="closeModal('modalCertificado')">&times;</span>
             
-            <h2 style="margin-bottom: 0.3rem; color: var(--yellow-bright); font-family: var(--font-display); letter-spacing: 2px;">EMISSÃO DO CERTIFICADO</h2>
+            <h2 style="margin-bottom: 0.3rem; color: var(--cyan); font-family: var(--font-display); letter-spacing: 2px;">EMISSÃO DO CERTIFICADO</h2>
             
             <p id="cert-status-msg" style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 1.5rem; font-family: var(--font-mono);">
                 SELECIONE O INTEGRANTE PARA GERAR O CERTIFICADO
             </p>
 
             {% if team_members %}
-                <form action="/generate_certificate" method="POST" target="_blank" style="display: flex; flex-direction: column; gap: 15px;">
+                <form action="/generate_certificate" method="POST" target="_blank" style="display: flex; flex-direction: column; gap: 15px;" onsubmit="prepararCertificado(event)">
                     
                     <div style="display: flex; flex-direction: column; gap: 5px;">
                         <label style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.75rem;">Selecione abaixo:</label>
                         
-                        <select id="cert-select" name="member_name" required style="background: #111; color: #fff; border: 1px solid #222; padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; width: 100%; outline: none; cursor: pointer;" onchange="this.style.borderColor='var(--yellow-bright)'">
+                        <select id="cert-select" name="member_name" required style="background: #111; color: #fff; border: 1px solid #222; padding: 12px; border-radius: 4px; font-family: var(--font-ui); font-size: 1rem; width: 100%; outline: none; cursor: pointer;" onchange="this.style.borderColor='var(--cyan)'">
                             <option value="" disabled selected>Nome do integrante...</option>
                             {% for integrante in team_members.split(',') %}
                                 {% if integrante.strip() %}
@@ -1320,9 +1631,16 @@
                         </select>
                     </div>
 
-                    <button id="cert-btn" type="submit" class="btn-start" style="background: var(--yellow-bright); color: #000; font-weight: 700; letter-spacing: 1px; width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 4px; cursor: pointer;">
+                    <button id="cert-btn" type="submit" class="btn-start" style="background: var(--cyan); color: #000; font-weight: 700; letter-spacing: 1px; width: 100%; padding: 12px; margin-top: 10px; border: none; border-radius: 4px; cursor: pointer;">
                         GERAR CERTIFICADO
                     </button>
+                    
+                    <div style="background: rgba(0, 188, 212, 0.05); border: 1px dashed var(--cyan); padding: 12px; border-radius: 6px; margin-top: 20px; margin-bottom: 15px;">
+                        <p style="font-family: var(--font-ui); font-size: 0.85rem; color: var(--cyan); text-align: center; margin: 0; line-height: 1.4;">
+                            <b>AVISO</b><br>
+                            Você poderá realizar a verificação de autenticidade deste documento em https://asyncx.com.br/validador, somente em<b> 10 dias úteis</b> após a emissão.
+                        </p>
+                    </div>
                 </form>
             {% else %}
                 <div style="text-align: center; padding: 15px 0; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.85rem;">
@@ -1331,6 +1649,34 @@
             {% endif %}
         </div>
     </div>
+
+    <!-- MODAL: Link de votação -->
+    <div id="modal-votacao-mvp" class="modal-overlay-global hidden-global">
+        <div class="modal-content-global">
+            <h2 class="modal-title-global" style="color: var(--yellow);">Operação MVP</h2>
+            
+            <div class="modal-rules-global">
+                <p style="margin-bottom: 12px;">1. A equipe que conquistar a maior <b>Torcida Externa</b> validada no fim do evento receberá um airdrop de <span class="modal-highlight-text-global" style="color: var(--yellow);">120 XP</span>.</p>
+                <p style="margin-bottom: 12px;">2. Copie o link para o formulário de votação abaixo e espalhe nas suas redes sociais, grupos e contatos.</p>
+                <p>3. Constas falsas resultaram em desclassificação. Jogue limpo!</p>
+            </div>
+            
+            <div style="margin-top: 24px;">
+                <input type="text" id="link-votacao-forms" value="{{ voting_link }}" readonly
+                    style="width: 100%; padding: 14px; border-radius: 4px; border: 1px dashed var(--yellow); background: #0f0f0f; color: var(--yellow); margin-bottom: 20px; font-family: 'Share Tech Mono', monospace; font-size: 1rem; outline: none; text-align: center; cursor: copy;"
+                    onclick="copiarLinkVotacao()">
+                
+                <button type="button" id="btn-copiar-link" onclick="copiarLinkVotacao()" class="modal-btn-global btn-primary-global" style="background: var(--yellow); color: #000; margin-bottom: 10px;">
+                    COPIAR LINK DE VOTAÇÃO
+                </button>
+                <button type="button" onclick="toggleModalVotacao(false)" class="modal-btn-global btn-secondary-global">
+                    FECHAR
+                </button>
+            </div>
+        </div>
+    </div>
+    {% include 'modal_sorteio.html' %}
+    {% include 'loader_global.html' %}
     <script>
         // TABS
         function switchTab(evt, categoryName) {
@@ -1358,14 +1704,19 @@
         // HINTS
         function comprarDica(id) {
             if(confirm("Essa dica terá um desconto de -25 PONTOS no ranking geral da equipe.")) {
+                showLoader('Resgatando dica...'); // LIGA O LOADER
                 fetch('/hint/' + id)
                     .then(r => r.json())
                     .then(data => {
                         if (data.error) {
+                            hideLoader(); // DESLIGA SE DER ERRO
                             alert(data.hint);
                         } else {
-                            location.reload();
+                            location.reload(); // Se der certo, a página recarrega e o loader some naturalmente
                         }
+                    }).catch(() => {
+                        hideLoader();
+                        alert("Erro de conexão.");
                     });
             }
         }
@@ -1487,35 +1838,31 @@
 
         // Adicione este script no final do seu dashboard.html
         function updateTeamAvatar(avatarName) {
-            // 1. Envia a requisição POST invisível para o Flask
+            showLoader('Alterando...'); // LIGA O LOADER
             fetch('/update_avatar', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ avatar_name: avatarName })
             })
             .then(response => response.json())
             .then(data => {
+                hideLoader(); 
                 if (data.success) {
-                    // 2. Se o Flask confirmar que salvou, atualizamos a foto na tela na mesma hora!
                     const avatarImg = document.getElementById('current-avatar');
                     avatarImg.src = "/static/img/avatars/" + avatarName;
-                    
-                    // 3. Fecha o modal
                     closeModal('modalAvatar');
                 } else {
                     alert("Erro ao comunicar com o servidor da AsyncX.");
                 }
             })
             .catch(error => {
+                hideLoader(); 
                 console.error('Falha na comunicação de rede:', error);
             });
         }
 
         // ── ENGENHARIA DE PLAYER YOUTUBE FACADE ──
-        
-        // 1. Carrega a API do Iframe do YouTube de forma assíncrona
+
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -1523,7 +1870,6 @@
 
         var asyncxPlayer;
 
-        // 2. Extrai o ID de qualquer link do YouTube (watch?v=, youtu.be, etc)
         function extractVideoID(url) {
             var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
             var match = url.match(regExp);
@@ -1540,22 +1886,21 @@
             // Se o player já existe, destrói para criar o novo do zero limpo
             if (asyncxPlayer) { asyncxPlayer.destroy(); }
 
-            // Cria o player usando a API oficial
             asyncxPlayer = new YT.Player('yt-player-container', {
                 height: '100%',
                 width: '100%',
                 videoId: videoId,
                 playerVars: {
-                    'autoplay': 1,        // Inicia sozinho (geralmente mutado se navegador barrar)
-                    'controls': 0,        // Tira todos os controles do YT
-                    'disablekb': 1,       // Tira atalhos de teclado do YT
-                    'fs': 0,              // Tira Fullscreen
-                    'modestbranding': 1,  // Tira logo
-                    'rel': 0              // Não mostra vídeos relacionados
+                    'autoplay': 1,        
+                    'controls': 0,        
+                    'disablekb': 1,       
+                    'fs': 1,              
+                    'modestbranding': 1,  
+                    'rel': 0              
                 },
                 events: {
                     'onReady': function(event) {
-                        event.target.playVideo(); // Força o play na nossa interface
+                        event.target.playVideo();
                     }
                 }
             });
@@ -1565,6 +1910,20 @@
         function asyncxPlay() { if(asyncxPlayer && asyncxPlayer.playVideo) asyncxPlayer.playVideo(); }
         function asyncxPause() { if(asyncxPlayer && asyncxPlayer.pauseVideo) asyncxPlayer.pauseVideo(); }
         
+        // ── NOVO: ENGINE DE FULLSCREEN NATIVA DO NAVEGADOR ──
+        function asyncxFullscreen() {
+            var playerIframe = document.getElementById('yt-player-container');
+            if (playerIframe) {
+                if (playerIframe.requestFullscreen) {
+                    playerIframe.requestFullscreen();
+                } else if (playerIframe.webkitRequestFullscreen) { /* Safari */
+                    playerIframe.webkitRequestFullscreen();
+                } else if (playerIframe.msRequestFullscreen) { /* IE11 */
+                    playerIframe.msRequestFullscreen();
+                }
+            }
+        }
+
         function closeVideoModal() {
             if(asyncxPlayer) { asyncxPlayer.destroy(); } // Mata o vídeo ao fechar
             document.getElementById('modalVideo').style.display = 'none';
@@ -1641,11 +2000,117 @@
             openModal('modalDicasAleatorias');
         }
 
+        // Monitor de fim de inscrições no Dashboard
+        const endStrDash = "{{ end_time }}";
+        if (endStrDash) {
+            const eventEndTimeDash = new Date(endStrDash).getTime();
+            const limitTimeSorteioDash = eventEndTimeDash + (48 * 60 * 60 * 1000);
+            const nowDash = new Date().getTime();
+            
+            // Procura o botão no dashboard para bloquear se o tempo estourou
+            const btnDash = document.querySelector('.sorteio-btn'); 
+            if (btnDash && nowDash > limitTimeSorteioDash) {
+                btnDash.textContent = "INSCRIÇÕES ENCERRADAS";
+                btnDash.style.opacity = "0.4";
+                btnDash.style.cursor = "not-allowed";
+                btnDash.onclick = null;
+            }
+        }
 
-        // AUTO-DISMISS ALERTS
-        setTimeout(() => {
-            document.querySelectorAll('.alert').forEach(a => a.style.display = 'none');
-        }, 3000);
+        function prepararCertificado(event) {
+            showLoader('Gerando chaves de autenticação...');
+            // Como o PDF baixa em outra aba, a aba atual não recarrega.
+            // Então programamos para desligar o loader após 4 segundos automaticamente.
+            setTimeout(() => {
+                hideLoader();
+            }, 4000);
+        }
+
+        // ── BARREIRA TEMPORAL PARA ENVIO DE FLAGS ──
+        function validarEnvioFlag(event) {
+            const endStr = "{{ end_time }}";
+            if (endStr) {
+                const eventEndTime = new Date(endStr).getTime();
+                const now = new Date().getTime();
+                
+                if (now > eventEndTime) {
+                    // O evento acabou! Trava o envio na hora.
+                    event.preventDefault();
+                    
+                    alert("SUBMISSÕES ENCERRADAS.");
+                    
+                    // Garante que o loader high-tech desligue, caso tenha sido acionado
+                    if (typeof hideLoader === "function") hideLoader(); 
+                    
+                    return false;
+                }
+            }
+            
+            // Se o tempo ainda está rolando, liga o loader e libera o envio para o backend
+            if (typeof showLoader === "function") showLoader('Analisando a flag...');
+            return true;
+        }
+
+        // ── AUTO-DISMISS ALERTS CRONOMETRADO (FADE-OUT COMPLETO) ──
+        window.addEventListener('DOMContentLoaded', () => {
+            const tickets = document.querySelectorAll('.asyncx-alert-ticket');
+            
+            tickets.forEach(ticket => {
+                // Mantém visível por 4 segundos para leitura estável
+                setTimeout(() => {
+                    ticket.style.opacity = "0";
+                    ticket.style.maxHeight = "0";
+                    ticket.style.margin = "0";
+                    ticket.style.padding = "0 20px";
+                    
+                    // Remove do DOM após a animação de fade (500ms) terminar
+                    setTimeout(() => {
+                        ticket.remove();
+                    }, 500);
+                }, 4000);
+            });
+        });
+
+        function toggleModalVotacao(show) {
+            const modal = document.getElementById('modal-votacao-mvp');
+            if (modal) {
+                if (show) {
+                    modal.classList.remove('hidden-global');
+                } else {
+                    modal.classList.add('hidden-global');
+                }
+            }
+        }
+
+        function copiarLinkVotacao() {
+            const linkInput = document.getElementById('link-votacao-forms');
+            const btnCopiar = document.getElementById('btn-copiar-link');
+            
+            // Seleciona o texto (funciona no PC e Mobile)
+            linkInput.select();
+            linkInput.setSelectionRange(0, 99999); 
+            
+            // Copia para a área de transferência
+            navigator.clipboard.writeText(linkInput.value).then(() => {
+                // Feedback Visual de Sucesso
+                const textoOriginal = btnCopiar.innerHTML;
+                btnCopiar.innerHTML = '✔️ LINK COPIADO COM SUCESSO!';
+                btnCopiar.style.background = '#4caf50'; // Fica Verde
+                btnCopiar.style.color = '#fff';
+                
+                // Retorna ao normal após 3 segundos
+                setTimeout(() => {
+                    btnCopiar.innerHTML = textoOriginal;
+                    btnCopiar.style.background = 'var(--yellow)';
+                    btnCopiar.style.color = '#000';
+                    // Tira a seleção do input
+                    window.getSelection().removeAllRanges();
+                }, 3000);
+            }).catch(err => {
+                console.error('Falha ao copiar o link: ', err);
+                alert('Erro ao copiar. Selecione o link manualmente.');
+            });
+        }
     </script>
 </body>
 </html>
