@@ -75,7 +75,10 @@
             line-height: 1;
         }
 
-        .brand-name span { color: var(--cyan); }
+        .brand-name span { 
+            color: var(--cyan);
+            font-style: italic;
+        }
 
         .brand-sub {
             font-family: var(--font-mono);
@@ -1206,7 +1209,7 @@
                                     {% if c.description %}
                                         <div class="card-label">Descrição</div>
                                         <div class="card-desc">
-                                            {{ c.description[:100] }}{% if c.description|length > 100 %}<br><span class="more">mais ...</span>{% endif %}
+                                            {{ c.description[:250] }}{% if c.description|length > 250%}...{% endif %}
                                         </div>
                                     {% endif %}
 
@@ -1222,7 +1225,21 @@
                                             <a href="{{ c.action_url }}" target="_blank" class="btn-start">ACESSAR</a>
                                             
                                         {% else %}
-                                            <button class="btn-start" style="cursor: default; opacity: 0.8;" onclick="return false;">INICIAR</button>
+                                            <button class="btn-start" 
+                                                    style="background: var(--cyan); color: #000000; font-weight: bold; letter-spacing: 1px; transition: all 0.2s; position: relative;" 
+                                                    onclick="const btn=this; 
+                                                             btn.innerText='DESAFIO DO MUNDO REAL...'; 
+                                                             btn.style.background='#007a87'; 
+                                                             btn.style.color='#ffffff';
+                                                             btn.style.animation='pulse 1s infinite'; 
+                                                             setTimeout(() => { 
+                                                                 btn.innerText='LOCALIZAR'; 
+                                                                 btn.style.background='var(--cyan)'; 
+                                                                 btn.style.color='#000000';
+                                                                 btn.style.animation='none'; 
+                                                             }, 3000);">
+                                                LOCALIZAR
+                                            </button>
                                         {% endif %}
 
                                         <div class="card-footer-row">
@@ -1274,9 +1291,12 @@
     <!-- FOOTER -->
     <div class="footer-bar">
         <span>Asyncx - Soluções em TI e Segurança digital - todos os direitos reservados</span>
-        <div class="footer-social">
-            <a href="#" title="Facebook">f</a>
-            <a href="#" title="Instagram">@</a>
+        <div class="footer-social" style="display: flex; gap: 15px; align-items: center;">       
+            <a href="https://www.linkedin.com/company/asyncxtecnologia" target="_blank" title="Siga a AsyncX no LinkedIn" 
+               style="color: var(--text-dim); display: flex; align-items: center; justify-content: center; transition: color 0.2s ease;"
+               onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='var(--text-dim)'">
+                <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.8v8.37h2.8v-4.67c0-.25.06-.5.14-.69a1.16 1.16 0 0 1 1.07-.77c.75 0 1 .57 1 1.41v4.72h2.8M6.5 8.37a1.37 1.37 0 1 0 0-2.75 1.37 1.37 0 0 0 0 2.75M8 18.5V10.13H5.2v8.37H8z"/></svg>
+            </a>
         </div>
     </div>
 
@@ -1474,11 +1494,11 @@
                     </div>
                 </a>
 
-                <a href="https://gtfobins.github.io/" target="_blank" class="arsenal-card">
-                    <svg viewBox="0 0 24 24" class="arsenal-icon"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.11-.9-2-2-2zm0 14H4V8h16v10zm-2-1h-6v-2h6v2zM7.5 17l-1.41-1.41L8.67 13l-2.58-2.59L7.5 9l4 4-4 4z"/></svg>
+                <a href="https://archive.org/web/" target="_blank" class="arsenal-card">
+                    <svg viewBox="0 0 24 24" class="arsenal-icon"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
                     <div>
-                        <h4 style="margin: 0 0 5px 0; color: var(--neon-cyan, #00f2ff); font-size: 1rem;">GTFOBins</h4>
-                        <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Lista curada de binários Unix para bypass e Escalação de Privilégio (PrivEsc).</p>
+                        <h4 style="margin: 0 0 5px 0; color: var(--neon-cyan, #00f2ff); font-size: 1rem;">Wayback Machine</h4>
+                        <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim); line-height: 1.4;">Arquivo digital da internet. Recupere páginas excluídas, diretórios antigos e histórico de domínios (OSINT).</p>
                     </div>
                 </a>
 
@@ -1949,49 +1969,48 @@
                     
                     select.disabled = true;
                     
-                    msg.innerHTML = '<span style="color: #ff4444;">Emissão disponével após o término do evento.</span>';
+                    msg.innerHTML = '<span style="color: #ff4444;">Emissão disponível após o término do evento.</span>';
                 }
             }
         });
 
-        const BANCO_DICAS_HCB = [
-            "Recon: Lembrem-se de checar arquivos como `robots.txt` e `sitemap.xml` no servidor alvo. Eles costumam revelar diretórios proibidos.",
-            "Forense Digital: O arquivo parece normal? Verifique metadados ocultos com `exiftool` ou extraia dados embutidos usando `steghide`.",
-            "Web Hacking: Bypass de autenticação simples costuma falhar se o backend sanitizar os inputs. Teste sempre injeções básicas como ' OR '1'='1.",
-            "Enumeração: Backups compactados (.zip, .tar.gz, .bak) deixados no diretório raiz do servidor web são vetores comuns de vazamento de código-fonte.",
-            "Redes: O uso da flag `-sV` no Nmap ajuda a levantar a versão exata do serviço em execução, permitindo buscar CVEs conhecidas no Exploit-DB.",
-            "WAF Bypass: Payloads em Base64 ou URL Encode são frequentemente usados para burlar firewalls web. Pratique a decodificação no Arsenal Hacker.",
-            "Privilege Escalation (Linux): Se o terminal do alvo responder, verifique as permissões SUID executando o comando: `find / -perm -4000 -type f 2>/dev/null`.",
-            "Reconhecimento: Ao analisar cabeçalhos HTTP com o comando `curl -I`, preste atenção redobrada no campo 'Server' e em cookies customizados.",
-            "Análise de Binários: Encontrou um arquivo sem extensão? Use o comando `strings arquivo | grep -i flag` ou verifique os Magic Bytes com o comando `file`.",
-            "Criptografia: Hash não se decripta, se quebra. Identifique a assinatura do hash com ferramentas online e use o CrackStation para senhas fracas.",
-            "OSINT: O Google Dorking é seu melhor amigo. Tente buscar por arquivos de configuração expostos com operadores como ext:env ou intitle:\"index of\".",
-            "Esteganografia: O arquivo de áudio ou imagem é suspeitamente pesado? Ferramentas como `binwalk` e `zsteg` podem revelar arquivos escondidos lá dentro.",
-            "Redes (DNS): A porta 53 está aberta? Tente realizar uma Transferência de Zona (AXFR) usando o comando `dig` para mapear subdomínios ocultos da corporação.",
-            "Privilege Escalation (Linux): Sempre verifique o que você pode rodar como superusuário digitando `sudo -l`. Se houver binários permitidos, consulte o GTFOBins.",
-            "Web Hacking: Fique de olho no código-fonte HTML da página (Ctrl+U). Desenvolvedores costumam deixar comentários com senhas ou rotas secretas.",
-            "Falhas de Lógica de Negócio: Em lojas virtuais vulneráveis, tente interceptar a requisição com o Burp Suite e alterar o valor do produto para números negativos.",
-            "LFI (Local File Inclusion): Se a URL parecer com `?arquivo=texto.txt`, tente voltar diretórios injetando `../../../../etc/passwd` para ler arquivos do sistema.",
-            "Redes (FTP): A porta 21 está aberta? Teste o login 'Anonymous' (usuário: anonymous, senha: em branco). É surpreendente o que sysadmins esquecem lá dentro.",
-            "Forense de Rede: Em arquivos de captura .pcap no Wireshark, filtre por `http.request.method == \"POST\"` para encontrar credenciais sendo enviadas em texto claro.",
-            "Privilege Escalation (Cron): Verifique as tarefas agendadas em `/etc/crontab`. Scripts rodando como root com permissão de escrita por usuários comuns são portas abertas.",
-            "Criptografia Clássica: O texto está embaralhado mas mantém a estrutura de palavras? Use o decodificador de Cifra de César (ROT) no Arsenal Hacker.",
-            "OSINT (Github): Desenvolvedores cometem erros. Busque por chaves de API ou tokens de banco de dados vazados no histórico de commits (git log).",
-            "Web Hacking (APIs): APIs REST frequentemente escondem versões antigas. Se a rota atual é `/api/v2/users`, verifique se a `/api/v1/users` ainda responde sem autenticação.",
-            "Linux Básico: O histórico de comandos do administrador pode conter senhas digitadas acidentalmente. Sempre verifique o `cat ~/.bash_history`.",
-            "Codificação Múltipla: Às vezes, o atacante codifica o payload em camadas. Você pode decodificar em Hexadecimal e descobrir que o resultado é um Base64 oculto.",
-            "Sessões Inseguras: Analise seus Cookies. Se for um JWT (JSON Web Token), jogue-o no jwt.io. Às vezes, basta alterar o campo de 'role' para 'admin'.",
-            "Forense de IoT: Baixou um arquivo de firmware .bin de um roteador? Use o comando `binwalk -e arquivo.bin` para extrair o sistema de arquivos inteiro.",
-            "Movimentação Lateral (SSH): Ganhou acesso como usuário comum? Vá até `~/.ssh/`. Se a chave privada (`id_rsa`) estiver legível, você pode invadir outros servidores.",
-            "Reconhecimento Criptográfico: Base64 tem letras maiúsculas, minúsculas e números. Base32 só usa MAIÚSCULAS e números de 2 a 7. Reconhecer padrões poupa tempo.",
-            "Dica de Ouro CTF: Se você está há 3 horas tentando quebrar um hash hiper complexo, pare. A solução geralmente é mais simples (como checar um diretório óbvio)."
+const BANCO_DICAS_HCB = [
+            "OSINT: O Google Dorking é o melhor amigo do pesquisador. Tente buscar por arquivos de configuração expostos usando operadores como ext:env ou intitle:\"index of\".",
+            "OSINT: Achou uma foto de um local e não sabe onde é? Faça uma busca reversa de imagens no Google Lens ou Yandex para descobrir a origem exata.",
+            "OSINT: Perfis públicos são minas de ouro. Detalhes como nome do pet, data de nascimento e cidade natal são frequentemente usados na composição de senhas.",
+            "OSINT: A página foi apagada ou o link quebrou? O site archive.org salva cópias antigas da internet. Aquele diretório oculto pode estar cacheado lá.",
+            "OSINT: Toda foto tirada com celular guarda segredos. O site Metadata2Go pode revelar as coordenadas GPS exatas de onde a imagem foi capturada.",
+            "Dados Vazados: O e-mail do alvo apareceu em listas de brechas? O site HaveIBeenPwned informa em quais vazamentos massivos aquela credencial foi exposta na internet.",
+            "Dados Vazados: Desenvolvedores também cometem erros. Busque por chaves de API, senhas ou tokens de acesso esquecidos e vazados no histórico de commits.",
+            "Dados Vazados: Hackers costumam despejar dumps de banco de dados em fóruns de texto puro. Pesquise pelo domínio do alvo seguido da palavra 'pastebin' no Google.",
+            "Dados Vazados: Hashes muito antigos encontrados em fóruns da Dark Web geralmente já foram quebrados. Consulte o CrackStation antes de tentar fazer força bruta.",
+            "Programação: Fique de olho no código-fonte HTML da página e no Console. Devs frequentemente deixam comentários com rotas secretas.",
+            "Programação: APIs REST muitas vezes escondem versões antigas. Se a rota atual é `/api/v2/users`, verifique se a `/api/v1/users` ainda responde sem pedir autenticação.",
+            "Programação: Variáveis globais expostas no JavaScript do navegador podem ser facilmente manipuladas via Console para burlar verificações de formulários.",
+            "Programação: Uma pasta secreta `.git` esquecida no servidor web de produção permite que qualquer pessoa baixe o código-fonte inteiro do projeto.",
+            "Programação: Nunca escreva senhas de banco de dados diretamente no código. Arquivos sensíveis como configurações .env são os primeiros alvos de atacantes.",
+            "Programação: Páginas de erro verbosas ativadas em produção entregam caminhos absolutos do servidor e versões de bibliotecas de bandeja para o invasor.",
+            "Linux: Esqueceu onde um arquivo está salvo? O comando `find / -name \"*nome*\" 2>/dev/null` faz uma varredura limpa pelo sistema escondendo mensagens de permissão negada.",
+            "Linux: O sistema está lento? Use o comando `htop` ou `top` para verificar quais processos estão consumindo CPU, e `kill -9 PID` para derrubá-los.",
+            "Linux: Quer achar uma palavra ou erro específico em um log de texto gigante? O comando `grep -i \"palavra\" arquivo.log` filtra tudo o que você precisa em segundos.",
+            "Linux: O histórico de comandos do sistema pode conter senhas ou parâmetros sensíveis digitados acidentalmente. Sempre verifique digitando `cat ~/.bash_history`.",
+            "EASTER EGG: Essa dica é para os sortudos! Encontre o Desafio no painel de missões e receba sua recompensa inserindo a seguinte flag: A_s0rt3_est4_AQu1!",
+            "Programação: Commits antigos nunca morrem realmente. Se um dev apagou uma credencial num commit recente, procure o histórico completo da árvore com `git log -p` para ver a alteração original.",
+            "OSINT Não procure apenas por websites. Motores de busca como o Shodan.io (no Arsenal) permitem encontrar câmaras, impressoras e bases de dados mal configuradas ligadas diretamente à internet pública.",
+            "Programação (GraphQL): Se o alvo usar uma API GraphQL, tente o ataque de Introspecção enviando a query `{ __schema { types { name } } }`. Isto pode mapear e revelar toda a estrutura invisível da base de dados.",
+            "Dados Vazados: Os alvos reciclam palavras-passe. Se encontrou 'Senha!2023' num vazamento antigo, experimente variações lógicas como 'Senha!2024' ou 'Senha@2024' antes de tentar um ataque de força bruta complexo.",
+            "OSINT: Ficheiros PDF e DOCX publicados em portais corporativos guardam segredos. O Metadata2Go revela o nome do autor, o software usado e até o caminho original do ficheiro no disco (ex: C:\\Users\\Admin\\...).",
+            "Programação: O token JWT tem três partes separadas por pontos. Experimente usar o CyberChef para descodificar o Base64, alterar o privilégio para 'admin' e testar a vulnerabilidade de 'None Algorithm' na assinatura.",
+            "Dados Vazados: Buckets da AWS mal configurados são um vetor clássico. Tente aceder ao endereço no formato `http://nome-do-alvo.s3.amazonaws.com` para verificar se os ficheiros internos da empresa estão listados publicamente.",
+            "OSINT: Tem uma foto mas não sabe o local? Analise o comprimento e a direção das sombras. Ferramentas de astronomia online (SunCalc) ajudam a determinar a hora e a latitude exata em que a fotografia foi tirada.",
+            "Forense: O atacante apagou o `.bash_history` do Linux? Não desista. Verifique se a aplicação guarda os seus próprios registos silenciosos, como ficheiros `.mysql_history` ou logs não rotacionados do Nginx/Apache.",
+            "Esteganografia e Dados Ocultos: A imagem PNG não apresenta nada de errado nos metadados? Experimente analisar os Bits Menos Significativos usando o CyberChef ou a ferramenta de terminal `zsteg` para revelar mensagens injetadas nos píxeis."
         ];
 
 
         function openModalDicas() {
             const elementoTexto = document.getElementById('textoDicaAleatoria');
             if (elementoTexto) {
-                // Sorteia um índice do array matemático
                 const indiceAleatorio = Math.floor(Math.random() * BANCO_DICAS_HCB.length);
                 // Injeta a dica correspondente
                 elementoTexto.innerText = `"${BANCO_DICAS_HCB[indiceAleatorio]}"`;
