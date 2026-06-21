@@ -1106,14 +1106,11 @@
                 </div>
                     <button class="nav-item" onclick="openModal('modalPlacar')">Placar geral</button>
                     <button class="nav-item" onclick="openModal('modalIntegrantes')">Equipe</button>
-                    <button class="nav-item" onclick="openModal('modalMaterial')">Central de Apoio</button>
-                    
+                    <button class="nav-item" onclick="openModal('modalMaterial')">Documentos</button>                   
                     <button class="nav-item" onclick="openModal('modalArsenal')">Ferramentas</button>
-                    <button class="nav-item" onclick="openModalDicas()">Mensagens de apoio</button>
-
+                    <button class="nav-item" onclick="openModalDicas()">Mensagens</button>
                     <button class="nav-item" onclick="openModal('modalCertificado')">Emitir Certificado</button>
                     <button class="nav-item" onclick="openModal('modalSobre')">Sobre</button>
-                    <div style="height: 1px; background: rgba(255, 215, 0, 0.3); margin: 15px 8px;"></div>
                     <button onclick="toggleModalGlobal(true)" class="sorteio-btn">
                         PREMIO EXCLUSIVO
                     </button><br>
@@ -1995,13 +1992,12 @@ const BANCO_DICAS_HCB = [
             "Linux: Quer achar uma palavra ou erro específico em um log de texto gigante? O comando `grep -i \"palavra\" arquivo.log` filtra tudo o que você precisa em segundos.",
             "Linux: O histórico de comandos do sistema pode conter senhas ou parâmetros sensíveis digitados acidentalmente. Sempre verifique digitando `cat ~/.bash_history`.",
             "EASTER EGG: Essa dica é para os sortudos! Encontre o Desafio no painel de missões e receba sua recompensa inserindo a seguinte flag: A_s0rt3_est4_AQu1!",
+            "EASTER EGG: Essa dica é para os resilientes! Mantenha o avatar default no time e receba 40 pontos no final do evento",
             "Programação: Commits antigos nunca morrem realmente. Se um dev apagou uma credencial num commit recente, procure o histórico completo da árvore com `git log -p` para ver a alteração original.",
-            "OSINT Não procure apenas por websites. Motores de busca como o Shodan.io (no Arsenal) permitem encontrar câmaras, impressoras e bases de dados mal configuradas ligadas diretamente à internet pública.",
-            "Programação (GraphQL): Se o alvo usar uma API GraphQL, tente o ataque de Introspecção enviando a query `{ __schema { types { name } } }`. Isto pode mapear e revelar toda a estrutura invisível da base de dados.",
+            "OSINT: Não procure apenas por websites. Motores de busca como o Shodan.io (no Arsenal) permitem encontrar câmaras, impressoras e bases de dados mal configuradas ligadas diretamente à internet pública.",
+            "Programação: Se o alvo usar uma API GraphQL, tente o ataque de Introspecção enviando a query `{ __schema { types { name } } }`. Isto pode mapear e revelar toda a estrutura invisível da base de dados.",
             "Dados Vazados: Os alvos reciclam palavras-passe. Se encontrou 'Senha!2023' num vazamento antigo, experimente variações lógicas como 'Senha!2024' ou 'Senha@2024' antes de tentar um ataque de força bruta complexo.",
             "OSINT: Ficheiros PDF e DOCX publicados em portais corporativos guardam segredos. O Metadata2Go revela o nome do autor, o software usado e até o caminho original do ficheiro no disco (ex: C:\\Users\\Admin\\...).",
-            "Programação: O token JWT tem três partes separadas por pontos. Experimente usar o CyberChef para descodificar o Base64, alterar o privilégio para 'admin' e testar a vulnerabilidade de 'None Algorithm' na assinatura.",
-            "Dados Vazados: Buckets da AWS mal configurados são um vetor clássico. Tente aceder ao endereço no formato `http://nome-do-alvo.s3.amazonaws.com` para verificar se os ficheiros internos da empresa estão listados publicamente.",
             "OSINT: Tem uma foto mas não sabe o local? Analise o comprimento e a direção das sombras. Ferramentas de astronomia online (SunCalc) ajudam a determinar a hora e a latitude exata em que a fotografia foi tirada.",
             "Forense: O atacante apagou o `.bash_history` do Linux? Não desista. Verifique se a aplicação guarda os seus próprios registos silenciosos, como ficheiros `.mysql_history` ou logs não rotacionados do Nginx/Apache.",
             "Esteganografia e Dados Ocultos: A imagem PNG não apresenta nada de errado nos metadados? Experimente analisar os Bits Menos Significativos usando o CyberChef ou a ferramenta de terminal `zsteg` para revelar mensagens injetadas nos píxeis."

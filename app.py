@@ -459,7 +459,7 @@ def generate_certificate():
     can = canvas.Canvas(packet, pagesize=(bg_width, bg_height))
     
     # --- CONFIGURAÇÃO DO NOME DO ALUNO (IM PONENTE) ---
-    can.setFont("Helvetica-Bold", 40)                     # Fonte aumentada para destaque absoluto
+    can.setFont("Helvetica-Bold", 20)                     # Fonte aumentada para destaque absoluto
     can.setFillColorRGB(0, 0, 0)                          # Cor Preta
     
     # Subi levemente o Y do nome (48% da altura) para dar espaço ao texto maior abaixo
