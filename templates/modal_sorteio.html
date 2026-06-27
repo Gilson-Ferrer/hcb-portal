@@ -65,7 +65,7 @@
         background: #00acc1;
         box-shadow: 0 0 15px rgba(0, 188, 212, 0.4);
     }
-    /* 🔒 ESTADO BLOQUEADO DO BOTÃO (LGPD) */
+
     .btn-primary-global:disabled {
         background: #333333;
         color: #666666;
@@ -104,7 +104,6 @@
         fill: none;
     }
 
-    /* 🛡️ ESTILOS DO CHECKBOX E LINK DA LGPD */
     .lgpd-container {
         display: flex;
         align-items: flex-start;
@@ -208,7 +207,7 @@
 </div>
 
 <script>
-    // Engine de contingência para o ano dinâmico no Front-end
+
     (function configurarHashtagDinamica() {
         const anoInjetado = "{{ start_time[:4] if start_time else '' }}";
         const anoFinal = anoInjetado || new Date().getFullYear();
@@ -220,7 +219,6 @@
         if (textSuccess && !textSuccess.textContent.includes(anoFinal)) textSuccess.textContent += anoFinal;
     })();
 
-    // 🔓 ENGINE LGPD: Libera o botão apenas se o checkbox estiver marcado
     function validarTermos() {
         const checkbox = document.getElementById('check-lgpd');
         const btn = document.getElementById('btn-enviar-global');
@@ -230,8 +228,7 @@
     function toggleModalGlobal(show) {
         const modal = document.getElementById('modal-regras-global');
         if (modal) modal.classList.toggle('hidden-global', !show);
-        
-        // Se abrir o modal, reseta o form e trava o botão por segurança
+
         if (show) {
             document.getElementById('form-sorteio-global').reset();
             validarTermos();
@@ -267,7 +264,7 @@
                 form.reset();
             } else {
                 alert('Erro: ' + (result.message || 'Falha ao registrar dados.'));
-                // Retorna o botão ao estado anterior em caso de erro
+
                 validarTermos();
             }
         } catch (error) {

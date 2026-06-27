@@ -43,7 +43,6 @@
             overflow-x: hidden;
         }
 
-        /* ── HEADER ── */
         .header {
             background: #111111;
             border-bottom: 1px solid var(--border);
@@ -152,14 +151,13 @@
 
         .btn-logout:hover { color: var(--red); }
 
-        /* ── LAYOUT ── */
         .workspace {
             display: grid;
             grid-template-columns: var(--sidebar-w) 1fr;
             min-height: calc(100vh - 70px);
+            width: 100%;
         }
 
-        /* ── SIDEBAR ── */
         .sidebar {
             background: #1e1e1e;
             border-right: 1px solid var(--border);
@@ -223,7 +221,6 @@
             color: var(--cyan);
         }
 
-        /* Sidebar nav links */
         .sidebar-nav {
             display: flex;
             flex-direction: column;
@@ -254,7 +251,6 @@
         .nav-item.highlight { color: var(--yellow); }
         .nav-item.highlight:hover { color: #ffd54f; }
 
-        /* Sidebar stats */
         .stat-row {
             padding: 10px 8px;
             font-family: var(--font-ui);
@@ -271,10 +267,10 @@
             margin-left: auto;
         }
 
-        /* ── MAIN CONTENT ── */
         .main-content {
             padding: 2rem 2rem;
             background: var(--bg);
+            width: 100%;
         }
 
         .section-title {
@@ -286,22 +282,17 @@
             letter-spacing: 1px;
         }
 
-        /* ── TABS ── */
         .tab-bar {
             display: flex;
             gap: 0;
             border-bottom: 2px solid var(--border);
             margin-bottom: 2rem;
             overflow-x: auto;
-            overflow-y: hidden; /* Evita qualquer scroll vertical fantasma */
-            
-            /* Oculta a barra no Firefox */
+            overflow-y: hidden; 
             scrollbar-width: none; 
-            /* Oculta a barra no Internet Explorer 10+ e Edge */
             -ms-overflow-style: none; 
         }
 
-        /* Oculta a barra de rolagem no Chrome, Safari e Opera (Motor WebKit) */
         .tab-bar::-webkit-scrollbar {
             display: none;
         }
@@ -332,14 +323,12 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* ── CHALLENGE GRID ── */
         .challenge-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
         }
 
-        /* ── CHALLENGE CARD ── */
         .challenge-card {
             background: var(--card);
             border: 1px solid var(--border);
@@ -364,7 +353,6 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(0, 0, 0, 0.9) !important;
         }
 
-        /* Card cover image */
         .card-cover {
             width: 100%;
             height: 160px;
@@ -420,7 +408,6 @@
             font-family: var(--font-mono);
         }
 
-        /* Solved checkmark overlay */
         .solved-check {
             position: absolute;
             bottom: 10px;
@@ -437,7 +424,6 @@
             z-index: 10;
         }
 
-        /* Card body */
         .card-body {
             padding: 1.2rem 1.2rem 1rem;
         }
@@ -474,7 +460,6 @@
             cursor: pointer;
         }
 
-        /* CTA button inside card */
         .btn-start {
             display: block;
             width: 100%;
@@ -497,7 +482,6 @@
 
         .btn-start:hover { opacity: 0.85; }
 
-        /* Points + hint row */
         .card-footer-row {
             display: flex;
             justify-content: space-between;
@@ -532,7 +516,6 @@
         .btn-hint:hover { opacity: 0.85; }
         .btn-hint:disabled { opacity: 0.4; cursor: default; }
 
-        /* Flag form */
         .flag-form {
             display: flex;
             flex-direction: column;
@@ -577,7 +560,6 @@
 
         .btn-submit:hover { background: var(--green-bright); }
 
-        /* Hint reveal */
         .hint-box {
             margin-top: 0.6rem;
             background: rgba(255, 152, 0, 0.05);
@@ -598,7 +580,6 @@
         }
         .blur-hint.reveal { filter: blur(0); user-select: text; }
 
-        /* ── FOOTER BAR ── */
         .footer-bar {
             background: #111;
             border-top: 1px solid var(--border);
@@ -623,7 +604,6 @@
 
         .footer-social a:hover { color: var(--cyan); }
 
-        /* ── MODALS ── */
         .modal {
             display: none;
             position: fixed;
@@ -657,7 +637,6 @@
 
         .modal-close:hover { color: #fff; }
 
-        /* ── FLASH ALERTS ── */
         .flash-container {
             position: fixed;
             top: 20px; left: 50%;
@@ -683,7 +662,6 @@
             100% { opacity: 0.5; }
         }
 
-        /* ── ARSENAL MODAL SPECIFICS ── */
         .modal-arsenal .modal-content { max-width: 800px; }
         
         .decoder-box { background: var(--bg); border: 1px solid var(--border-light); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; }
@@ -722,14 +700,6 @@
             box-shadow: 0 0 12px rgba(0, 242, 255, 0.15);
         }
 
-        /* O Segredo da Simetria: CSS Grid */
-        .modal-arsenal-custom .decoder-controls {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 15px;
-        }
-
         .modal-arsenal-custom .btn-decode {
             background: #161616;
             color: #aaa;
@@ -753,7 +723,6 @@
         }
 
         .modal-arsenal-custom .btn-clear {
-            grid-column: span 4; /* Ocupa as 4 colunas perfeitamente */
             background: rgba(244, 67, 54, 0.05);
             color: #ff4444;
             border: 1px dashed #ff4444;
@@ -790,12 +759,6 @@
             min-height: 60px;
         }
 
-        .modal-arsenal-custom .arsenal-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-        }
-
         .modal-arsenal-custom .arsenal-card {
             background: #111;
             padding: 18px 15px;
@@ -829,52 +792,44 @@
             filter: drop-shadow(0 0 6px var(--neon-cyan, #00f2ff));
         }
 
-        /* ── SCROLLBAR CYBERPUNK PARA O MODAL ── */
         .modal-arsenal-custom .modal-content {
-            max-height: 85vh; /* Trava o modal em 85% da altura da tela */
-            overflow-y: auto; /* Cria o scroll automaticamente se o conteúdo passar */
-            
-            /* Estilização do Scrollbar para Firefox */
+            max-height: 85vh;
+            overflow-y: auto; 
             scrollbar-width: thin;
             scrollbar-color: var(--neon-cyan, #00f2ff) #111;
         }
 
-        /* Estilização do Scrollbar para Chrome, Edge e Safari */
         .modal-arsenal-custom .modal-content::-webkit-scrollbar {
             width: 6px;
         }
         .modal-arsenal-custom .modal-content::-webkit-scrollbar-track {
-            background: #0a0a0a; /* Fundo do trilho escuro */
+            background: #0a0a0a; 
             border-radius: 8px;
             border: 1px solid #222;
         }
         .modal-arsenal-custom .modal-content::-webkit-scrollbar-thumb {
-            background: var(--neon-cyan, #00f2ff); /* A barra em Ciano Neon */
+            background: var(--neon-cyan, #00f2ff); 
             border-radius: 8px;
         }
         .modal-arsenal-custom .modal-content::-webkit-scrollbar-thumb:hover {
-            background: #00acc1; /* Cor levemente mais escura ao passar o mouse */
+            background: #00acc1;
         }
-        /* ── PLAYER BLINDADO ASYNCX ── */
+
         .video-shield-container {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%; /* Proporção 16:9 perfeita mantida */
+            padding-bottom: 56.25%; 
             background: #000;
             border-radius: 8px;
             overflow: hidden; 
-            /* Borda removida, usaremos box-shadow no HTML para profundidade */
         }
 
         #yt-player-container {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            /* TRUQUES REMOVIDOS: Fim do scale(1.3) e do pointer-events: none */
         }
 
-
-        /* ── CONTROLOS DO VÍDEO (ÍCONES MINIMALISTAS) ── */
         .custom-controls {
             display: flex;
             gap: 12px;
@@ -893,29 +848,27 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            color: #ffffff; /* Define os ícones como estritamente brancos */
+            color: #ffffff; 
         }
 
         .btn-icon svg {
             width: 22px;
             height: 22px;
-            fill: currentColor; /* O SVG herda o branco perfeitamente */
+            fill: currentColor; 
             transition: transform 0.2s ease;
         }
 
-        /* Efeito Hover Elegante (Acende o fundo e a borda levemente) */
         .btn-icon:hover {
             background: rgba(255, 255, 255, 0.1);
             border-color: #666;
         }
 
-        /* Efeito de "Clique" (O ícone encolhe levemente ao clicar) */
         .btn-icon:active {
             transform: scale(0.92);
         }
 
         .btn-icon:hover svg {
-            transform: scale(1.1); /* O ícone cresce subtilmente no hover */
+            transform: scale(1.1); 
         }
 
         .feed-status {
@@ -924,15 +877,15 @@
             font-size: 0.8rem;
             color: var(--text-dim);
         }
-        /* ── AVATAR UNIFICADO (Fim dos Conflitos) ── */
+
         .avatar-option {
             cursor: pointer;
-            width: 80px;  /* Defina o tamanho fixo aqui */
-            height: 80px; /* Deve ser idêntico ao width para ser um círculo perfeito */
+            width: 80px;  
+            height: 80px; 
             border-radius: 50%;
             padding: 4px;
             background: transparent;
-            border: 3px solid var(--border-cyber, #333); /* Borda neutra inicial */
+            border: 3px solid var(--border-cyber, #333);
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
@@ -945,10 +898,9 @@
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
-            filter: saturate(1.2); /* Brilho inicial leve */
+            filter: saturate(1.2);
         }
 
-        /* Efeito de Brilho apenas no HOVER */
         .avatar-option:hover {
             border-color: var(--neon-cyan) !important;
             box-shadow: 0 0 15px rgba(0, 242, 255, 0.6);
@@ -975,21 +927,127 @@
             opacity: 0.75; 
         }
 
-        /* ==========================================================================
-           🛡️ ASYNCX MOBILE ARMOR - PASSO 2: BLINDAGEM DE EXTRAVASAMENTO
-           ========================================================================== */
+        @media (min-width: 1400px) {
+            .workspace {
+                width: 100%;
+                grid-template-columns: var(--sidebar-w) 1fr;
+            }
+
+            .main-content {
+                padding: 3rem 4rem; 
+                width: 100%;
+            }
+
+            .section-title {
+                font-size: 2.6rem !important;
+                margin-bottom: 2rem;
+            }
+
+            .challenge-grid {
+                grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)) !important;
+                gap: 2rem !important;
+            }
+
+            .challenge-card {
+                border-radius: 12px;
+            }
+
+            .card-cover {
+                height: 210px !important;
+            }
+
+            .card-body {
+                padding: 1.5rem !important;
+            }
+
+            .card-title {
+                font-size: 1.45rem !important; 
+                margin-bottom: 0.8rem;
+            }
+
+            .card-desc {
+                font-size: 1rem !important;
+                line-height: 1.6;
+            }
+
+            .pts-badge {
+                font-size: 1.6rem !important; 
+            }
+
+            .btn-start, .btn-submit {
+                padding: 14px !important;
+                font-size: 1.05rem !important;
+            }
+
+            .input-flag {
+                padding: 12px 16px !important;
+                font-size: 1rem !important;
+            }
+        }
+
+        .modal-content {
+            width: 94% !important;
+            max-width: 650px !important; 
+            max-height: 85vh !important;  
+            overflow-y: auto !important; 
+            margin: 30px auto !important;
+            padding: 1.5rem !important;
+        }
+
+        .modal-arsenal-custom .decoder-controls {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)) !important;
+            gap: 8px !important;
+        }
+        .modal-arsenal-custom .btn-decode {
+            flex: 1 1 calc(50% - 8px) !important;
+        }
+        .modal-arsenal-custom .btn-clear {
+            grid-column: 1 / -1 !important; 
+            margin-top: 5px !important;
+        }
+
+        .modal-arsenal-custom .arsenal-grid {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+        }
+        .modal-arsenal-custom .arsenal-card {
+            padding: 14px !important;
+        }
+
+        .docs-responsive-grid {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+        }
+
+        .docs-responsive-grid > div {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 10px !important;
+            padding: 15px !important;
+        }
+
+        .docs-responsive-grid > div a {
+            width: 100% !important;
+            align-self: center !important;
+            margin-top: 8px !important;
+            text-align: center !important;
+            padding: 10px 0 !important;
+        }
+
+
         @media (max-width: 900px) {
-            /* 0. Trava Mestre (Evita o balanço horizontal de tela) */
             body { max-width: 100vw; overflow-x: hidden; }
 
-            /* 1. Fundação do Layout */
             .workspace { grid-template-columns: 1fr; }
-            .header { height: auto; grid-template-columns: 1fr; padding: 1rem; gap: 15px; }
+            .header { height: auto; grid-template-columns: 1fr; padding: 1rem; gap: 12px; }
             .brand { border-right: none; padding: 0; align-items: center; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-            .header-center { width: 100%; justify-content: space-between; }
-            .header-actions { width: 100%; justify-content: center; }
+            .header-center { width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; }
+            .header-actions { width: 100%; display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
 
-            /* 2. Compactação da Sidebar e Perfil (Conserta o Card Enorme) */
             .sidebar { border-right: none; border-bottom: 1px solid var(--border); padding: 1rem; }
             .team-block { flex-direction: row; justify-content: flex-start; text-align: left; border-bottom: none; padding-bottom: 0; margin-bottom: 15px; }
             .team-block .profile-card { text-align: left !important; display: flex; align-items: center; gap: 15px; width: 100%; }
@@ -997,38 +1055,31 @@
             .team-name { font-size: 1rem; }
             .team-inst { font-size: 0.65rem; }
 
-            /* 3. Escala a Caixa de Pontuação para caber na tela */
             .sidebar-nav > div[style*="display: flex"] { flex-direction: row !important; gap: 5px !important; margin-bottom: 10px !important; }
             .sidebar-nav > div > div { padding: 8px 4px !important; }
             .sidebar-nav > div > div > strong { font-size: 1.1rem !important; }
             .sidebar-nav > div > div > span { font-size: 0.55rem !important; }
 
-            /* 4. Menu Compactado (Evita que botões laterais estiquem a tela) */
             .sidebar-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
             .nav-item { padding: 8px 5px; font-size: 0.8rem; text-align: center; justify-content: center; border: 1px solid var(--border-light); border-radius: 4px; }
             .sidebar-nav > div.linha-divisoria { display: none; }
             .sorteio-btn { grid-column: span 2; margin: 5px 0 !important; padding: 10px !important; font-size: 0.85rem; }
 
-            /* 5. Ajuste Principal dos Cards (Limita a largura e o grid) */
             .main-content { padding: 1rem; max-width: 100vw; }
             .challenge-grid { grid-template-columns: 1fr; gap: 1rem; }
             .challenge-card { width: 100%; max-width: 100%; }
-            .card-cover { height: 140px; } /* Reduz a altura da imagem de capa do card */
+            .card-cover { height: 140px; }
             .card-title { font-size: 1.05rem; }
 
-            /* 6. Tabs Ocultando o Scroll Vertical */
             .tab-bar { padding-bottom: 5px; margin-bottom: 1.5rem; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; }
             .tab-btn { font-size: 0.85rem; padding: 10px 15px; }
 
-            /* 7. Footer Quebrado Correto */
             .footer-bar { flex-direction: column; gap: 10px; text-align: center; padding: 1rem; }
             .footer-social { justify-content: center; }
         }
     </style>
 </head>
 <body>
-
-    <!-- HEADER -->
     <div class="header">
         <div class="brand">
             <div class="brand-name">Asyn<span>X</span></div>
@@ -1048,9 +1099,7 @@
 
     <div class="workspace">
 
-        <!-- SIDEBAR -->
         <div class="sidebar">
-            
             <div class="team-block">
                 <div class="profile-card" style="text-align: center;">
                     
@@ -1165,7 +1214,6 @@
                         {% for c in list %}
                             <div class="challenge-card {% if c.id in solved_ids %}solved-box{% endif %}">
 
-                                <!-- Cover -->
                                 <div class="card-cover">
     
                                     {% if c.action_type == 'iframe' and c.action_url %}
@@ -1285,7 +1333,6 @@
 
     </div>
 
-    <!-- FOOTER -->
     <div class="footer-bar">
         <span>Asyncx - Soluções em TI e Segurança digital - todos os direitos reservados</span>
         <div class="footer-social" style="display: flex; gap: 15px; align-items: center;">       
@@ -1571,7 +1618,7 @@
                 Documentação oficial e Cheat Sheets autorizados para consulta durante a operação.
             </p>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div class="docs-responsive-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                             
                 <div style="background: rgba(0, 188, 212, 0.05); border: 1px solid #222; border-radius: 8px; padding: 15px; display: flex; align-items: center; justify-content: space-between; transition: border 0.2s;" onmouseover="this.style.borderColor='var(--cyan)'" onmouseout="this.style.borderColor='#222'">
                     <div>
@@ -1695,7 +1742,6 @@
     {% include 'modal_sorteio.html' %}
     {% include 'loader_global.html' %}
     <script>
-        // TABS
         function switchTab(evt, categoryName) {
             const tabcontents = document.getElementsByClassName("tab-content");
             for (let i = 0; i < tabcontents.length; i++) {
@@ -1709,7 +1755,6 @@
             evt.currentTarget.classList.add("active");
         }
 
-        // MODALS
         function openModal(id) { document.getElementById(id).style.display = "flex"; }
         function closeModal(id) { document.getElementById(id).style.display = "none"; }
         window.addEventListener('click', function(e) {
@@ -1718,18 +1763,17 @@
             });
         });
 
-        // HINTS
         function comprarDica(id) {
             if(confirm("Essa dica terá um desconto de -25 PONTOS no ranking geral da equipe.")) {
-                showLoader('Resgatando dica...'); // LIGA O LOADER
+                showLoader('Resgatando dica...');
                 fetch('/hint/' + id)
                     .then(r => r.json())
                     .then(data => {
                         if (data.error) {
-                            hideLoader(); // DESLIGA SE DER ERRO
+                            hideLoader();
                             alert(data.hint);
                         } else {
-                            location.reload(); // Se der certo, a página recarrega e o loader some naturalmente
+                            location.reload();
                         }
                     }).catch(() => {
                         hideLoader();
@@ -1738,7 +1782,6 @@
             }
         }
 
-        // COUNTDOWN
         const endTimeStr = "{{ end_time }}";
         if (endTimeStr) {
             const countDownDate = new Date(endTimeStr).getTime();
@@ -1760,7 +1803,6 @@
             }, 1000);
         }
 
-        // MOTOR DO ARSENAL DE DECODIFICAÇÃO
         function runDecode(type) {
             const input = document.getElementById('decodeInput').value.trim();
             const output = document.getElementById('decodeOutput');
@@ -1783,24 +1825,20 @@
                         break;
                         
                     case 'hex':
-                        // Remove espaços e processa pares de hexadecimais
                         const cleanHex = input.replace(/\s/g, '');
                         result = cleanHex.match(/.{1,2}/g).map(byte => String.fromCharCode(parseInt(byte, 16))).join('');
                         break;
                         
                     case 'bin':
-                        // Processa binários (separados por espaço ou blocos de 8 bits contínuos)
                         const binBlocks = input.includes(' ') ? input.split(' ') : input.match(/.{1,8}/g);
                         result = binBlocks.map(b => String.fromCharCode(parseInt(b, 2))).join('');
                         break;
                         
                     case 'oct':
-                        // Processa octais separados por espaço
                         result = input.split(/\s+/).map(o => String.fromCharCode(parseInt(o, 8))).join('');
                         break;
                         
                     case 'b32':
-                        // Decodificador RFC 4648 Base32
                         const b32chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
                         let bits = "";
                         let str32 = input.replace(/=+$/, '').toUpperCase();
@@ -1815,7 +1853,6 @@
                         break;
                         
                     case 'b45':
-                        // Decodificador Base45 (Comum em QR Codes modernos e CTFs)
                         const charset45 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
                         let res45 = [];
                         for (let i = 0; i < input.length; i += 3) {
@@ -1834,7 +1871,6 @@
                         break;
 
                     case 'rot':
-                        // Brute-force: Processa todas as 25 rotações de César de uma vez
                         result = "--- BRUTE FORCE CIFRA DE CÉSAR ---\n\n";
                         for (let i = 1; i <= 25; i++) {
                             let rotStr = input.replace(/[a-zA-Z]/g, function(c) {
@@ -1853,9 +1889,8 @@
             }
         }
 
-        // Adicione este script no final do seu dashboard.html
         function updateTeamAvatar(avatarName) {
-            showLoader('Alterando...'); // LIGA O LOADER
+            showLoader('Alterando...'); 
             fetch('/update_avatar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1878,8 +1913,6 @@
             });
         }
 
-        // ── ENGENHARIA DE PLAYER YOUTUBE FACADE ──
-
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -1893,14 +1926,12 @@
             return (match && match[2].length === 11) ? match[2] : null;
         }
 
-        // 3. Abre o Modal e Instancia o Vídeo
         function openVideoModal(videoUrl, title) {
-            document.getElementById('videoModalTitle').innerText = "> " + title.toUpperCase();
+            document.getElementById('videoModalTitle').innerText = title.toUpperCase();
             document.getElementById('modalVideo').style.display = 'flex';
             
             var videoId = extractVideoID(videoUrl);
 
-            // Se o player já existe, destrói para criar o novo do zero limpo
             if (asyncxPlayer) { asyncxPlayer.destroy(); }
 
             asyncxPlayer = new YT.Player('yt-player-container', {
@@ -1923,36 +1954,32 @@
             });
         }
 
-        // 4. Funções dos botões nativos
         function asyncxPlay() { if(asyncxPlayer && asyncxPlayer.playVideo) asyncxPlayer.playVideo(); }
         function asyncxPause() { if(asyncxPlayer && asyncxPlayer.pauseVideo) asyncxPlayer.pauseVideo(); }
-        
-        // ── NOVO: ENGINE DE FULLSCREEN NATIVA DO NAVEGADOR ──
+
         function asyncxFullscreen() {
             var playerIframe = document.getElementById('yt-player-container');
             if (playerIframe) {
                 if (playerIframe.requestFullscreen) {
                     playerIframe.requestFullscreen();
-                } else if (playerIframe.webkitRequestFullscreen) { /* Safari */
+                } else if (playerIframe.webkitRequestFullscreen) { 
                     playerIframe.webkitRequestFullscreen();
-                } else if (playerIframe.msRequestFullscreen) { /* IE11 */
+                } else if (playerIframe.msRequestFullscreen) {
                     playerIframe.msRequestFullscreen();
                 }
             }
         }
 
         function closeVideoModal() {
-            if(asyncxPlayer) { asyncxPlayer.destroy(); } // Mata o vídeo ao fechar
+            if(asyncxPlayer) { asyncxPlayer.destroy(); }
             document.getElementById('modalVideo').style.display = 'none';
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            // A variável end_time já foi injetada pelo Flask no Jinja2
             const eventEndTime = new Date("{{ end_time }}").getTime();
             const now = new Date().getTime();
             
             if (now < eventEndTime) {
-                // O evento ainda está ativo! Trava a interface.
                 const btn = document.getElementById("cert-btn");
                 const select = document.getElementById("cert-select");
                 const msg = document.getElementById("cert-status-msg");
@@ -2008,21 +2035,16 @@ const BANCO_DICAS_HCB = [
             const elementoTexto = document.getElementById('textoDicaAleatoria');
             if (elementoTexto) {
                 const indiceAleatorio = Math.floor(Math.random() * BANCO_DICAS_HCB.length);
-                // Injeta a dica correspondente
                 elementoTexto.innerText = `"${BANCO_DICAS_HCB[indiceAleatorio]}"`;
             }
-            // Abre o modal chamando a função padrão que você já tem no sistema
             openModal('modalDicasAleatorias');
         }
 
-        // Monitor de fim de inscrições no Dashboard
         const endStrDash = "{{ end_time }}";
         if (endStrDash) {
             const eventEndTimeDash = new Date(endStrDash).getTime();
             const limitTimeSorteioDash = eventEndTimeDash + (48 * 60 * 60 * 1000);
             const nowDash = new Date().getTime();
-            
-            // Procura o botão no dashboard para bloquear se o tempo estourou
             const btnDash = document.querySelector('.sorteio-btn'); 
             if (btnDash && nowDash > limitTimeSorteioDash) {
                 btnDash.textContent = "INSCRIÇÕES ENCERRADAS";
@@ -2034,14 +2056,12 @@ const BANCO_DICAS_HCB = [
 
         function prepararCertificado(event) {
             showLoader('Gerando chaves de autenticação...');
-            // Como o PDF baixa em outra aba, a aba atual não recarrega.
-            // Então programamos para desligar o loader após 4 segundos automaticamente.
+
             setTimeout(() => {
                 hideLoader();
             }, 4000);
         }
 
-        // ── BARREIRA TEMPORAL PARA ENVIO DE FLAGS ──
         function validarEnvioFlag(event) {
             const endStr = "{{ end_time }}";
             if (endStr) {
@@ -2049,36 +2069,31 @@ const BANCO_DICAS_HCB = [
                 const now = new Date().getTime();
                 
                 if (now > eventEndTime) {
-                    // O evento acabou! Trava o envio na hora.
                     event.preventDefault();
                     
                     alert("SUBMISSÕES ENCERRADAS.");
-                    
-                    // Garante que o loader high-tech desligue, caso tenha sido acionado
+
                     if (typeof hideLoader === "function") hideLoader(); 
                     
                     return false;
                 }
             }
-            
-            // Se o tempo ainda está rolando, liga o loader e libera o envio para o backend
+
             if (typeof showLoader === "function") showLoader('Analisando a flag...');
             return true;
         }
 
-        // ── AUTO-DISMISS ALERTS CRONOMETRADO (FADE-OUT COMPLETO) ──
         window.addEventListener('DOMContentLoaded', () => {
             const tickets = document.querySelectorAll('.asyncx-alert-ticket');
             
             tickets.forEach(ticket => {
-                // Mantém visível por 4 segundos para leitura estável
+
                 setTimeout(() => {
                     ticket.style.opacity = "0";
                     ticket.style.maxHeight = "0";
                     ticket.style.margin = "0";
                     ticket.style.padding = "0 20px";
-                    
-                    // Remove do DOM após a animação de fade (500ms) terminar
+
                     setTimeout(() => {
                         ticket.remove();
                     }, 500);
@@ -2100,25 +2115,20 @@ const BANCO_DICAS_HCB = [
         function copiarLinkVotacao() {
             const linkInput = document.getElementById('link-votacao-forms');
             const btnCopiar = document.getElementById('btn-copiar-link');
-            
-            // Seleciona o texto (funciona no PC e Mobile)
+
             linkInput.select();
             linkInput.setSelectionRange(0, 99999); 
-            
-            // Copia para a área de transferência
+
             navigator.clipboard.writeText(linkInput.value).then(() => {
-                // Feedback Visual de Sucesso
                 const textoOriginal = btnCopiar.innerHTML;
                 btnCopiar.innerHTML = '✔️ LINK COPIADO COM SUCESSO!';
-                btnCopiar.style.background = '#4caf50'; // Fica Verde
+                btnCopiar.style.background = '#4caf50'; 
                 btnCopiar.style.color = '#fff';
-                
-                // Retorna ao normal após 3 segundos
+
                 setTimeout(() => {
                     btnCopiar.innerHTML = textoOriginal;
                     btnCopiar.style.background = 'var(--yellow)';
                     btnCopiar.style.color = '#000';
-                    // Tira a seleção do input
                     window.getSelection().removeAllRanges();
                 }, 3000);
             }).catch(err => {

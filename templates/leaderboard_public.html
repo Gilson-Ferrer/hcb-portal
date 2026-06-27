@@ -20,8 +20,6 @@
             --font-display: 'Orbitron', monospace;
             --font-ui: 'Rajdhani', sans-serif;
             --font-mono: 'Share Tech Mono', monospace;
-
-            /* One color per category slot (up to 10) */
             --cat-0: #e53935;
             --cat-1: #fb8c00;
             --cat-2: #1565c0;
@@ -45,7 +43,6 @@
             flex-direction: column;
         }
 
-        /* ── HEADER AJUSTADO ── */
         .header {
             background: #111;
             border-bottom: 1px solid var(--border);
@@ -130,7 +127,6 @@
 
         .btn-close:hover { color: var(--cyan); }
 
-        /* ── MATRIX ── */
         .matrix-wrapper {
             flex: 1;
             padding: 1.5rem;
@@ -138,6 +134,7 @@
         }
 
         .matrix-table {
+            width: 100%;
             border-collapse: separate;
             border-spacing: 2px;
             font-family: var(--font-mono);
@@ -237,7 +234,6 @@
         td.cell-solved   { opacity: 1;    color: #fff; font-weight: 800; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
         td.cell-unsolved { opacity: 0.22; color: #000; font-weight: 700; }
 
-        /* ── FOOTER ── */
         .footer-bar {
             background: #111;
             border-top: 1px solid var(--border);
@@ -268,6 +264,128 @@
             text-decoration: none;
         }
         .sorteio-btn:hover { opacity: 0.75; }
+
+        @media (min-width: 1400px) {
+
+            .matrix-table {
+                font-size: 1rem; 
+                border-spacing: 4px;
+            }
+
+            .col-team { 
+                min-width: 280px !important;
+                max-width: none !important; 
+                font-size: 1.3rem !important;
+            }
+            .col-team .team-inst {
+                font-size: 0.85rem !important;
+                margin-top: 4px;
+            }
+
+            .col-score {
+                font-size: 1.3rem !important;
+                width: 90px !important;
+                min-width: 90px !important;
+            }
+
+            td.cell-solved, td.cell-unsolved, thead tr:last-child th.cat-num {
+                width: auto !important;
+                min-width: 75px !important;
+                max-width: none !important;
+                height: 48px !important;
+                font-size: 1.1rem !important;
+            }
+
+            thead tr:first-child th.cat-header {
+                font-size: 0.9rem !important;
+                padding: 10px 5px !important;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .header {
+                height: auto;
+                flex-direction: column;
+                padding: 1rem;
+                gap: 12px;
+                text-align: center;
+            }
+            .brand {
+                border-right: none;
+                padding-right: 0;
+                align-items: center;
+            }
+            .header-center {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .header style + div, .header > div:last-child {
+                width: 100%;
+                justify-content: center !important;
+                flex-wrap: wrap;
+            }
+
+            .matrix-wrapper {
+                padding: 0.5rem;
+                max-width: 100vw;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .matrix-table {
+                font-size: 0.65rem;
+            }
+
+            td.col-team {
+                position: sticky;
+                left: 0;
+                z-index: 10;
+                background: #111111 !important;
+                box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+                min-width: 120px !important;
+                max-width: 140px !important;
+            }
+
+            thead th.col-team {
+                position: sticky;
+                left: 0;
+                z-index: 11;
+                background: #111111 !important;
+            }
+
+            td.cell-solved, td.cell-unsolved, thead tr:last-child th.cat-num {
+                width: 32px !important;
+                min-width: 32px !important;
+                max-width: 32px !important;
+                font-size: 0.65rem;
+            }
+
+            .footer-bar {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+                padding: 1rem;
+            }
+
+            body::before {
+                content: "SUGESTÃO: GIRE O DISPOSITIVO EM MODO PAISAGEM PARA UMA VISÃO COMPLETA.";
+                display: block;
+                background: rgba(0, 188, 212, 0.15);
+                border-bottom: 1px solid var(--cyan);
+                color: var(--cyan);
+                font-family: var(--mono);
+                font-size: 0.7rem;
+                font-weight: bold;
+                text-align: center;
+                padding: 8px 10px;
+                letter-spacing: 1px;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) and (orientation: landscape) {
+            body::before { display: none !important; }
+        }
 
     </style>
 
@@ -389,16 +507,19 @@
 
     <div class="footer-bar">
         <span>Asyncx - Soluções em TI e Segurança digital - todos os direitos reservados</span>
-        <div class="footer-social">
-            <a href="#" title="Facebook">f</a>
-            <a href="#" title="Instagram">@</a>
+        <div class="footer-social" style="display: flex; gap: 15px; align-items: center;">       
+            <a href="https://www.linkedin.com/company/asyncxtecnologia" target="_blank" title="Siga a AsyncX no LinkedIn" 
+               style="color: var(--text-dim); display: flex; align-items: center; justify-content: center; transition: color 0.2s ease;"
+               onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='var(--text-dim)'">
+                <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.8v8.37h2.8v-4.67c0-.25.06-.5.14-.69a1.16 1.16 0 0 1 1.07-.77c.75 0 1 .57 1 1.41v4.72h2.8M6.5 8.37a1.37 1.37 0 1 0 0-2.75 1.37 1.37 0 0 0 0 2.75M8 18.5V10.13H5.2v8.37H8z"/></svg>
+            </a>
         </div>
     </div>
     {% include 'modal_sorteio.html' %}
     {% include 'loader_global.html' %}
     
     <script>
-    // Resgata as datas do backend injetadas pelo Jinja
+
     const startStr = "{{ start_time }}";
     const endStr = "{{ end_time }}";
     
@@ -410,8 +531,6 @@
 
     function updateTimer() {
         const now = new Date().getTime();
-        
-        // 🔒 BLINDAGEM DO BOTÃO DE SORTEIO (48h após o fim do evento)
         const limitTimeSorteio = eventEndTime + (48 * 60 * 60 * 1000); 
         const btnAbrirSorteio = document.getElementById('btn-abrir-sorteio');
         
@@ -421,8 +540,7 @@
             btnAbrirSorteio.style.cursor = "not-allowed";
             btnAbrirSorteio.onclick = null; 
         }
-        
-        // 1. ESTADO: PRÉ-JOGO
+
         if (eventStartTime && now < eventStartTime) {
             const distance = eventStartTime - now;
             label.textContent = "O EVENTO INICIA EM:";
@@ -432,16 +550,14 @@
         }
 
         const distanceToEnd = eventEndTime - now;
-        
-        // 2. ESTADO: FIM DE JOGO
+
         if (distanceToEnd < 0) {
             label.textContent = "EVENTO";
             display.textContent = "ENCERRADO"; 
             display.style.color = "#f44336"; 
             return;
         }
-        
-        // 3. ESTADO: EM ANDAMENTO
+
         label.textContent = "TEMPO RESTANTE:";
         display.style.color = ""; 
         renderTime(distanceToEnd);

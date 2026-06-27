@@ -4,7 +4,7 @@
         top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(5, 5, 5, 0.92);
         backdrop-filter: blur(8px);
-        z-index: 999999; /* Fica acima de TUDO, inclusive modais */
+        z-index: 999999;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -19,7 +19,6 @@
         pointer-events: auto;
     }
 
-    /* Linha de frequência ciano */
     .asyncx-loader-track {
         width: 240px;
         height: 2px;
@@ -39,7 +38,6 @@
         animation: asyncx-scan 1.2s infinite cubic-bezier(0.8, 0, 0.2, 1);
     }
 
-    /* Texto de status */
     .asyncx-loader-text {
         font-family: 'Share Tech Mono', monospace;
         color: #00bcd4;
@@ -68,10 +66,7 @@
 </div>
 
 <script>
-    /**
-     * Função global para acionar o Loading.
-     * @param {string} mensagem - Texto opcional para mostrar na tela (ex: "AUTENTICANDO...")
-     */
+
     function showLoader(mensagem = "PROCESSANDO DADOS...") {
         const loader = document.getElementById('global-loader');
         const textElement = document.getElementById('global-loader-text');
@@ -81,9 +76,6 @@
         }
     }
 
-    /**
-     * Função global para esconder o Loading.
-     */
     function hideLoader() {
         const loader = document.getElementById('global-loader');
         if (loader) {

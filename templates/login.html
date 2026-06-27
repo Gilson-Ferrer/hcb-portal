@@ -6,17 +6,16 @@
     <title>ASYNCX | Hackathon Challenge Box</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
     <style>
-:root {
+    :root {
             --bg-color: #050505;
-            --card-bg: rgba(15, 15, 15, 0.75); /* Fundo da caixa levemente transparente */
+            --card-bg: rgba(15, 15, 15, 0.75); 
             --accent-color: #00f2ff;
             --text-primary: #ffffff;
             --text-secondary: #a0a0a0;
-            --border-color: rgba(255, 255, 255, 0.1); /* Borda mais suave para o efeito vidro */
+            --border-color: rgba(255, 255, 255, 0.1); 
         }
 
         body {
-            /* FALLBACK e IMAGEM DE FUNDO COM OVERLAY ESCURO */
             background-color: var(--bg-color);
             background-image: 
                 linear-gradient(rgba(5, 5, 5, 0.45), rgba(5, 5, 5, 0.85)), 
@@ -44,7 +43,6 @@
             text-align: center;
             opacity: 1;
             transform: scale(1);
-            /* Transição suave de opacidade, escala e margem para não quebrar o layout no fechamento */
             transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
                         transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
                         margin 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
@@ -69,16 +67,15 @@
             padding: 2.5rem;
             border-radius: 20px;
             border: 1px solid var(--border-color);
-            /* Efeito de desfoque do fundo (Glassmorphism) */
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            /* Sombra neon suave em volta da caixa */
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 242, 255, 0.05);
             width: 100%;
             max-width: 360px;
             text-align: center;
             position: relative;
             z-index: 10;
+            margin: 20px;
         }
 
         .contractor-brand {
@@ -106,7 +103,7 @@
         input {
             width: 100%;
             padding: 12px 16px;
-            background-color: rgba(0, 0, 0, 0.6); /* Input mais escuro para contrastar */
+            background-color: rgba(0, 0, 0, 0.6); 
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
             color: white;
@@ -220,16 +217,12 @@
             const alertBox = document.getElementById('login-alert-ticket');
             
             if (alertBox) {
-                // Aguarda 5000ms (5 segundos) visível na tela antes de iniciar o sumiço
                 setTimeout(() => {
-                    // Inicia o colapso visual do elemento de forma suave
                     alertBox.style.opacity = "0";
                     alertBox.style.transform = "scale(0.95)";
                     alertBox.style.maxHeight = "0";
                     alertBox.style.padding = "0 14px";
                     alertBox.style.margin = "0";
-                    
-                    // Remove completamente do DOM do navegador após o término da animação (500ms)
                     setTimeout(() => {
                         alertBox.remove();
                     }, 500);
