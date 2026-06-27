@@ -13,18 +13,12 @@ from pypdf import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4, landscape
 
-EVENT_END = datetime(2026, 6, 8, 23, 59, 59)
-
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', 'asyncx_hack_2026_local_key')
+app.secret_key = os.environ.get('SECRET_KEY', 'asyncx_h4ck_loc4l_key')
 DATABASE_URL = os.environ.get('DATABASE_URL')
-
-# ==============================================================================
-# MULTI-TENANT 
-# ==============================================================================
-
-TENANT_ID = os.environ.get('TENANT_ID', 'estacio')
-INSTITUTION_NAME = os.environ.get('INSTITUTION_NAME', 'ESTÁCIO CARAPICUÍBA')
+TENANT_ID = os.environ.get('TENANT_ID', 'default_tenant')
+INSTITUTION_NAME = os.environ.get('INSTITUTION_NAME', 'NOME INSTITUIÇÃO')
+VOTING_LINK = os.environ.get('VOTING_FORM_LINK', 'https://link-pendente.asyncx.com.br')
 
 def get_db():
     conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
@@ -133,8 +127,6 @@ def dashboard():
     
     cur.close()
     conn.close()
-
-    voting_link = os.environ.get('VOTING_FORM_LINK', 'https://link-pendente.asyncx.com.br')
     
     return render_template('dashboard.html', 
                            event_name=event['name'],
@@ -148,7 +140,7 @@ def dashboard():
                            team_avatar=team_avatar,
                            institution_name=INSTITUTION_NAME,
                            team_members=team_members,
-                           voting_link=voting_link,
+                           voting_link=VOTING_LINK,
                            end_time=event['end_time'].isoformat())
 
 @app.route('/leaderboard')
