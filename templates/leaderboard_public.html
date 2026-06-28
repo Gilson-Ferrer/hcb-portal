@@ -337,14 +337,15 @@
 
             .timer-mobile {
                 display: inline-flex !important;
+                position: absolute !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
                 font-family: var(--font-display);
-                font-size: 0.85rem !important;
+                font-size: 0.95rem !important;
                 font-weight: 700 !important;
                 color: var(--red);
-                background: rgba(244, 67, 54, 0.08);
-                border: 1px solid rgba(244, 67, 54, 0.3);
                 padding: 4px 8px;
-                border-radius: 4px;
+                white-space: nowrap;
             }
 
             .hamburger-btn {
@@ -377,7 +378,7 @@
                 display: flex !important;
                 animation: fadeInDropdown 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             }
-            
+
             @keyframes fadeInDropdown {
                 0% { opacity: 0; transform: translateY(-10px) scale(0.97); }
                 100% { opacity: 1; transform: translateY(0) scale(1); }
@@ -446,21 +447,6 @@
                 text-align: center;
                 padding: 1rem;
             }
-
-            body::before {
-                content: "MODO PAISAGEM PARA VISÃO COMPLETA";
-                display: block;
-                background: rgba(0, 188, 212, 0.15);
-                border-bottom: 1px solid var(--cyan);
-                color: var(--cyan);
-                font-family: var(--mono);
-                font-size: 0.7rem;
-                font-weight: bold;
-                text-align: center;
-                padding: 8px 10px;
-                letter-spacing: 1px;
-                width: 100%;
-            }
         }
 
         @media (max-width: 768px) and (orientation: landscape) {
@@ -494,11 +480,11 @@
         <div class="header-left">
             <div class="brand">
                 <div class="brand-name">Asyn<span>X</span></div>
-                <div class="brand-sub">Hackathon Challenge Box</div>
+                <div class="brand-sub">Hackathon</div>
             </div>
-            <div id="countdown-mobile" class="timer-mobile"></div>
+            
         </div>
-
+        <div id="countdown-mobile" class="timer-mobile"></div>
         <div class="header-center">
             <span class="event-label" id="event-label">Status do Evento</span>
             <div class="timer" id="countdown"></div>
@@ -620,6 +606,19 @@
     
     <script>
 
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        if (menu) menu.classList.toggle('menu-open');
+    }
+
+    document.addEventListener('click', function(event) {
+        const menu = document.getElementById('mobile-menu');
+        const hamburger = document.querySelector('.hamburger-btn');
+        if (menu && menu.classList.contains('menu-open') && !menu.contains(event.target) && !hamburger.contains(event.target)) {
+            menu.classList.remove('menu-open');
+        }
+    });
+
     const startStr = "{{ start_time }}";
     const endStr = "{{ end_time }}";
     
@@ -668,11 +667,18 @@
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        
-        display.textContent = (days > 0 ? days + "d " : "") +
+
+        const timeString = days + "d " +
             String(hours).padStart(2, '0') + ':' +
             String(minutes).padStart(2, '0') + ':' +
             String(seconds).padStart(2, '0');
+
+        display.textContent = timeString;
+
+        const mobileTimer = document.getElementById("countdown-mobile");
+        if (mobileTimer) {
+            mobileTimer.textContent = timeString;
+        }
     }
 
     setInterval(updateTimer, 1000);
