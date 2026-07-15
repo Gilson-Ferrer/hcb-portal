@@ -1292,20 +1292,13 @@
                                         <div class="video-wrapper">
                                             <div class="video-overlay"></div>
                                             <div class="rec-indicator">LIVE FEED</div>
-                                            <img class="card-cover-img" id="thumb-{{ c.id }}" src="" style="display: none; filter: grayscale(20%) contrast(110%);">
-                                            <script>
-                                                (function() {
-                                                    var url = "{{ c.action_url }}";
-                                                    var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-                                                    var match = url.match(regExp);
-                                                    var videoId = (match && match[2].length === 11) ? match[2] : null;
-                                                    if(videoId) {
-                                                        var imgElement = document.getElementById("thumb-{{ c.id }}");
-                                                        imgElement.src = "https://img.youtube.com/vi/" + videoId + "/maxresdefault.jpg";
-                                                        imgElement.style.display = "block";
-                                                    }
-                                                })();
-                                            </script>
+                                            
+                                            <!-- Verifica se você cadastrou uma imagem, se sim, usa ela. Se não, exibe o placeholder -->
+                                            {% if c.cover_image %}
+                                                <img class="card-cover-img" src="{{ c.cover_image }}" style="filter: grayscale(20%) contrast(110%);">
+                                            {% else %}
+                                                <div class="card-cover-placeholder" style="position: relative; z-index: 2;">&lt;VÍDEO&gt;</div>
+                                            {% endif %}
                                         </div>
                                         
                                     {% elif c.cover_image %}
